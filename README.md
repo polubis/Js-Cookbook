@@ -9,6 +9,8 @@
 
 # Language core concepts
 
+#### `Event loop`
+
 #### Why extending build-in JS objects is bad idea ?
 
 #### `Prototype inheritance`
