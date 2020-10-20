@@ -207,6 +207,8 @@
 
 #### `MVP`
 
+#### `Flux`
+
 #### `Prototype`
 
 #### `Module`
@@ -228,3 +230,76 @@
 #### `Facade`
 
 #### `Flyweight`
+
+# React
+
+#### What React is ?
+
+#### `ref`
+
+#### `VirtualDOM`
+
+#### `context` and `Context API`
+
+#### `Lifecycle hooks`
+
+#### `Lifecycle methods`
+
+#### `key` prop
+
+#### `Element` vs `Component`
+
+#### `diffing` algorythm
+
+#### `Synthetic event`
+
+#### `Performance improvements`
+
+#### `Event handling`
+
+#### `Why components must be capitalized`
+
+#### `JSX`
+
+#### `createElement`
+
+#### `cloneElement`
+
+#### `ErrorBoundaries`
+
+#### `ForwardRef`
+
+#### `useRef`
+
+#### `createRef`
+
+#### `strict mode` in React
+
+#### `forceUpdate`
+
+# React patterns
+
+#### `HOC`
+
+#### `Render prop`
+
+#### `Compound component`
+
+#### `Function as a child`
+
+#### `Render slot`
+
+#### `Proxy component`
+
+# React ecosystem
+
+#### `redux`
+
+#### `redux-thunk`
+
+#### `redux-observable`
+
+#### `redux-saga`
+
+
+
