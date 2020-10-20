@@ -1,3 +1,12 @@
+# Standards naming
+
+#### ES2015 a.k.a. ES6
+#### ES2016 a.k.a. ES7
+#### ES2017 a.k.a. ES8
+#### ES2018 a.k.a. ES9
+#### ES2019 a.k.a. ES10
+#### ES2020 a.k.a. ES11
+
 # Language core concepts
 
 #### Why extending build-in JS objects is bad idea ?
@@ -64,7 +73,9 @@
 
 #### `Enums` in pure JS
 
-# `ES5` Language syntax
+# `ES6` Language syntax
+
+#### `Promise`
 
 #### `Object.freeze`
 
