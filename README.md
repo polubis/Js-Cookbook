@@ -9,7 +9,15 @@
 
 # Language core concepts
 
+#### `Reflection`
+
+#### `Callback`
+
+#### Script types and loading order
+
 #### `Event loop`
+
+#### Object descriptors
 
 #### Why extending build-in JS objects is bad idea ?
 
@@ -36,6 +44,8 @@
 #### `Host objects` vs `Native objects`
 
 #### `Coercion`
+
+#### `Memoization`
 
 #### `Annonymous` vs `Named` functions
 
@@ -119,6 +129,10 @@
 
 #### `spread syntax`
 
+#### `dynamic import`
+
+#### `modules`
+
 #### `rest syntax`
 
 #### `classes`
@@ -132,6 +146,10 @@
 #### `WeakMap`
 
 #### `Map`
+
+#### `Set`
+
+#### `WeakSet`
 
 # `ES7` Language syntax
 
@@ -183,11 +201,19 @@
 
 # Design patterns
 
+#### `MVC`
+
+#### `MVVM`
+
+#### `MVP`
+
 #### `Prototype`
 
 #### `Module`
 
 #### `Factory`
+
+#### `Dependency injection`
 
 #### `Observer`
 
