@@ -1,1 +1,139 @@
-# Js-Cookbook
+# Language core concepts
+
+#### Why extending build-in JS objects is bad idea ?
+
+#### `Prototype inheritance`
+
+#### What `transpiling` is ?
+
+#### What `hoisting` is ?
+
+#### `Currying`
+
+#### `Polyfill`
+
+#### `Event bubbling`
+
+#### What `scope` is ?
+
+#### Explain `values and `types`
+
+#### `same-origin policy` 
+
+#### How to force `strict mode` in Node
+
+#### `Host objects` vs `Native objects`
+
+#### `Coercion`
+
+#### `Annonymous` vs `Named` functions
+
+#### `Temporal Dead Zone`
+
+#### `JSONP`
+
+#### `AJAX`
+
+#### `function Person(){}; var person = Person()` vs `var person = new Person()`
+
+#### `this` keyword
+
+#### `deep-freeze` - how this can be implemented ?
+
+#### `pass by reference` vs `pass by value`
+
+#### How compare 2 objects ?
+
+#### Drawback of creating true `private` in js
+
+#### `undefined` vs `non-defined`
+
+#### `document load` vs `DOMContentLoaded` event
+
+#### `Higher order function`
+
+#### `function foo() {}` vs `var foo = function() {}`
+
+#### `IIFEs`
+
+#### `AMD`
+
+#### `CommonJS`
+
+#### `Closures`
+
+#### `Enums` in pure JS
+
+# `ES5` Language syntax
+
+#### `Object.freeze`
+
+#### `call()`
+
+#### `apply()`
+
+#### `bind()`
+
+#### `function constructors`
+
+#### `==` vs `===`
+
+#### `load event` - purpose, other solutions 
+
+#### `strict mode` vs `non strict`
+
+#### `typeof` operator
+
+#### `instanceof` operator
+
+#### `new` keyword
+
+#### `var` keyword
+
+#### `undefined` value
+
+#### `null` value
+
+#### `NaN` value
+
+#### `throw Error('msg')` vs `throw new Error('msg')`
+
+# `ES6` Language syntax
+
+#### `let`
+
+#### `const`
+
+#### `spread syntax`
+
+#### `rest syntax`
+
+#### `classes`
+
+#### `arrow functions`
+
+#### `symbols`
+
+#### `generators`
+
+#### `WeakMap`
+
+#### `Map`
+
+# `ES7` Language syntax
+
+#### `async/await`
+
+# Design patterns
+
+#### `Prototype`
+
+#### `Module`
+
+#### `Factory`
+
+#### `Observer`
+
+#### `Mediator`
+
+#### `Partial application`
