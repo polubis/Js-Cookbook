@@ -73,7 +73,7 @@
 
 #### `Enums` in pure JS
 
-# `ES6` Language syntax
+# `ES5` Language syntax
 
 #### `Promise`
 
