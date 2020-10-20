@@ -194,3 +194,9 @@
 #### `Partial application`
 
 #### `Decorator`
+
+#### `Proxy`
+
+#### `Facade`
+
+#### `Flyweight`
