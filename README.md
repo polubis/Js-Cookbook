@@ -131,7 +131,7 @@ loadScript("/article/script-async-defer/small.js");
 
 JavaScript `concurrency model` is based on `event loop` algorythm. 
 
-https://miro.medium.com/max/2000/1*m5M4NV495oH4ADvpnItnVQ.png
+![Event loop](https://miro.medium.com/max/2000/1*m5M4NV495oH4ADvpnItnVQ.png)
 
 #### Object descriptors
 
