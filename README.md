@@ -129,7 +129,7 @@ loadScript("/article/script-async-defer/small.js");
 
 #### `Event loop`
 
-JavaScript `concurrency model` is based on `event loop` algorythm. 
+JavaScript `concurrency model` is based on `event loop` algorythm. This modell never blocks if all `hard` calculations are performed via `callbacks` as requests or `web workers` usage and if don't use legacay `synchronous` API's` like `alert()`.
 
 ![Event loop](https://miro.medium.com/max/2000/1*m5M4NV495oH4ADvpnItnVQ.png)
 
