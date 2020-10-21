@@ -147,6 +147,8 @@ Metadata added to an object.
 
 `property data descriptors` - object assigned to an object’s property. Dictates how the JavaScript engine will behave regarding that property.
 
+They can be used to dictate how to work with objects.
+
 - `value` - the actual value we want the property to be (defaults undefined)
 - `enumerable` - whether the property should show up in operations that enumerate over an object’s keys, such as `for...in` loops or `Object.keys()` (defaults false)
 - `configurable` - indicates if we can later change the descriptor settings or be able to delete the property off the object (defaults false)
