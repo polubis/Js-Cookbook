@@ -19,6 +19,8 @@ Allows to access things like private fields which can cause unexpected side effe
 
 Key mechanism to allow an application or framework to work with code that might not have even been written yet.
 
+In JS `Reflect` object can't be created with `new` keyword.
+
 ```js
 // Reflection tools before ES6
 Object.getOwnPropertyDescriptor(), Object.keys(), Object.isArray(), ...etc
