@@ -129,6 +129,10 @@ loadScript("/article/script-async-defer/small.js");
 
 #### `Event loop`
 
+JavaScript `concurrency model` is based on `event loop` algorythm. 
+
+https://miro.medium.com/max/2000/1*m5M4NV495oH4ADvpnItnVQ.png
+
 #### Object descriptors
 
 #### Why extending build-in JS objects is bad idea ?
