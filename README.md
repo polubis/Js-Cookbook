@@ -84,15 +84,47 @@ In this scenario browser renders full html, starts download / execute script.
 
 `defer` attribute allows to load script `in the background` and after full DOM render - execute script. Much faster becauase we rendering HTML and downloading script in the same time.
 
+- document order - as they go in the document,
 - never block the page,
 - always execute when the DOM is ready (but before DOMContentLoaded event),
 - wait for other scripts to being downloaded - keeps their relative order before execution
 ```js
-<script defer src="https://javascript.info/article/script-async-defer/long.js"></script>
+// Download starts parallel to improve performance - but small.js must wait for long.js to be downloaded before exection.
+<script defer src="https://javascript.info/article/script-async-defer/long.js"></script> 
 <script defer src="https://javascript.info/article/script-async-defer/small.js"></script>
 ```
 
+`async` behaves like `defer` but script is independent. 
 
+- browser doesn't block on `async` like `defer`,
+- other scripts don't wait and `async` scripts don't wait for them,
+- `DOmContentLoaded` and `async` scripts don't wait for each other
+   - `DOMcontentLoaded` may happen before `async` script (if finishes loading after the page is complete),
+   - or after `async` script (if script was small or was in HTTP-cache)
+- loads `in the background` and runs when ready
+
+`dynamic scripts` create via JavaScript. Starts loading as soon as it’s appended to the document. Behaves as `async` by default.
+
+```js
+let script = document.createElement('script');
+script.src = "/article/script-async-defer/long.js";
+document.body.append(script); // (*)
+```
+
+Behaviour can be changed via JavaScript. `async` set as false tells - "scripts will behave just like `defer`".
+
+```js
+function loadScript(src) {
+  let script = document.createElement('script');
+  script.src = src;
+  script.async = false;
+  document.body.append(script);
+}
+
+// long.js runs first because of async=false
+loadScript("/article/script-async-defer/long.js");
+loadScript("/article/script-async-defer/small.js");
+```
 
 #### `Event loop`
 
