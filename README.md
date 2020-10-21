@@ -96,6 +96,7 @@ In this scenario browser renders full html, starts download / execute script.
 
 `async` behaves like `defer` but script is independent. 
 
+- load first order,
 - browser doesn't block on `async` like `defer`,
 - other scripts don't wait and `async` scripts don't wait for them,
 - `DOmContentLoaded` and `async` scripts don't wait for each other
