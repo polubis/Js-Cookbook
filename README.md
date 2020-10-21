@@ -21,7 +21,7 @@
 
     In JS `Reflect` object can't be created with `new` keyword.
 
-    ```js
+ ```js
     // Reflection tools before ES6
     Object.getOwnPropertyDescriptor(), Object.keys(), Object.isArray(), ...etc
     // Reflection tools after ES6
