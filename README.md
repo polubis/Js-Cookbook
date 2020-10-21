@@ -129,7 +129,14 @@ loadScript("/article/script-async-defer/small.js");
 
 #### `Event loop`
 
-JavaScript `concurrency model` is based on `event loop` algorythm. This modell never blocks if all `hard` calculations are performed via `callbacks` as requests or `web workers` usage and if don't use legacay `synchronous` API's` like `alert()`.
+JavaScript `concurrency model` is based on `event loop` algorythm. This model never blocks if all `hard` calculations are performed via `callbacks` as requests or `web workers` usage and if don't use legacay `synchronous` API's like `alert()`.
+
+- `Heap` - manages memory allocation
+- `Stack` - handles functions execution order
+   - if a function is marked `asynchronous` it will go to the `callback queue`
+- `Callback queue` - runs callback only if stack is empty
+
+> `setTimeout()` using setTimeout with a delay of `0` means calling when the stack is empty.
 
 ![Event loop](https://miro.medium.com/max/2000/1*m5M4NV495oH4ADvpnItnVQ.png)
 
