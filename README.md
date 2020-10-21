@@ -145,7 +145,7 @@ JavaScript `concurrency model` is based on `event loop` algorythm. This model ne
 
 Metadata added to an object.
 
-`property data descriptors`.
+`property data descriptors` - object assigned to an object’s property. Dictates how the JavaScript engine will behave regarding that property.
 
 - `value` - the actual value we want the property to be (defaults undefined)
 - `enumerable` - whether the property should show up in operations that enumerate over an object’s keys, such as `for...in` loops or `Object.keys()` (defaults false)
@@ -153,12 +153,86 @@ Metadata added to an object.
 - `writable` - tells if the value of the property can be changed (defaults false)
 
 ```js
+const obj = {};
+obj.a = 1;
+Object.getOwnPropertyDescriptor(obj, 'a');
+// { value: 1,
+//   writable: true,
+//   enumerable: true,
+//   configurable: true }
 
+Object.defineProperty(
+    obj,              // Object we're defining property on
+    'a',                 // Property name
+    {                     // Property descriptor
+        value: 1,
+        enumerable: true,
+        writable: false // by default
+        configurable: false // by default
+    }
+);
+
+Object.defineProperties(
+    obj,                    
+    {                             
+        a: {
+            value: 1,
+            writable: false,
+            enumerable: true,
+            configurable: false
+        },
+        b: {
+            value: 2,
+            writable: false,
+            enumerable: true,
+            configurable: false
+        }
+    }
+);
 ```
 
-`property accessor descriptors`.
+`property accessor descriptors` - object assigned to object's property. Hiddes implementation details, allows to perform additional operations. For accessor properties, there is no value or writable, but instead there are get and set functions. 
 
+Getters/setters can be used as wrappers over `real` property values to gain more control over operations with them.
 
+- `get` – a function without arguments, that works when a property is read
+- `set` – a function with one argument, that is called when the property is set
+- `enumerable` – same as for data properties
+- `configurable` – same as for data properties
+
+```js
+let user = {
+  name: "John",
+  surname: "Smith"
+};
+
+Object.defineProperty(user, 'fullName', {
+  get() {
+    return `${this.name} ${this.surname}`;
+  },
+
+  set(value) {
+    [this.name, this.surname] = value.split(" ");
+  }
+});
+
+alert(user.fullName); // John Smith
+
+for(let key in user) alert(key); // name, surname
+```
+
+If we try to supply both get and value in the same descriptor, there will be an error.
+
+```js
+// Error: Invalid property descriptor.
+Object.defineProperty({}, 'prop', {
+  get() {
+    return 1
+  },
+
+  value: 2
+});
+```
 
 #### Why extending build-in JS objects is bad idea ?
 
