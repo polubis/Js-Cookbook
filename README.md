@@ -9,42 +9,46 @@
 
 # Language core concepts
 
-#### `Reflection`
+<details>
+  <summary>#### `Reflection`</summary>
+  
+    Language's ability to inspect and dynamically call classes, methods, attributes, etc. at runtime. If there is an option to do something without reflection - do it without reflection.
 
-Language's ability to inspect and dynamically call classes, methods, attributes, etc. at runtime. If there is an option to do something without reflection - do it without reflection.
+    Slower than normal code execution and in some languages requires runtime permissions.
 
-Slower than normal code execution and in some languages requires runtime permissions.
+    Allows to access things like private fields which can cause unexpected side effects.
 
-Allows to access things like private fields which can cause unexpected side effects.
+    Key mechanism to allow an application or framework to work with code that might not have even been written yet.
 
-Key mechanism to allow an application or framework to work with code that might not have even been written yet.
+    In JS `Reflect` object can't be created with `new` keyword.
 
-In JS `Reflect` object can't be created with `new` keyword.
+    ```js
+    // Reflection tools before ES6
+    Object.getOwnPropertyDescriptor(), Object.keys(), Object.isArray(), ...etc
+    // Reflection tools after ES6
+    class Person {
+        constructor(firstName, lastName) {
+            this.firstName = firstName;
+            this.lastName = lastName;
+        }
+        get fullName() {
+            return `${this.firstName} ${this.lastName}`;
+        }
+    };
 
-```js
-// Reflection tools before ES6
-Object.getOwnPropertyDescriptor(), Object.keys(), Object.isArray(), ...etc
-// Reflection tools after ES6
-class Person {
-    constructor(firstName, lastName) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-    }
-    get fullName() {
-        return `${this.firstName} ${this.lastName}`;
-    }
-};
+    let args = ['John', 'Doe'];
 
-let args = ['John', 'Doe'];
+    let john = Reflect.construct(
+        Person,
+        args
+    );
 
-let john = Reflect.construct(
-    Person,
-    args
-);
+    console.log(john instanceof Person);
+    console.log(john.fullName); // John Doe
+    ```
+</details>
 
-console.log(john instanceof Person);
-console.log(john.fullName); // John Doe
-```
+
 
 #### `Callback`
 
