@@ -46,9 +46,17 @@ console.log(john instanceof Person);
 console.log(john.fullName); // John Doe
 ```
 
-
-
 #### `Callback`
+
+Function which is passed as argument to other function and executed inside or returned.
+
+```js
+const fibb = (calc) => {
+    for(let i = 0; i < 10; i++) {
+        calc();
+    }
+}
+```
 
 #### Script types and loading order
 
