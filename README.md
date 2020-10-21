@@ -141,7 +141,7 @@ JavaScript `concurrency model` is based on `event loop` algorythm. This model ne
 
 ![Event loop](https://miro.medium.com/max/2000/1*m5M4NV495oH4ADvpnItnVQ.png)
 
-#### Object descriptors
+#### `Object descriptors`
 
 Metadata added to an object.
 
