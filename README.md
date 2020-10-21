@@ -9,8 +9,7 @@
 
 # Language core concepts
 
-<details>
-  <summary>#### `Reflection`</summary>
+#### `Reflection`
   
     Language's ability to inspect and dynamically call classes, methods, attributes, etc. at runtime. If there is an option to do something without reflection - do it without reflection.
 
@@ -45,10 +44,7 @@
 
     console.log(john instanceof Person);
     console.log(john.fullName); // John Doe
-    ```
-</details>
-
-
+  ```
 
 #### `Callback`
 
