@@ -11,6 +11,39 @@
 
 #### `Reflection`
 
+Language's ability to inspect and dynamically call classes, methods, attributes, etc. at runtime. If there is an option to do something without reflection - do it without reflection.
+
+Reflection is slower than normal code execution and in some languages requires runtime permissions.
+
+Reflection allows to access things like private fields which can cause unexpected side effects.
+
+```js
+// Reflection tools before ES6
+Object.getOwnPropertyDescriptor(), Object.keys(), Object.isArray(), ...etc
+// Reflection tools after ES6
+class Person {
+    constructor(firstName, lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+    get fullName() {
+        return `${this.firstName} ${this.lastName}`;
+    }
+};
+
+let args = ['John', 'Doe'];
+
+let john = Reflect.construct(
+    Person,
+    args
+);
+
+console.log(john instanceof Person);
+console.log(john.fullName); // John Doe
+```
+
+
+
 #### `Callback`
 
 #### Script types and loading order
