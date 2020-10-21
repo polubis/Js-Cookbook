@@ -58,7 +58,41 @@ const fibb = (calc) => {
 }
 ```
 
-#### Script types and loading order
+#### `<Script>`
+
+Browser process HTML markup from `<head>` to `<body>`. So if we have `<script>` tag between HTML markup - rendering process will be blocked until script is downloaded and executed.
+
+```html
+<p>...content before script...</p>
+
+<script src="https://javascript.info/article/script-async-defer/long.js?speed=1"></script>
+
+<!-- This isn't visible until the script loads -->
+<p>...content after script...</p>
+```
+
+Workaround for that is - adding script at bottom - whole page will be rendered and after that script will be loaded. 
+In this scenario browser renders full html, starts download / execute script.
+
+```html
+<body>
+  ...all content is above the script...
+
+  <script src="https://javascript.info/article/script-async-defer/long.js?speed=1"></script>
+</body>
+```
+
+`defer` attribute allows to load script `in the background` and after full DOM render - execute script. Much faster becauase we rendering HTML and downloading script in the same time.
+
+- never block the page,
+- always execute when the DOM is ready (but before DOMContentLoaded event),
+- wait for other scripts to being downloaded - keeps their relative order before execution
+```js
+<script defer src="https://javascript.info/article/script-async-defer/long.js"></script>
+<script defer src="https://javascript.info/article/script-async-defer/small.js"></script>
+```
+
+
 
 #### `Event loop`
 
