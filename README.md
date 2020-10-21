@@ -143,6 +143,23 @@ JavaScript `concurrency model` is based on `event loop` algorythm. This model ne
 
 #### Object descriptors
 
+Metadata added to an object.
+
+`property data descriptors`.
+
+- `value` - the actual value we want the property to be (defaults undefined)
+- `enumerable` - whether the property should show up in operations that enumerate over an object’s keys, such as `for...in` loops or `Object.keys()` (defaults false)
+- `configurable` - indicates if we can later change the descriptor settings or be able to delete the property off the object (defaults false)
+- `writable` - tells if the value of the property can be changed (defaults false)
+
+```js
+
+```
+
+`property accessor descriptors`.
+
+
+
 #### Why extending build-in JS objects is bad idea ?
 
 #### `Prototype inheritance`
