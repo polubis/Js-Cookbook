@@ -244,8 +244,19 @@ Object.defineProperty({}, 'prop', {
 
 #### `Hoisting`
 
-Declarations of variables are moved into memory during the compile phase. This allows to use variable or function before declaration in code.
-Hoisting doesn't move declarations at the top of file - just adds them in memory.
+Mechanism where variables and function declarations are moved to the top of their scope(memory) before code execution. 
+JavaScript Engine first declaring variables in memory and later initialises them.
+
+![Hoisting](https://cdn.scotch.io/8976/bNTL1QI3RFebh7C1JPYC_variable%20hoisting.png)
+
+> Undeclared variable is assigned the value undefined at execution and is also of type undefined.
+```js
+console.log(typeof variable); // Output: undefined
+```
+> ReferenceError is thrown when trying to access a previously undeclared variable.
+```js
+console.log(variable); // Output: ReferenceError: variable is not defined
+```
 
 
 #### `Currying`
