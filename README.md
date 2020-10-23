@@ -247,6 +247,8 @@ Object.defineProperty({}, 'prop', {
 Mechanism where variables and function declarations are moved to the top of their scope(memory) before code execution. 
 JavaScript Engine first declaring variables in memory and later initialises them.
 
+> To avoid hoisting problems always - `declare and initialise our variable before use`.
+
 ![Hoisting](https://cdn.scotch.io/8976/bNTL1QI3RFebh7C1JPYC_variable%20hoisting.png)
 
 > Undeclared variable is assigned the value undefined at execution and is also of type undefined.
@@ -256,6 +258,67 @@ console.log(typeof variable); // Output: undefined
 > ReferenceError is thrown when trying to access a previously undeclared variable.
 ```js
 console.log(variable); // Output: ReferenceError: variable is not defined
+```
+
+```js
+var a = 10; 
+// is transformed to:
+var a;
+a = 10;
+```
+
+```js
+console.log(hoist); // Output: undefined
+var hoist = 'The variable has been hoisted.';
+```
+
+```js
+var hoist;
+console.log(hoist); // Output: undefined
+hoist = 'The variable has been hoisted.';
+```
+
+```js
+'use strict';
+console.log(hoist); // Output: ReferenceError: hoist is not defined
+hoist = 'Hoisted';
+```
+
+```js
+console.log(hoist); // Output: ReferenceError: hoist is not defined ...
+let hoist = 'The variable has been hoisted.';
+```
+
+```js
+let hoist;
+console.log(hoist); // Output: undefined
+hoist = 'Hoisted'
+```
+
+```js
+const PI = 3.142;
+PI = 22/7; // Let's reassign the value of PI
+console.log(PI); // Output: TypeError: Assignment to constant variable.
+```
+
+```js
+console.log(hoist); // Output: ReferenceError: hoist is not defined
+const hoist = 'The variable has been hoisted.';
+```
+
+```js
+function getCircumference(radius) {
+  console.log(circumference)
+  circumference = PI*radius*2;
+  const PI = 22/7;
+}
+getCircumference(2) // ReferenceError: circumference is not defined
+```
+
+```js
+const PI;
+console.log(PI); // Ouput: SyntaxError: Missing initializer in const declaration
+PI=3.142;
 ```
 
 
