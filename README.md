@@ -451,7 +451,7 @@ console.log(hoist); // Output: ReferenceError: hoist is not defined
 const hoist = 'The variable has been hoisted.';
 ```
 
-```js`
+```js
 function getCircumference(radius) {
   console.log(circumference)
   circumference = PI*radius*2;
