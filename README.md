@@ -9,6 +9,27 @@
 
 # Language core concepts
 
+#### `Function declarations`
+
+Should be used in global scope.
+
+```js
+function hoisted() {
+  console.log('This function has been hoisted.');
+};
+```
+
+#### `Function expressions`
+
+FE avoid polluting the global scope. Name can be avoided.
+Annonymous functions are invoked and forgotten immediately.
+Limits where the function is available, keeps your global scope light.
+
+```js
+var expression = function() {
+  console.log('Will this work?');
+};
+```
 
 #### `Callback`
 
