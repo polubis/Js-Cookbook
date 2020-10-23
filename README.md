@@ -242,7 +242,11 @@ Object.defineProperty({}, 'prop', {
 
 #### What `transpiling` is ?
 
-#### What `hoisting` is ?
+#### `Hoisting`
+
+Declarations of variables are moved into memory during the compile phase. This allows to use variable or function before declaration in code.
+Hoisting doesn't move declarations at the top of file - just adds them in memory.
+
 
 #### `Currying`
 
