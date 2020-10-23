@@ -265,6 +265,8 @@ Object.defineProperty({}, 'prop', {
 
 #### `Hoisting`
 
+https://www.digitalocean.com/community/tutorials/understanding-hoisting-in-javascript#:~:text=Hoisting%20is%20a%20JavaScript%20mechanism,scope%20is%20global%20or%20local.
+
 Mechanism where variables and function declarations are moved to the top of their scope(memory) before code execution. 
 JavaScript Engine first declaring variables in memory and later initialises them.
 
