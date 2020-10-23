@@ -342,6 +342,108 @@ console.log(PI); // Ouput: SyntaxError: Missing initializer in const declaration
 PI=3.142;
 ```
 
+```js
+hoisted(); // Output: "This function has been hoisted."
+function hoisted() {
+  console.log('This function has been hoisted.');
+};
+```
+
+```js
+expression(); //Output: "TypeError: expression is not a function
+var expression = function() {
+  console.log('Will this work?');
+};
+```
+
+Function declarations are hoisted over variable declarations but not over variable assignments.
+
+> Variable assignment over function declaration
+```js
+var double = 22;
+function double(num) {
+  return (num*2);
+}
+console.log(typeof double); // Output: number
+```
+
+> Function declarations over variable declarations
+```js
+var double;
+function double(num) {
+  return (num*2);
+}
+console.log(typeof double); // Output: function
+```
+
+> Class `declarations` are hoisted. However, they remain uninitialised until evaluation.
+> Declare a class before you can use it.
+
+```js
+var Frodo = new Hobbit();
+Frodo.height = 100;
+Frodo.weight = 300;
+console.log(Frodo); // Output: ReferenceError: Hobbit is not defined
+class Hobbit {
+  constructor(height, weight) {
+    this.height = height;
+    this.weight = weight;
+  }
+}
+```
+
+```js
+class Hobbit {
+  constructor(height, weight) {
+    this.height = height;
+    this.weight = weight;
+  }
+}
+var Frodo = new Hobbit();
+Frodo.height = 100;
+Frodo.weight = 300;
+console.log(Frodo); // Output: { height: 100, weight: 300 }
+```
+
+> Class `expressions` are not hoisted.
+
+```js
+var Square = new Polygon();
+Square.height = 10;
+Square.width = 10;
+console.log(Square); // Output: TypeError: Polygon is not a constructor
+var Polygon = class {
+  constructor(height, width) {
+    this.height = height;
+    this.width = width;
+  }
+};
+```
+
+```js
+var Square = new Polygon();
+Square.height = 10;
+Square.width = 10;
+console.log(Square); // Output: TypeError: Polygon is not a constructor
+var Polygon = class Polygon {
+  constructor(height, width) {
+    this.height = height;
+    this.width = width;
+  }
+};
+```
+
+```js
+var Polygon = class Polygon {
+  constructor(height, width) {
+    this.height = height;
+    this.width = width;
+  }
+};
+Square.height = 10;
+Square.width = 10;
+console.log(Square);
+```
 
 #### `Currying`
 
