@@ -449,6 +449,14 @@ console.log(Square);
 
 #### `Currying`
 
+Functional programming technique -is a transformation of functions that translates a function from callable as `f(a, b, c)` into callable as `f(a)(b)(c)`.
+Increases code composition - we can create function with defined variables which will be available via `closure` and use them later.
+
+```js
+
+```
+
+
 #### `Polyfill`
 
 #### `Event bubbling`
