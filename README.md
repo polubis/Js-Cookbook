@@ -800,6 +800,20 @@ new Date(0) + 0          // 'Thu Jan 01 1970 02:00:00(EET)0'
 
 #### `Memoization`
 
+Memoization is an optimization technique that speeds up applications by storing the results of expensive function calls and returning the cached result when the same inputs occur again.
+
+```js
+const results = {};
+
+const fibb = (n) => {
+  if (results.hasOwnProperty(n)) {
+    return results[n];
+  }
+  
+  // some expensive calculations
+}
+```
+
 #### `Annonymous` vs `Named` functions
 
 #### `Temporal Dead Zone`
@@ -807,8 +821,6 @@ new Date(0) + 0          // 'Thu Jan 01 1970 02:00:00(EET)0'
 #### `JSONP`
 
 #### `AJAX`
-
-#### `function Person(){}; var person = Person()` vs `var person = new Person()`
 
 #### `this` keyword
 
@@ -826,7 +838,21 @@ new Date(0) + 0          // 'Thu Jan 01 1970 02:00:00(EET)0'
 
 #### `Higher order function`
 
-#### `function foo() {}` vs `var foo = function() {}`
+Functions that operate on other functions, either by taking them as arguments or by returning them, are called higher-order functions.
+
+```js
+function filter(array, test) {
+  let passed = [];
+  for (let element of array) {
+    if (test(element)) {
+      passed.push(element);
+    }
+  }
+  return passed;
+}
+console.log(filter(SCRIPTS, script => script.living));
+// → [{name: "Adlam", …}, …]
+```
 
 #### `IIFEs`
 
