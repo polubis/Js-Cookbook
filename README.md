@@ -532,7 +532,50 @@ const getProductURL = productId => {
 Piece of code (usually JavaScript on the Web) used to provide modern functionality on older browsers that do not natively support it.
 For example, a polyfill could be used to mimic the functionality of an HTML Canvas element on Microsoft Internet Explorer 7 using a Silverlight plugin or mimic support for CSS rem units, or text-shadow, or whatever you want.
 
+#### `Event propagation phases`
+
+The standard DOM Events describes 3 phases of event propagation:
+ - `Capturing phase` – the event goes down to the element
+ - `Target phase` – the event reached the target element
+ - `Bubbling phase` – the event bubbles up from the element
+ 
+ ![Event propagation phases](https://www.w3.org/TR/2003/WD-DOM-Level-3-Events-20030331/images/eventflow.png)
+ 
+#### `Event capturing`
+
+```js
+elem.addEventListener(..., {capture: true})
+// or, just "true" is an alias to {capture: true} // means handler is set on the capture phase
+elem.addEventListener(..., true)
+```
+ 
 #### `Event bubbling`
+
+When an event happens on an element, it first runs the handlers on it, then on its parent, then all the way up on other ancestors.
+
+Almost all `event bubble` expect `focus` event and some others.
+
+Element that `caused` event is called `target`.
+
+Element which have event assigned to is called `currentTarget` = `this`.
+
+A bubbling event goes from the target element straight up. Normaly upwards `html` and then to `document` object.
+
+To stop bubbling use `event.stopPropagation()`.
+
+To stop bubbling in all handlers use `event.stopImmedietePropagation()`.
+
+`event.eventPhase` – the current phase `(capturing=1, target=2, bubbling=3)`.
+
+> Use only if needed
+
+```html
+<form onclick="alert('form')">FORM // called always
+  <div onclick="alert('div')">DIV // called on div / p click
+    <p onclick="alert('p')">P</p> // called on p click
+  </div>
+</form>
+```
 
 #### What `scope` is ?
 
