@@ -577,6 +577,79 @@ To stop bubbling in all handlers use `event.stopImmedietePropagation()`.
 </form>
 ```
 
+#### `Event delegation`
+
+`DOM pattern` which can be implemented by following algorythm:
+
+ - Put a single handler on the container.
+ - In the handler – check the source element event.target.
+ - If the event happened inside an element that interests us, then handle the event.
+ 
+```html
+<table>
+  <tr>
+    <th colspan="3"><em>Bagua</em> Chart: Direction, Element, Color, Meaning</th>
+  </tr>
+  <tr>
+    <td class="nw"><strong>Northwest</strong><br>Metal<br>Silver<br>Elders</td>
+    <td class="n">...</td>
+    <td class="ne">...</td>
+  </tr>
+  <tr>...2 more lines of this kind...</tr>
+  <tr>...2 more lines of this kind...</tr>
+</table>
+```
+```js
+table.onclick = function(event) {
+  let td = event.target.closest('td'); // Gets closest element which match selector. 
+  if (!td) return; // If event.target is not inside any <td>, then the call returns immediately, as there’s nothing to do.
+  if (!table.contains(td)) return; // In case of nested tables, event.target may be a <td>, but lying outside of the current table. So we check if that’s actually our table’s  // <td>.
+  highlight(td);
+};
+ ```
+
+With data attributes usage
+
+```html
+<div id="menu">
+  <button data-action="save">Save</button>
+  <button data-action="load">Load</button>
+  <button data-action="search">Search</button>
+</div>
+```
+
+```js
+<script>
+  class Menu {
+    constructor(elem) {
+      this._elem = elem;
+      elem.onclick = this.onClick.bind(this); // (*)
+    }
+
+    save() {
+      alert('saving');
+    }
+
+    load() {
+      alert('loading');
+    }
+
+    search() {
+      alert('searching');
+    }
+
+    onClick(event) {
+      let action = event.target.dataset.action;
+      if (action) {
+        this[action]();
+      }
+    };
+  }
+
+  new Menu(menu);
+</script>
+```
+
 #### What `scope` is ?
 
 #### Explain `values and `types`
