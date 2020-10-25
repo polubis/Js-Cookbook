@@ -452,7 +452,13 @@ console.log(Square);
 Functional programming technique - is a transformation of functions that translates a function from callable as `f(a, b, c)` into callable as `f(a)(b)(c)`.
 Increases code composition - we can create function with defined variables which will be available via `closure` and use them later.
 
-> `Currying` is based on `Partial Application`.
+This technique requires `unary functions` - functions which takes only one argument.
+`unary functions` can be also called `1-ary` - `ary` is based of `arity` term which describes how many arguments function takes.
+
+
+> Curried functions works like `iterator`
+> Can bo used to increase composition
+> Great for memoization
 
 ```js
 const req = v => !!v;
@@ -488,6 +494,34 @@ console.log(
 ); // 42
 ```
 
+#### `Partial application`
+
+Technique of fixing a number of arguments to a function, producing another function of smaller arguments.
+Partial application produces functions of arbitrary number of arguments. The transformed function is different from the original — it needs less arguments (have smaller `arity`).
+
+> Reduces code duplication
+> Increases code composition
+
+```js
+const partial = (fn, ...argsToApply) => {
+  return (...restArgsToApply) => {
+    return fn(...argsToApply, ...restArgsToApply)
+  }
+}
+const getApiURL = (apiHostname, resourceName, resourceId) => {
+  return `https://${apiHostname}/api/${resourceName}/${resourceId}`
+}
+const getResourceURL = partial(getApiURL, 'localhost:3000')
+const getUserURL = userId => {
+  return getResourceURL('users', userId)
+}
+const getOrderURL = orderId => {
+  return getResourceURL('orders', orderId)
+}
+const getProductURL = productId => {
+  return getResourceURL('products', productId)
+}
+```
 
 #### `Polyfill`
 
@@ -724,8 +758,6 @@ PI=3.142;
 #### `Observer`
 
 #### `Mediator`
-
-#### `Partial application`
 
 #### `Decorator`
 
