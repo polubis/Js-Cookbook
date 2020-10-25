@@ -449,11 +449,43 @@ console.log(Square);
 
 #### `Currying`
 
-Functional programming technique -is a transformation of functions that translates a function from callable as `f(a, b, c)` into callable as `f(a)(b)(c)`.
+Functional programming technique - is a transformation of functions that translates a function from callable as `f(a, b, c)` into callable as `f(a)(b)(c)`.
 Increases code composition - we can create function with defined variables which will be available via `closure` and use them later.
 
-```js
+> `Currying` is based on `Partial Application`.
 
+```js
+const req = v => !!v;
+const min = (length) => v => v.length < length;
+const max = (length) => v => v.length > length;
+const makeValidatorsRunner = (...fns) => (value) => {
+  return fns.reduce((acc, fn) => {
+    return {
+      ...acc,
+      [idx]: fn(value)
+    }
+ }, {})    
+};
+const runLoginValidators = makeValidatorsRunner(req, min(2), max(25)); // remembers validators for later usage
+const runRegisterValidators = makeValidatorsRunner(req, min(4), max(50)); // remembers validators for later usage
+``` 
+
+Own `curry` function.
+
+```js
+function curry(f) {
+  return function currify() {
+    const args = Array.prototype.slice.call(arguments);
+    return args.length >= f.length ? // f.length - tells how many args function needs, args.length - how many arguments were passed to function
+      f.apply(null, args) :
+      currify.bind(null, ...args)
+  }
+}
+const add = (a, b, c, d) => a + b + c + d;
+const curriedAdd = curry(add);
+console.log(
+  curriedAdd(4)(2)(16)(20)
+); // 42
 ```
 
 
