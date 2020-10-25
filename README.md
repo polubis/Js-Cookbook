@@ -608,7 +608,7 @@ table.onclick = function(event) {
 };
  ```
 
-With data attributes usage
+With data attributes usage:
 
 ```html
 <div id="menu">
@@ -650,6 +650,17 @@ With data attributes usage
 </script>
 ```
 
+Benefits:
+
+- Simplifies initialization and saves memory: no need to add many handlers.
+- Less code: when adding or removing elements, no need to add/remove handlers.
+- DOM modifications: we can mass add/remove elements with innerHTML and the like.
+
+Limitations:
+
+- First, the event must be bubbling. Some events do not bubble. Also, low-level handlers should not use event.stopPropagation().
+- Second, the delegation may add CPU load, because the container-level handler reacts on events in any place of the container, no matter whether they interest us or not. But usually the load is negligible, so we don’t take it into account.
+
 #### What `scope` is ?
 
 #### Explain `values and `types`
@@ -660,7 +671,86 @@ With data attributes usage
 
 #### `Host objects` vs `Native objects`
 
+#### `Primitives`
+
+`number`, `string`, `boolean`, `null`, `undefined`, `Symbol (added in ES6)`.
+
 #### `Coercion`
+
+https://dorey.github.io/JavaScript-Equality-Table/
+
+Type coercion is the process of converting value from one type to another (such as string to number, object to boolean, and so on). Any type, be it primitive or an object, is a valid subject for type coercion.
+
+> One operator that does not trigger implicit type coercion is ===.
+
+> `Implicit coercion` is double edge sword - less code but can be buggy.
+
+```js
+String(123) // explicit, type casting
+123 + ''    // implicit
+```
+There are tree types of `conversion` to: `string`, `boolean`, `number`.
+
+##### String conversion
+
+To explicitly convert values to a string apply the `String()` function. Implicit coercion is triggered by the binary `+` operator, when any operand is a `string`.
+
+```js
+String(123) // explicit
+123 + ''    // implicit
+String(123)                   // '123'
+String(-12.3)                 // '-12.3'
+String(null)                  // 'null'
+String(undefined)             // 'undefined'
+String(true)                  // 'true'
+String(false)                 // 'false'
+String(Symbol('my symbol'))   // 'Symbol(my symbol)' // Explicit type conversion only
+'' + Symbol('my symbol')      // TypeError is thrown
+```
+
+##### Boolean conversion
+
+To explicitly convert a value to a boolean apply the `Boolean()` function.
+Implicit conversion happens in logical context, or is triggered by logical operators `( || && !)`.c
+
+> Logical operators such as `||` and `&&` do boolean conversions internally, but actually return the value of original operands, even if they are not boolean.
+
+```js
+Boolean(2)          // explicit
+if (2) { ... }      // implicit due to logical context
+!!2                 // implicit due to logical operator
+2 || 'hello'        // implicit due to logical operator
+
+// returns number 123, instead of returning true
+// 'hello' and 123 are still coerced to boolean internally to calculate the expression
+let x = 'hello' && 123;   // x === 123
+
+Boolean('')           // false
+Boolean(0)            // false     
+Boolean(-0)           // false
+Boolean(NaN)          // false
+Boolean(null)         // false
+Boolean(undefined)    // false
+Boolean(false)        // false
+Boolean({})             // true
+Boolean([])             // true
+Boolean(Symbol())       // true
+!!Symbol()              // true
+Boolean(function() {})  // true
+```
+
+##### Number conversion
+
+For an explicit conversion just apply the `Number()` function. Implicit can be triggered by:
+
+ - comparison operators `(>, <, <=,>=)`
+ - bitwise operators `(| & ^ ~)`
+ - arithmetic operators `(- + * / % )` 
+ > Note, that binary `+` does not trigger numeric conversion, when any operand is a `string`.
+ - unary `+` operator
+ - loose equality operator `==`, `!=`
+ > Note that `==` does not trigger numeric conversion when both operands are `strings`.
+
 
 #### `Memoization`
 
@@ -716,7 +806,9 @@ With data attributes usage
 
 #### `function constructors`
 
-#### `==` vs `===`
+#### Loose equality `==`
+
+#### Strit equality `===`
 
 #### `load event` - purpose, other solutions 
 
