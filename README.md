@@ -696,8 +696,6 @@ There are tree types of `conversion` to: `string`, `boolean`, `number`.
 To explicitly convert values to a string apply the `String()` function. Implicit coercion is triggered by the binary `+` operator, when any operand is a `string`.
 
 ```js
-String(123) // explicit
-123 + ''    // implicit
 String(123)                   // '123'
 String(-12.3)                 // '-12.3'
 String(null)                  // 'null'
@@ -750,7 +748,55 @@ For an explicit conversion just apply the `Number()` function. Implicit can be t
  - unary `+` operator
  - loose equality operator `==`, `!=`
  > Note that `==` does not trigger numeric conversion when both operands are `strings`.
+ 
+```js
+Number(null)                   // 0
+Number(undefined)              // NaN
+Number(true)                   // 1
+Number(false)                  // 0
+Number(" 12 ")                 // 12
+Number("-12.34")               // -12.34
+Number("\n")                   // 0
+Number(" 12s ")                // NaN
+Number(123)                    // 123
+Number(Symbol('my symbol'))    // TypeError is thrown
++Symbol('123')                 // TypeError is thrown
+null == 0               // false, null is not converted to 0
+null == null            // true
+undefined == undefined  // true
+null == undefined       // true
+```
 
+> When converting a `string` to a `number`, the engine first trims leading and trailing whitespace, `\n`, `\t` characters, returning `NaN` 
+> if the trimmed string does not >represent a valid number. If `string` is empty, it returns `0`.
+
+> Symbols cannot be converted to a number.
+
+##### Objects conversion
+
+Always objects are converted to primitives and after converts to the final type.
+
+Objects are converted to primitives via the internal `[[ToPrimitive]]` method, which is responsible for both numeric and string conversion.
+
+```js
+true + false             // 1
+12 / "6"                 // 2
+"number" + 15 + 3        // 'number153'
+15 + 3 + "number"        // '18number'
+[1] > null               // true
+"foo" + + "bar"          // 'fooNaN'
+'true' == true           // false
+false == 'false'         // false
+null == ''               // false
+!!"false" == !!"true"    // true
+['x'] == 'x'             // true 
+[] + null + 1            // 'null1'
+[1,2,3] == [1,2,3]       // false
+{}+[]+{}+[1]             // '0[object Object]1'
+!+[]+[]+![]              // 'truefalse'
+new Date(0) - 0          // 0
+new Date(0) + 0          // 'Thu Jan 01 1970 02:00:00(EET)0'
+```
 
 #### `Memoization`
 
