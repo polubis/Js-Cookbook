@@ -709,7 +709,7 @@ String(Symbol('my symbol'))   // 'Symbol(my symbol)' // Explicit type conversion
 ##### Boolean conversion
 
 To explicitly convert a value to a boolean apply the `Boolean()` function.
-Implicit conversion happens in logical context, or is triggered by logical operators `( || && !)`.c
+Implicit conversion happens in logical context, or is triggered by logical operators `( || && !)`.
 
 > Logical operators such as `||` and `&&` do boolean conversions internally, but actually return the value of original operands, even if they are not boolean.
 
