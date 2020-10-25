@@ -261,7 +261,11 @@ Object.defineProperty({}, 'prop', {
 
 #### `Prototype inheritance`
 
-#### What `transpiling` is ?
+#### `Transpiling`
+
+`Source-to-source` compilation, are tools that read source code written in one programming language, and produce the equivalent code in another language. Languages you write that transpile to JavaScript are often called compile-to-JS languages, and are said to target JavaScript.
+
+`Babel` transpiler is example of `transpiling` or React-Native behaviour which takes JavaScript code and transpiles this code for `Android`, `IOS` languages.
 
 #### `Hoisting`
 
