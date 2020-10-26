@@ -755,6 +755,171 @@ require(["amdCounterModule"], amdCounterModule => {
 });
 ```
 
+AMD’s define function has another overload. It accepts a callback function, and pass a CommonJS-like require function to that callback. Inside the callback function, require can be called to dynamically load the module:
+
+```js
+// Use dynamic AMD module.
+define(require => {
+    const dynamicDependencyModule1 = require("dependencyModule1");
+    const dynamicDependencyModule2 = require("dependencyModule2");
+
+    let count = 0;
+    const increase = () => ++count;
+    const reset = () => {
+        count = 0;
+        console.log("Count is reset.");
+    };
+
+    return {
+        increase,
+        reset
+    };
+});
+```
+
+The above define function overload can also passes the require function as well as exports variable and module to its callback function. So inside the callback, CommonJS syntax code can work:
+
+```js
+// Define AMD module with CommonJS code.
+define((require, exports, module) => {
+    // CommonJS code.
+    const dependencyModule1 = require("dependencyModule1");
+    const dependencyModule2 = require("dependencyModule2");
+
+    let count = 0;
+    const increase = () => ++count;
+    const reset = () => {
+        count = 0;
+        console.log("Count is reset.");
+    };
+
+    exports.increase = increase;
+    exports.reset = reset;
+});
+
+// Use AMD module with CommonJS code.
+define(require => {
+    // CommonJS code.
+    const counterModule = require("amdCounterModule");
+    counterModule.increase();
+    counterModule.reset();
+});
+```
+
+### UMD module: Universal Module Definition, or UmdJS module
+
+https://github.com/umdjs/umd
+
+Set of tricky patterns to make your code file work in multiple environments.
+
+### ES module: ECMAScript 2015, or ES6 module
+
+After all the module mess, in 2015, JavaScript’s spec version 6 introduces one more different module syntax. This spec is called ECMAScript 2015 (ES2015), or ECMAScript 6 (ES6).
+
+```js
+// Define ES module: esCounterModule.js or esCounterModule.mjs.
+import dependencyModule1 from "./dependencyModule1.mjs";
+import dependencyModule2 from "./dependencyModule2.mjs";
+
+let count = 0;
+// Named export:
+export const increase = () => ++count;
+export const reset = () => {
+    count = 0;
+    console.log("Count is reset.");
+};
+// Or default export:
+export default {
+    increase,
+    reset
+};
+```
+
+```js
+// Use ES module.
+// Browser: <script type="module" src="esCounterModule.js"></script> or inline.
+// Server: esCounterModule.mjs
+// Import from named export.
+import { increase, reset } from "./esCounterModule.mjs";
+increase();
+reset();
+// Or import from default export:
+import esCounterModule from "./esCounterModule.mjs";
+esCounterModule.increase();
+esCounterModule.reset();
+```
+
+### ES dynamic module: ECMAScript 2020, or ES11 dynamic module
+
+```js
+// Use dynamic ES module with promise APIs, import from named export:
+import("./esCounterModule.js").then(({ increase, reset }) => {
+    increase();
+    reset();
+});
+// Or import from default export:
+import("./esCounterModule.js").then(dynamicESCounterModule => {
+    dynamicESCounterModule.increase();
+    dynamicESCounterModule.reset();
+});
+```
+
+```js
+// Use dynamic ES module with async/await.
+(async () => {
+
+    // Import from named export:
+    const { increase, reset } = await import("./esCounterModule.js");
+    increase();
+    reset();
+
+    // Or import from default export:
+    const dynamicESCounterModule = await import("./esCounterModule.js");
+    dynamicESCounterModule.increase();
+    dynamicESCounterModule.reset();
+
+})();
+```
+
+### System module: SystemJS module
+
+SystemJS is a library that can enable ES module syntax for older ES. If the current runtime, like an old browser, does not support ES6 syntax, the above code cannot work. One solution is to transpile the above module definition to a call of SystemJS library API, `System.register`:
+
+```js
+// Define SystemJS module.
+System.register(["./dependencyModule1.js", "./dependencyModule2.js"], function (exports_1, context_1) {
+    "use strict";
+    var dependencyModule1_js_1, dependencyModule2_js_1, count, increase, reset;
+    var __moduleName = context_1 && context_1.id;
+    return {
+        setters: [
+            function (dependencyModule1_js_1_1) {
+                dependencyModule1_js_1 = dependencyModule1_js_1_1;
+            },
+            function (dependencyModule2_js_1_1) {
+                dependencyModule2_js_1 = dependencyModule2_js_1_1;
+            }
+        ],
+        execute: function () {
+            dependencyModule1_js_1.default.api1();
+            dependencyModule2_js_1.default.api2();
+            count = 0;
+            // Named export:
+            exports_1("increase", increase = function () { return ++count };
+            exports_1("reset", reset = function () {
+                count = 0;
+                console.log("Count is reset.");
+            };);
+            // Or default export:
+            exports_1("default", {
+                increase,
+                reset
+            });
+        }
+    };
+});
+```
+
 ## Object descriptors
 
 Metadata added to an object.
