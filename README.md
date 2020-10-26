@@ -11,7 +11,7 @@
 
 ## Function declarations
 
-Should be *used* in global scope.
+Should be **used** in global scope.
 
 ```js
 function hoisted() {
