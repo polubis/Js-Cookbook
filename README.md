@@ -1071,7 +1071,7 @@ console.log(typeof name); // Throws an error, cannot access 'name' before initia
 let name = "Kealan";
 ```
 
-[!TDZReferenceError](https://www.freecodecamp.org/news/content/images/2020/10/image-5.png)
+![TDZReferenceError](https://www.freecodecamp.org/news/content/images/2020/10/image-5.png)
 
 ## Transpiling
 
