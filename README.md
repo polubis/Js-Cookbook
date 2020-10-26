@@ -69,7 +69,7 @@ console.log(
 
 ## Event loop
 
-*JavaScript **concurrency model** is based on **event loop** algorythm. This model never blocks if all **hard** calculations are performed via **callbacks** as requests or **web workers** usage and if don't use legacay **synchronous** API's like `alert()`.
+JavaScript **concurrency model** is based on **event loop** algorythm. This model never blocks if all **hard** calculations are performed via **callbacks** as requests or **web workers** usage and if don't use legacay **synchronous** API's like `alert()`.
 
 - **Heap** - manages memory allocation.
 - **Stack** - handles functions execution order:
