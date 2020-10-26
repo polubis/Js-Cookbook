@@ -7,8 +7,6 @@
 #### ES2019 a.k.a. ES10
 #### ES2020 a.k.a. ES11
 
-# Language core concepts
-
 ## Callback
 
 Function which is passed as argument to other function and executed inside or returned.
@@ -19,6 +17,129 @@ const fibb = (calc) => {
         calc();
     }
 }
+```
+
+## Coercion
+
+https://dorey.github.io/JavaScript-Equality-Table/
+
+Type coercion is the process of converting value from one type to another (such as string to number, object to boolean, and so on). Any type, be it primitive or an object, is a valid subject for type coercion.
+
+> One operator that does not trigger implicit type coercion is `===`.
+
+> **Implicit coercion** is double edge sword - less code but can be buggy.
+
+```js
+String(123) // explicit, type casting
+123 + ''    // implicit
+```
+There are tree types of **conversion** to: `string`, `boolean`, `number`.
+
+### String conversion
+
+To explicitly convert values to a string apply the `String()` function. Implicit coercion is triggered by the binary `+` operator, when any operand is a `string`.
+
+```js
+String(123)                   // '123'
+String(-12.3)                 // '-12.3'
+String(null)                  // 'null'
+String(undefined)             // 'undefined'
+String(true)                  // 'true'
+String(false)                 // 'false'
+String(Symbol('my symbol'))   // 'Symbol(my symbol)' // Explicit type conversion only
+'' + Symbol('my symbol')      // TypeError is thrown
+```
+
+### Boolean conversion
+
+To explicitly convert a value to a boolean apply the `Boolean()` function.
+Implicit conversion happens in logical context, or is triggered by logical operators `( || && !)`.
+
+> Logical operators such as `||` and `&&` do boolean conversions internally, but actually return the value of original operands, even if they are not boolean.
+
+```js
+Boolean(2)          // explicit
+if (2) { ... }      // implicit due to logical context
+!!2                 // implicit due to logical operator
+2 || 'hello'        // implicit due to logical operator
+
+// returns number 123, instead of returning true
+// 'hello' and 123 are still coerced to boolean internally to calculate the expression
+let x = 'hello' && 123;   // x === 123
+
+Boolean('')           // false
+Boolean(0)            // false     
+Boolean(-0)           // false
+Boolean(NaN)          // false
+Boolean(null)         // false
+Boolean(undefined)    // false
+Boolean(false)        // false
+Boolean({})             // true
+Boolean([])             // true
+Boolean(Symbol())       // true
+!!Symbol()              // true
+Boolean(function() {})  // true
+```
+
+### Number conversion
+
+For an explicit conversion just apply the `Number()` function. Implicit can be triggered by:
+
+ - comparison operators `(>, <, <=,>=)`
+ - bitwise operators `(| & ^ ~)`
+ - arithmetic operators `(- + * / % )` 
+ > Note, that binary `+` does not trigger numeric conversion, when any operand is a `string`.
+ - unary `+` operator
+ - loose equality operator `==`, `!=`
+ > Note that `==` does not trigger numeric conversion when both operands are `strings`.
+ 
+```js
+Number(null)                   // 0
+Number(undefined)              // NaN
+Number(true)                   // 1
+Number(false)                  // 0
+Number(" 12 ")                 // 12
+Number("-12.34")               // -12.34
+Number("\n")                   // 0
+Number(" 12s ")                // NaN
+Number(123)                    // 123
+Number(Symbol('my symbol'))    // TypeError is thrown
++Symbol('123')                 // TypeError is thrown
+null == 0               // false, null is not converted to 0
+null == null            // true
+undefined == undefined  // true
+null == undefined       // true
+```
+
+> When converting a `string` to a `number`, the engine first trims leading and trailing whitespace, `\n`, `\t` characters, returning `NaN` 
+> if the trimmed string does not >represent a valid number. If `string` is empty, it returns `0`.
+
+> Symbols cannot be converted to a number.
+
+### Objects conversion
+
+Always objects are converted to primitives and after converts to the final type.
+
+Objects are converted to primitives via the internal `[[ToPrimitive]]` method, which is responsible for both numeric and string conversion.
+
+```js
+true + false             // 1
+12 / "6"                 // 2
+"number" + 15 + 3        // 'number153'
+15 + 3 + "number"        // '18number'
+[1] > null               // true
+"foo" + + "bar"          // 'fooNaN'
+'true' == true           // false
+false == 'false'         // false
+null == ''               // false
+!!"false" == !!"true"    // true
+['x'] == 'x'             // true 
+[] + null + 1            // 'null1'
+[1,2,3] == [1,2,3]       // false
+{}+[]+{}+[1]             // '0[object Object]1'
+!+[]+[]+![]              // 'truefalse'
+new Date(0) - 0          // 0
+new Date(0) + 0          // 'Thu Jan 01 1970 02:00:00(EET)0'
 ```
 
 ## Currying
@@ -78,7 +199,224 @@ JavaScript **concurrency model** is based on **event loop** algorythm. This mode
 
 > `setTimeout()` using `setTimeout` with a delay of `0` means calling when the stack is empty.
 
+## Execution context
+
+The environment (value of `this`, **variables**, **objects**, and **functions** JavaScript code has access to at a particular time) in which the JavaScript code is executed.
+
+- **Global execution context**
+
+This is the default execution context in which JS code start its execution when the file first loads in the browser. There is only one **global execution context**.
+
+- **Functional execution context**
+
+Created after function call. Have access to **global execution context** but not **vice versa`**.
+
+- **Eval execution context**
+
+Context inside `eval` function.
+
+### Execution context stack
+
+Data structure (last in first out data structure) to store all the execution stacks created during the life cycle of the script.
+
+```js
+var a = 10;
+function functionA() {
+	console.log("Start function A");
+	function functionB(){
+		console.log("In function B");
+	}
+	functionB();
+}
+functionA();
+console.log("GlobalContext");
+```
+
+![Execution context stack](https://miro.medium.com/max/700/1*bDebsOuhRx9NMyvLHY2zxA.gif)
+
+### Execution context creation
+
+- **Creation phase** is the phase in which the JS engine has called a function but its execution has not started. In the creation phase, JS engine is in the compilation phase and it just scans over the function code to compile the code, it doesn’t execute any code.
+  - Creates the **Activation object** or the Variable object: Activation object is a special object in JS which contain all the variables, function arguments and inner functions   declaration information. As activation object is a special object it does not have the dunder proto property,
+  - Creates the **scope chain**: Once the activation object gets created, the JS engine initializes the scope chain which is a list of all the variables objects inside which the current function exists. This also includes the variable object of the global execution context. Scope chain also contains the current function variable object,
+  - Determines the value of `this`: After the scope chain, the JavaScript engine initializes the value of this.
+
+```js
+function funA (a, b) {
+  var c = 3;
+  
+  var d = 2;
+  
+  d = function() {
+    return a - b;
+  }
+}
+funA(3, 2);
+
+// RESULT
+executionContextObj = {
+ variableObject: {
+  argumentObject : {
+    0: a,
+    1: b,
+    length: 2
+  },
+  a: 3,
+  b: 2,
+  c: undefined, 
+  d: undefined // then pointer to the function defintion of d
+ }, // All the variable, arguments and inner function details of the funA
+ scopechain: [], // List of all the scopes inside which the current function is
+ this // Value of this 
+}
+```
+
+- **Execution phase** JS engines will again scan through the function to update the variable object with the values of the variables and will execute the code.
+
+```js
+variableObject = {
+  argumentObject : {
+    0: a,
+    1: b,
+    length: 2
+  },
+  a: 3,
+  b: 2,
+  c: 3,
+  d: undefined then pointer to the function defintion of d
+}
+```
+
 ![Event loop](https://miro.medium.com/max/2000/1*m5M4NV495oH4ADvpnItnVQ.png)
+
+## Event delegation
+
+**DOM pattern** which can be implemented by following algorythm:
+
+ - Put a single handler on the container.
+ - In the handler – check the source element event.target.
+ - If the event happened inside an element that interests us, then handle the event.
+ 
+```html
+<table>
+  <tr>
+    <th colspan="3"><em>Bagua</em> Chart: Direction, Element, Color, Meaning</th>
+  </tr>
+  <tr>
+    <td class="nw"><strong>Northwest</strong><br>Metal<br>Silver<br>Elders</td>
+    <td class="n">...</td>
+    <td class="ne">...</td>
+  </tr>
+  <tr>...2 more lines of this kind...</tr>
+  <tr>...2 more lines of this kind...</tr>
+</table>
+```
+```js
+table.onclick = function(event) {
+  let td = event.target.closest('td'); // Gets closest element which match selector. 
+  if (!td) return; // If event.target is not inside any <td>, then the call returns immediately, as there’s nothing to do.
+  if (!table.contains(td)) return; // In case of nested tables, event.target may be a <td>, but lying outside of the current table. So we check if that’s actually our table’s  // <td>.
+  highlight(td);
+};
+ ```
+
+With data attributes usage:
+
+```html
+<div id="menu">
+  <button data-action="save">Save</button>
+  <button data-action="load">Load</button>
+  <button data-action="search">Search</button>
+</div>
+```
+
+```js
+<script>
+  class Menu {
+    constructor(elem) {
+      this._elem = elem;
+      elem.onclick = this.onClick.bind(this); // (*)
+    }
+
+    save() {
+      alert('saving');
+    }
+
+    load() {
+      alert('loading');
+    }
+
+    search() {
+      alert('searching');
+    }
+
+    onClick(event) {
+      let action = event.target.dataset.action;
+      if (action) {
+        this[action]();
+      }
+    };
+  }
+
+  new Menu(menu);
+</script>
+```
+
+Benefits:
+
+- Simplifies initialization and saves memory: no need to add many handlers.
+- Less code: when adding or removing elements, no need to add/remove handlers.
+- DOM modifications: we can mass add/remove elements with innerHTML and the like.
+
+Limitations:
+
+- First, the event must be bubbling. Some events do not bubble. Also, low-level handlers should not use `event.stopPropagation()`.
+- Second, the delegation may add CPU load, because the container-level handler reacts on events in any place of the container, no matter whether they interest us or not. But usually the load is negligible, so we don’t take it into account.
+
+## Event propagation phases
+
+The standard DOM Events describes 3 phases of event propagation:
+ - **Capturing phase`=** – the event goes down to the element.
+ - **Target phase** – the event reached the target element.
+ - **Bubbling phase** – the event bubbles up from the element.
+ 
+ ![Event propagation phases](https://www.w3.org/TR/2003/WD-DOM-Level-3-Events-20030331/images/eventflow.png)
+ 
+### Event capturing
+
+```js
+elem.addEventListener(..., {capture: true})
+// or, just "true" is an alias to {capture: true} // means handler is set on the capture phase
+elem.addEventListener(..., true)
+```
+ 
+### Event bubbling
+
+When an event happens on an element, it first runs the handlers on it, then on its parent, then all the way up on other ancestors.
+
+Almost all **event bubble** expect `focus` event and some others.
+
+Element that **caused** event is called `target`.
+
+Element which have event assigned to is called `currentTarget` = `this`.
+
+A bubbling event goes from the target element straight up. Normaly upwards `html` and then to `document` object.
+
+To stop bubbling use `event.stopPropagation()`.
+
+To stop bubbling in all handlers use `event.stopImmedietePropagation()`.
+
+`event.eventPhase` – the current phase `(capturing=1, target=2, bubbling=3)`.
+
+> Use only if needed.
+
+```html
+<form onclick="alert('form')">FORM // called always
+  <div onclick="alert('div')">DIV // called on div / p click
+    <p onclick="alert('p')">P</p> // called on p click
+  </div>
+</form>
+```
 
 ## Function declarations
 
@@ -106,7 +444,25 @@ var functionOne = function() {
 };
 ```
 
-#### `Hoisting`
+## Higher order function
+
+Functions that operate on other functions, either by taking them as arguments or by returning them, are called higher-order functions.
+
+```js
+function filter(array, test) {
+  let passed = [];
+  for (let element of array) {
+    if (test(element)) {
+      passed.push(element);
+    }
+  }
+  return passed;
+}
+console.log(filter(SCRIPTS, script => script.living));
+// → [{name: "Adlam", …}, …]
+```
+
+## Hoisting
 
 https://www.digitalocean.com/community/tutorials/understanding-hoisting-in-javascript#:~:text=Hoisting%20is%20a%20JavaScript%20mechanism,scope%20is%20global%20or%20local.
 
@@ -292,6 +648,22 @@ Square.width = 10;
 console.log(Square);
 ```
 
+## Memoization
+
+Memoization is an optimization technique that speeds up applications by storing the results of expensive function calls and returning the cached result when the same inputs occur again.
+
+```js
+const results = {};
+
+const fibb = (n) => {
+  if (results.hasOwnProperty(n)) {
+    return results[n];
+  }
+  
+  // some expensive calculations
+}
+```
+
 ## Object descriptors
 
 Metadata added to an object.
@@ -405,6 +777,15 @@ const getProductURL = productId => {
   return getResourceURL('products', productId)
 }
 ```
+
+## Polyfill
+
+Piece of code (usually JavaScript on the Web) used to provide modern functionality on older browsers that do not natively support it.
+For example, a polyfill could be used to mimic the functionality of an HTML Canvas element on Microsoft Internet Explorer 7 using a Silverlight plugin or mimic support for CSS rem units, or text-shadow, or whatever you want.
+
+## Primitives
+
+`number`, `string`, `boolean`, `null`, `undefined`, `Symbol` (added in ES6).
 
 ## Prototype inheritance
 
@@ -523,6 +904,33 @@ So the browser checks to see if the person1's prototype object has a `valueOf()`
   console.log(john.fullName); // John Doe
 ```
 
+## Scope chain
+
+The scope chain is a list of all the variable objects of functions inside which the current function exists. Scope chain also consists of the current function execution object.
+
+```js
+a = 1;
+var b = 2;
+cFunc = function(e) {
+  var c = 10;
+  var d = 15;
+  console.log(c);
+  console.log(a); 
+  function dFunc() {
+    var f = 5;
+    console.log(f)
+    console.log(c);
+    console.log(a); 
+  }
+  dFunc();
+}
+cFunc(10);
+
+// Scope chain of dFunc = [dFunc variable object, 
+                       // cFunc variable object,
+                        // Global execution context variable object]
+```
+
 ## Script types
 
 Browser process HTML markup from `<head>` to `<body>`. So if we have `<script>` tag between HTML markup - rendering process will be blocked until script is **downloaded and executed**.
@@ -592,411 +1000,69 @@ loadScript("/article/script-async-defer/long.js");
 loadScript("/article/script-async-defer/small.js");
 ```
 
+## Variables
+
+### `let`
+
+- Block scoped variable - not function scoped as `var`.
+- `let` variables are block hoisted.
+- Remain uninitialised at the beginning of execution.
+
+```js
+console.log(hoist); // Output: ReferenceError: hoist is not defined ...
+let hoist = 'The variable has been hoisted.';
+```
+
+```js
+let hoist;
+console.log(hoist); // Output: undefined
+hoist = 'Hoisted'
+```
+
+### `const`
+
+- Works same as `let`.
+- Value cannot be modified once assigned.
+
+```js
+const PI = 3.142;
+PI = 22/7; // Let's reassign the value of PI
+console.log(PI); // Output: TypeError: Assignment to constant variable.
+```
+
+```js
+console.log(hoist); // Output: ReferenceError: hoist is not defined
+const hoist = 'The variable has been hoisted.';
+```
+
+```js
+function getCircumference(radius) {
+  console.log(circumference)
+  circumference = PI*radius*2;
+  const PI = 22/7;
+}
+getCircumference(2) // ReferenceError: circumference is not defined
+```
+
+```js
+const PI;
+console.log(PI); // Ouput: SyntaxError: Missing initializer in const declaration
+PI=3.142;
+```
+
 ## Transpiling
 
 **Source-to-source** compilation, are tools that read source code written in one programming language, and produce the equivalent code in another language. Languages you write that transpile to JavaScript are often called **compile-to-JS languages**, and are said to target JavaScript.
 
 `Babel` transpiler is example of **transpiling** or `React-Native` behaviour which takes JavaScript code and transpiles this code for `Android`, `IOS` languages.
 
-#### `Polyfill`
-
-Piece of code (usually JavaScript on the Web) used to provide modern functionality on older browsers that do not natively support it.
-For example, a polyfill could be used to mimic the functionality of an HTML Canvas element on Microsoft Internet Explorer 7 using a Silverlight plugin or mimic support for CSS rem units, or text-shadow, or whatever you want.
-
-#### `Event propagation phases`
-
-The standard DOM Events describes 3 phases of event propagation:
- - `Capturing phase` – the event goes down to the element
- - `Target phase` – the event reached the target element
- - `Bubbling phase` – the event bubbles up from the element
- 
- ![Event propagation phases](https://www.w3.org/TR/2003/WD-DOM-Level-3-Events-20030331/images/eventflow.png)
- 
-#### `Event capturing`
-
-```js
-elem.addEventListener(..., {capture: true})
-// or, just "true" is an alias to {capture: true} // means handler is set on the capture phase
-elem.addEventListener(..., true)
-```
- 
-#### `Event bubbling`
-
-When an event happens on an element, it first runs the handlers on it, then on its parent, then all the way up on other ancestors.
-
-Almost all `event bubble` expect `focus` event and some others.
-
-Element that `caused` event is called `target`.
-
-Element which have event assigned to is called `currentTarget` = `this`.
-
-A bubbling event goes from the target element straight up. Normaly upwards `html` and then to `document` object.
-
-To stop bubbling use `event.stopPropagation()`.
-
-To stop bubbling in all handlers use `event.stopImmedietePropagation()`.
-
-`event.eventPhase` – the current phase `(capturing=1, target=2, bubbling=3)`.
-
-> Use only if needed
-
-```html
-<form onclick="alert('form')">FORM // called always
-  <div onclick="alert('div')">DIV // called on div / p click
-    <p onclick="alert('p')">P</p> // called on p click
-  </div>
-</form>
-```
-
-#### `Event delegation`
-
-`DOM pattern` which can be implemented by following algorythm:
-
- - Put a single handler on the container.
- - In the handler – check the source element event.target.
- - If the event happened inside an element that interests us, then handle the event.
- 
-```html
-<table>
-  <tr>
-    <th colspan="3"><em>Bagua</em> Chart: Direction, Element, Color, Meaning</th>
-  </tr>
-  <tr>
-    <td class="nw"><strong>Northwest</strong><br>Metal<br>Silver<br>Elders</td>
-    <td class="n">...</td>
-    <td class="ne">...</td>
-  </tr>
-  <tr>...2 more lines of this kind...</tr>
-  <tr>...2 more lines of this kind...</tr>
-</table>
-```
-```js
-table.onclick = function(event) {
-  let td = event.target.closest('td'); // Gets closest element which match selector. 
-  if (!td) return; // If event.target is not inside any <td>, then the call returns immediately, as there’s nothing to do.
-  if (!table.contains(td)) return; // In case of nested tables, event.target may be a <td>, but lying outside of the current table. So we check if that’s actually our table’s  // <td>.
-  highlight(td);
-};
- ```
-
-With data attributes usage:
-
-```html
-<div id="menu">
-  <button data-action="save">Save</button>
-  <button data-action="load">Load</button>
-  <button data-action="search">Search</button>
-</div>
-```
-
-```js
-<script>
-  class Menu {
-    constructor(elem) {
-      this._elem = elem;
-      elem.onclick = this.onClick.bind(this); // (*)
-    }
-
-    save() {
-      alert('saving');
-    }
-
-    load() {
-      alert('loading');
-    }
-
-    search() {
-      alert('searching');
-    }
-
-    onClick(event) {
-      let action = event.target.dataset.action;
-      if (action) {
-        this[action]();
-      }
-    };
-  }
-
-  new Menu(menu);
-</script>
-```
-
-Benefits:
-
-- Simplifies initialization and saves memory: no need to add many handlers.
-- Less code: when adding or removing elements, no need to add/remove handlers.
-- DOM modifications: we can mass add/remove elements with innerHTML and the like.
-
-Limitations:
-
-- First, the event must be bubbling. Some events do not bubble. Also, low-level handlers should not use event.stopPropagation().
-- Second, the delegation may add CPU load, because the container-level handler reacts on events in any place of the container, no matter whether they interest us or not. But usually the load is negligible, so we don’t take it into account.
-
-#### Execution context
-
-The environment (`value of this`, `variables`, `objects`, and `functions` JavaScript code has access to at a particular time) in which the JavaScript code is executed.
-
-- `Global execution context`
-
-This is the default execution context in which JS code start its execution when the file first loads in the browser. There is only one `global execution context`.
-
-- `Functional execution context`
-
-Created after function call. Have access to `global execution context` but not `vice versa`.
-
-- `Eval execution context`
-
-Context inside `eval` function.
-
-##### Execution context stack
-
-Data structure (last in first out data structure) to store all the execution stacks created during the life cycle of the script.
-
-```js
-var a = 10;
-function functionA() {
-	console.log("Start function A");
-	function functionB(){
-		console.log("In function B");
-	}
-	functionB();
-}
-functionA();
-console.log("GlobalContext");
-```
-
-![Execution context stack](https://miro.medium.com/max/700/1*bDebsOuhRx9NMyvLHY2zxA.gif)
-
-##### Execution context creation
-
-- `Creation phase` is the phase in which the JS engine has called a function but its execution has not started. In the creation phase, JS engine is in the compilation phase and it just scans over the function code to compile the code, it doesn’t execute any code.
-  - Creates the `Activation object` or the Variable object: Activation object is a special object in JS which contain all the variables, function arguments and inner functions   declaration information. As activation object is a special object it does not have the dunder proto property,
-  - Creates the `scope chain`: Once the activation object gets created, the JS engine initializes the scope chain which is a list of all the variables objects inside which the current function exists. This also includes the variable object of the global execution context. Scope chain also contains the current function variable object,
-  - Determines the value of `this`: After the scope chain, the JavaScript engine initializes the value of this.
-
-```js
-function funA (a, b) {
-  var c = 3;
-  
-  var d = 2;
-  
-  d = function() {
-    return a - b;
-  }
-}
-funA(3, 2);
-
-// RESULT
-executionContextObj = {
- variableObject: {
-  argumentObject : {
-    0: a,
-    1: b,
-    length: 2
-  },
-  a: 3,
-  b: 2,
-  c: undefined, 
-  d: undefined // then pointer to the function defintion of d
- }, // All the variable, arguments and inner function details of the funA
- scopechain: [], // List of all the scopes inside which the current function is
- this // Value of this 
-}
-```
-
-- `Execution phase` JS engines will again scan through the function to update the variable object with the values of the variables and will execute the code.
-
-```js
-variableObject = {
-  argumentObject : {
-    0: a,
-    1: b,
-    length: 2
-  },
-  a: 3,
-  b: 2,
-  c: 3,
-  d: undefined then pointer to the function defintion of d
-}
-```
-
-#### `Scope chain`
-
-The scope chain is a list of all the variable objects of functions inside which the current function exists. Scope chain also consists of the current function execution object.
-
-```js
-a = 1;
-var b = 2;
-cFunc = function(e) {
-  var c = 10;
-  var d = 15;
-  console.log(c);
-  console.log(a); 
-  function dFunc() {
-    var f = 5;
-    console.log(f)
-    console.log(c);
-    console.log(a); 
-  }
-  dFunc();
-}
-cFunc(10);
-
-// Scope chain of dFunc = [dFunc variable object, 
-                       // cFunc variable object,
-                        // Global execution context variable object]
-```
-
-#### Explain `values and `types`
+#### Explain `values` and `types`
 
 #### `same-origin policy` 
 
 #### How to force `strict mode` in Node
 
 #### `Host objects` vs `Native objects`
-
-#### `Primitives`
-
-`number`, `string`, `boolean`, `null`, `undefined`, `Symbol (added in ES6)`.
-
-#### `Coercion`
-
-https://dorey.github.io/JavaScript-Equality-Table/
-
-Type coercion is the process of converting value from one type to another (such as string to number, object to boolean, and so on). Any type, be it primitive or an object, is a valid subject for type coercion.
-
-> One operator that does not trigger implicit type coercion is ===.
-
-> `Implicit coercion` is double edge sword - less code but can be buggy.
-
-```js
-String(123) // explicit, type casting
-123 + ''    // implicit
-```
-There are tree types of `conversion` to: `string`, `boolean`, `number`.
-
-##### String conversion
-
-To explicitly convert values to a string apply the `String()` function. Implicit coercion is triggered by the binary `+` operator, when any operand is a `string`.
-
-```js
-String(123)                   // '123'
-String(-12.3)                 // '-12.3'
-String(null)                  // 'null'
-String(undefined)             // 'undefined'
-String(true)                  // 'true'
-String(false)                 // 'false'
-String(Symbol('my symbol'))   // 'Symbol(my symbol)' // Explicit type conversion only
-'' + Symbol('my symbol')      // TypeError is thrown
-```
-
-##### Boolean conversion
-
-To explicitly convert a value to a boolean apply the `Boolean()` function.
-Implicit conversion happens in logical context, or is triggered by logical operators `( || && !)`.
-
-> Logical operators such as `||` and `&&` do boolean conversions internally, but actually return the value of original operands, even if they are not boolean.
-
-```js
-Boolean(2)          // explicit
-if (2) { ... }      // implicit due to logical context
-!!2                 // implicit due to logical operator
-2 || 'hello'        // implicit due to logical operator
-
-// returns number 123, instead of returning true
-// 'hello' and 123 are still coerced to boolean internally to calculate the expression
-let x = 'hello' && 123;   // x === 123
-
-Boolean('')           // false
-Boolean(0)            // false     
-Boolean(-0)           // false
-Boolean(NaN)          // false
-Boolean(null)         // false
-Boolean(undefined)    // false
-Boolean(false)        // false
-Boolean({})             // true
-Boolean([])             // true
-Boolean(Symbol())       // true
-!!Symbol()              // true
-Boolean(function() {})  // true
-```
-
-##### Number conversion
-
-For an explicit conversion just apply the `Number()` function. Implicit can be triggered by:
-
- - comparison operators `(>, <, <=,>=)`
- - bitwise operators `(| & ^ ~)`
- - arithmetic operators `(- + * / % )` 
- > Note, that binary `+` does not trigger numeric conversion, when any operand is a `string`.
- - unary `+` operator
- - loose equality operator `==`, `!=`
- > Note that `==` does not trigger numeric conversion when both operands are `strings`.
- 
-```js
-Number(null)                   // 0
-Number(undefined)              // NaN
-Number(true)                   // 1
-Number(false)                  // 0
-Number(" 12 ")                 // 12
-Number("-12.34")               // -12.34
-Number("\n")                   // 0
-Number(" 12s ")                // NaN
-Number(123)                    // 123
-Number(Symbol('my symbol'))    // TypeError is thrown
-+Symbol('123')                 // TypeError is thrown
-null == 0               // false, null is not converted to 0
-null == null            // true
-undefined == undefined  // true
-null == undefined       // true
-```
-
-> When converting a `string` to a `number`, the engine first trims leading and trailing whitespace, `\n`, `\t` characters, returning `NaN` 
-> if the trimmed string does not >represent a valid number. If `string` is empty, it returns `0`.
-
-> Symbols cannot be converted to a number.
-
-##### Objects conversion
-
-Always objects are converted to primitives and after converts to the final type.
-
-Objects are converted to primitives via the internal `[[ToPrimitive]]` method, which is responsible for both numeric and string conversion.
-
-```js
-true + false             // 1
-12 / "6"                 // 2
-"number" + 15 + 3        // 'number153'
-15 + 3 + "number"        // '18number'
-[1] > null               // true
-"foo" + + "bar"          // 'fooNaN'
-'true' == true           // false
-false == 'false'         // false
-null == ''               // false
-!!"false" == !!"true"    // true
-['x'] == 'x'             // true 
-[] + null + 1            // 'null1'
-[1,2,3] == [1,2,3]       // false
-{}+[]+{}+[1]             // '0[object Object]1'
-!+[]+[]+![]              // 'truefalse'
-new Date(0) - 0          // 0
-new Date(0) + 0          // 'Thu Jan 01 1970 02:00:00(EET)0'
-```
-
-#### `Memoization`
-
-Memoization is an optimization technique that speeds up applications by storing the results of expensive function calls and returning the cached result when the same inputs occur again.
-
-```js
-const results = {};
-
-const fibb = (n) => {
-  if (results.hasOwnProperty(n)) {
-    return results[n];
-  }
-  
-  // some expensive calculations
-}
-```
 
 #### `Annonymous` vs `Named` functions
 
@@ -1019,24 +1085,6 @@ const fibb = (n) => {
 #### `undefined` vs `non-defined`
 
 #### `document load` vs `DOMContentLoaded` event
-
-#### `Higher order function`
-
-Functions that operate on other functions, either by taking them as arguments or by returning them, are called higher-order functions.
-
-```js
-function filter(array, test) {
-  let passed = [];
-  for (let element of array) {
-    if (test(element)) {
-      passed.push(element);
-    }
-  }
-  return passed;
-}
-console.log(filter(SCRIPTS, script => script.living));
-// → [{name: "Adlam", …}, …]
-```
 
 #### `IIFEs`
 
@@ -1087,54 +1135,6 @@ console.log(filter(SCRIPTS, script => script.living));
 #### `throw Error('msg')` vs `throw new Error('msg')`
 
 # `ES6` Language syntax
-
-#### `let`
-
-Block scoped variable - not function scoped as `var`.
-`let` variables are block hoisted.
-Remain uninitialised at the beginning of execution.
-
-```js
-console.log(hoist); // Output: ReferenceError: hoist is not defined ...
-let hoist = 'The variable has been hoisted.';
-```
-
-```js
-let hoist;
-console.log(hoist); // Output: undefined
-hoist = 'Hoisted'
-```
-
-#### `const`
-
-Works same as `let`.
-Value cannot be modified once assigned.
-
-```js
-const PI = 3.142;
-PI = 22/7; // Let's reassign the value of PI
-console.log(PI); // Output: TypeError: Assignment to constant variable.
-```
-
-```js
-console.log(hoist); // Output: ReferenceError: hoist is not defined
-const hoist = 'The variable has been hoisted.';
-```
-
-```js
-function getCircumference(radius) {
-  console.log(circumference)
-  circumference = PI*radius*2;
-  const PI = 22/7;
-}
-getCircumference(2) // ReferenceError: circumference is not defined
-```
-
-```js
-const PI;
-console.log(PI); // Ouput: SyntaxError: Missing initializer in const declaration
-PI=3.142;
-```
 
 #### `spread syntax`
 
