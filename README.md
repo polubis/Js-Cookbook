@@ -60,6 +60,192 @@ var functionOne = function() {
 };
 ```
 
+#### `Hoisting`
+
+https://www.digitalocean.com/community/tutorials/understanding-hoisting-in-javascript#:~:text=Hoisting%20is%20a%20JavaScript%20mechanism,scope%20is%20global%20or%20local.
+
+Mechanism where **variables** and **function declarations** are moved to the top of their scope(memory) before code execution. 
+JavaScript Engine first declaring variables in memory and later initialises them.
+
+> To avoid hoisting problems always - `declare and initialise our variable before use`.
+
+![Hoisting](https://cdn.scotch.io/8976/bNTL1QI3RFebh7C1JPYC_variable%20hoisting.png)
+
+Undeclared variable is assigned the value undefined at execution and is also of type `undefined`.
+
+```js
+console.log(typeof variable); // Output: undefined
+```
+
+`ReferenceError` is thrown when trying to access a previously `undeclared` variable.
+
+```js
+console.log(variable); // Output: ReferenceError: variable is not defined
+```
+
+```js
+var a = 10; 
+// is transformed to:
+var a;
+a = 10;
+```
+
+```js
+console.log(hoist); // Output: undefined
+var hoist = 'The variable has been hoisted.';
+```
+
+```js
+var hoist;
+console.log(hoist); // Output: undefined
+hoist = 'The variable has been hoisted.';
+```
+
+```js
+'use strict';
+console.log(hoist); // Output: ReferenceError: hoist is not defined
+hoist = 'Hoisted';
+```
+
+```js
+console.log(hoist); // Output: ReferenceError: hoist is not defined ...
+let hoist = 'The variable has been hoisted.';
+```
+
+```js
+let hoist;
+console.log(hoist); // Output: undefined
+hoist = 'Hoisted'
+```
+
+```js
+const PI = 3.142;
+PI = 22/7; // Let's reassign the value of PI
+console.log(PI); // Output: TypeError: Assignment to constant variable.
+```
+
+```js
+console.log(hoist); // Output: ReferenceError: hoist is not defined
+const hoist = 'The variable has been hoisted.';
+```
+
+```js
+function getCircumference(radius) {
+  console.log(circumference)
+  circumference = PI*radius*2;
+  const PI = 22/7;
+}
+getCircumference(2) // ReferenceError: circumference is not defined
+```
+
+```js
+const PI;
+console.log(PI); // Ouput: SyntaxError: Missing initializer in const declaration
+PI=3.142;
+```
+
+```js
+hoisted(); // Output: "This function has been hoisted."
+function hoisted() {
+  console.log('This function has been hoisted.');
+};
+```
+
+```js
+expression(); //Output: "TypeError: expression is not a function
+var expression = function() {
+  console.log('Will this work?');
+};
+```
+
+Function declarations are hoisted over variable declarations but not over variable assignments. Variable assignment over function declaration.
+
+```js
+var double = 22;
+function double(num) {
+  return (num*2);
+}
+console.log(typeof double); // Output: number
+```
+
+Function declarations over variable declarations.
+
+```js
+var double;
+function double(num) {
+  return (num*2);
+}
+console.log(typeof double); // Output: function
+```
+
+Class `declarations` are hoisted. However, they remain uninitialised until evaluation. Declare a class before you can use it.
+
+```js
+var Frodo = new Hobbit();
+Frodo.height = 100;
+Frodo.weight = 300;
+console.log(Frodo); // Output: ReferenceError: Hobbit is not defined
+class Hobbit {
+  constructor(height, weight) {
+    this.height = height;
+    this.weight = weight;
+  }
+}
+```
+
+```js
+class Hobbit {
+  constructor(height, weight) {
+    this.height = height;
+    this.weight = weight;
+  }
+}
+var Frodo = new Hobbit();
+Frodo.height = 100;
+Frodo.weight = 300;
+console.log(Frodo); // Output: { height: 100, weight: 300 }
+```
+
+Class `expressions` are not hoisted.
+
+```js
+var Square = new Polygon();
+Square.height = 10;
+Square.width = 10;
+console.log(Square); // Output: TypeError: Polygon is not a constructor
+var Polygon = class {
+  constructor(height, width) {
+    this.height = height;
+    this.width = width;
+  }
+};
+```
+
+```js
+var Square = new Polygon();
+Square.height = 10;
+Square.width = 10;
+console.log(Square); // Output: TypeError: Polygon is not a constructor
+var Polygon = class Polygon {
+  constructor(height, width) {
+    this.height = height;
+    this.width = width;
+  }
+};
+```
+
+```js
+var Polygon = class Polygon {
+  constructor(height, width) {
+    this.height = height;
+    this.width = width;
+  }
+};
+Square.height = 10;
+Square.width = 10;
+console.log(Square);
+```
+
 ## Object descriptors
 
 Metadata added to an object.
@@ -148,6 +334,86 @@ Object.defineProperty({}, 'prop', {
   value: 2
 });
 ```
+
+## Prototype inheritance
+
+When it comes to **inheritance**, JavaScript only has one construct: **objects**. Each object has a `private` property which holds a link to another object called its **prototype**. That prototype object has a prototype of its own, and so on until an object is reached with `null` as its prototype. By definition, null has no prototype, and acts as **the final link in this prototype chain**.
+
+```js
+function Person(first, last, age, gender, interests) {
+  // property and method definitions
+  this.name = {
+    'first': first,
+    'last' : last
+  };
+  this.age = age;
+  this.gender = gender;
+  //...see link in summary above for full definition
+}
+Person.prototype.farewell = function() { // prototype definition
+  alert(this.name.first + ' has left the building. Bye for now!');
+};
+
+let person1 = new Person('Bob', 'Smith', 32, 'male', ['music', 'skiing']);
+
+console.log(person1.__proto__); // Object {}
+console.log(Object.getPrototypeOf(person1)); // Object {}
+
+console.log(person1.__proto__.__proto__);  // Object {}
+console.log(Object.getPrototypeOf(person1.__proto__)); // Object {}
+
+console.log(person1.__proto__.__proto__.__proto__); // null
+console.log(Object.getPrototypeOf(person1.__proto__.__proto__)); // null
+```
+
+```js
+function Student() {
+    this.name = 'John';
+    this.gender = 'M';
+}
+var studObj = new Student();
+Student.prototype.sayHi= function(){
+    alert("Hi");
+};
+var studObj1 = new Student();
+var proto = Object.getPrototypeOf(studObj1);  // returns Student's prototype object
+alert(proto.constructor); // returns Student function 
+```
+
+```js
+function Person(firstName, lastName) {
+    this.FirstName = firstName || "unknown";
+    this.LastName = lastName || "unknown";            
+}
+Person.prototype.getFullName = function () {
+    return this.FirstName + " " + this.LastName;
+}
+function Student(firstName, lastName, schoolName, grade)
+{
+    Person.call(this, firstName, lastName);
+
+    this.SchoolName = schoolName || "unknown";
+    this.Grade = grade || 0;
+}
+//Student.prototype = Person.prototype;
+Student.prototype = new Person();
+Student.prototype.constructor = Student;
+var std = new Student("James","Bond", "XYZ", 10);
+alert(std.getFullName()); // James Bond
+alert(std instanceof Student); // true
+alert(std instanceof Person); // true
+```
+
+![Person object shape](https://mdn.mozillademos.org/files/13853/object-available-members.png)
+
+![Protype chain](https://mdn.mozillademos.org/files/13891/MDN-Graphics-person-person-object-2.png)
+
+The browser initially checks to see if the person1 object has a `valueOf()` method available on it, as defined on its constructor, `Person()`, and it doesn't.
+So the browser checks to see if the person1's prototype object has a `valueOf()` method available on it. It doesn't, then the browser checks person1's prototype object's prototype object, and it has. So the method is called.
+
+> We want to reiterate that the **methods** and **properties** are not copied from one object to another in the prototype chain. They are accessed by walking up the chain as described above.
+
+> The prototype chain is traversed only while retrieving properties. If properties are set or deleted directly on the object, the prototype chain is not traversed.
 
 ## Reflection
 
@@ -255,277 +521,11 @@ loadScript("/article/script-async-defer/long.js");
 loadScript("/article/script-async-defer/small.js");
 ```
 
-#### Why extending build-in JS objects is bad idea ?
+## Transpiling
 
-#### `Prototype inheritance`
+**Source-to-source** compilation, are tools that read source code written in one programming language, and produce the equivalent code in another language. Languages you write that transpile to JavaScript are often called **compile-to-JS languages**, and are said to target JavaScript.
 
-When it comes to `inheritance`, JavaScript only has one construct: `objects`. Each object has a `private` property which holds a link to another object called its `prototype`. That prototype object has a prototype of its own, and so on until an object is reached with `null` as its prototype. By definition, null has no prototype, and acts as `the final link in this prototype chain`.
-
-```js
-function Person(first, last, age, gender, interests) {
-  // property and method definitions
-  this.name = {
-    'first': first,
-    'last' : last
-  };
-  this.age = age;
-  this.gender = gender;
-  //...see link in summary above for full definition
-}
-Person.prototype.farewell = function() { // prototype definition
-  alert(this.name.first + ' has left the building. Bye for now!');
-};
-
-let person1 = new Person('Bob', 'Smith', 32, 'male', ['music', 'skiing']);
-
-console.log(person1.__proto__); // Object {}
-console.log(Object.getPrototypeOf(person1)); // Object {}
-
-console.log(person1.__proto__.__proto__);  // Object {}
-console.log(Object.getPrototypeOf(person1.__proto__)); // Object {}
-
-console.log(person1.__proto__.__proto__.__proto__); // null
-console.log(Object.getPrototypeOf(person1.__proto__.__proto__)); // null
-```
-
-```js
-function Student() {
-    this.name = 'John';
-    this.gender = 'M';
-}
-var studObj = new Student();
-Student.prototype.sayHi= function(){
-    alert("Hi");
-};
-var studObj1 = new Student();
-var proto = Object.getPrototypeOf(studObj1);  // returns Student's prototype object
-alert(proto.constructor); // returns Student function 
-```
-
-```js
-function Person(firstName, lastName) {
-    this.FirstName = firstName || "unknown";
-    this.LastName = lastName || "unknown";            
-}
-Person.prototype.getFullName = function () {
-    return this.FirstName + " " + this.LastName;
-}
-function Student(firstName, lastName, schoolName, grade)
-{
-    Person.call(this, firstName, lastName);
-
-    this.SchoolName = schoolName || "unknown";
-    this.Grade = grade || 0;
-}
-//Student.prototype = Person.prototype;
-Student.prototype = new Person();
-Student.prototype.constructor = Student;
-var std = new Student("James","Bond", "XYZ", 10);
-alert(std.getFullName()); // James Bond
-alert(std instanceof Student); // true
-alert(std instanceof Person); // true
-```
-
-![Person object shape](https://mdn.mozillademos.org/files/13853/object-available-members.png)
-
-![Protype chain](https://mdn.mozillademos.org/files/13891/MDN-Graphics-person-person-object-2.png)
-
-The browser initially checks to see if the person1 object has a `valueOf()` method available on it, as defined on its constructor, `Person()`, and it doesn't.
-So the browser checks to see if the person1's prototype object has a `valueOf()` method available on it. It doesn't, then the browser checks person1's prototype object's prototype object, and it has. So the method is called.
-
-> We want to reiterate that the `methods` and `properties` are not copied from one object to another in the prototype chain. They are accessed by walking up the chain as described above.
-
-> The prototype chain is traversed only while retrieving properties. If properties are set or deleted directly on the object, the prototype chain is not traversed.
-
-#### `Transpiling`
-
-`Source-to-source` compilation, are tools that read source code written in one programming language, and produce the equivalent code in another language. Languages you write that transpile to JavaScript are often called compile-to-JS languages, and are said to target JavaScript.
-
-`Babel` transpiler is example of `transpiling` or React-Native behaviour which takes JavaScript code and transpiles this code for `Android`, `IOS` languages.
-
-#### `Hoisting`
-
-https://www.digitalocean.com/community/tutorials/understanding-hoisting-in-javascript#:~:text=Hoisting%20is%20a%20JavaScript%20mechanism,scope%20is%20global%20or%20local.
-
-Mechanism where variables and function declarations are moved to the top of their scope(memory) before code execution. 
-JavaScript Engine first declaring variables in memory and later initialises them.
-
-> To avoid hoisting problems always - `declare and initialise our variable before use`.
-
-![Hoisting](https://cdn.scotch.io/8976/bNTL1QI3RFebh7C1JPYC_variable%20hoisting.png)
-
-> Undeclared variable is assigned the value undefined at execution and is also of type undefined.
-```js
-console.log(typeof variable); // Output: undefined
-```
-> ReferenceError is thrown when trying to access a previously undeclared variable.
-```js
-console.log(variable); // Output: ReferenceError: variable is not defined
-```
-
-```js
-var a = 10; 
-// is transformed to:
-var a;
-a = 10;
-```
-
-```js
-console.log(hoist); // Output: undefined
-var hoist = 'The variable has been hoisted.';
-```
-
-```js
-var hoist;
-console.log(hoist); // Output: undefined
-hoist = 'The variable has been hoisted.';
-```
-
-```js
-'use strict';
-console.log(hoist); // Output: ReferenceError: hoist is not defined
-hoist = 'Hoisted';
-```
-
-```js
-console.log(hoist); // Output: ReferenceError: hoist is not defined ...
-let hoist = 'The variable has been hoisted.';
-```
-
-```js
-let hoist;
-console.log(hoist); // Output: undefined
-hoist = 'Hoisted'
-```
-
-```js
-const PI = 3.142;
-PI = 22/7; // Let's reassign the value of PI
-console.log(PI); // Output: TypeError: Assignment to constant variable.
-```
-
-```js
-console.log(hoist); // Output: ReferenceError: hoist is not defined
-const hoist = 'The variable has been hoisted.';
-```
-
-```js
-function getCircumference(radius) {
-  console.log(circumference)
-  circumference = PI*radius*2;
-  const PI = 22/7;
-}
-getCircumference(2) // ReferenceError: circumference is not defined
-```
-
-```js
-const PI;
-console.log(PI); // Ouput: SyntaxError: Missing initializer in const declaration
-PI=3.142;
-```
-
-```js
-hoisted(); // Output: "This function has been hoisted."
-function hoisted() {
-  console.log('This function has been hoisted.');
-};
-```
-
-```js
-expression(); //Output: "TypeError: expression is not a function
-var expression = function() {
-  console.log('Will this work?');
-};
-```
-
-Function declarations are hoisted over variable declarations but not over variable assignments.
-
-> Variable assignment over function declaration
-```js
-var double = 22;
-function double(num) {
-  return (num*2);
-}
-console.log(typeof double); // Output: number
-```
-
-> Function declarations over variable declarations
-```js
-var double;
-function double(num) {
-  return (num*2);
-}
-console.log(typeof double); // Output: function
-```
-
-> Class `declarations` are hoisted. However, they remain uninitialised until evaluation.
-> Declare a class before you can use it.
-
-```js
-var Frodo = new Hobbit();
-Frodo.height = 100;
-Frodo.weight = 300;
-console.log(Frodo); // Output: ReferenceError: Hobbit is not defined
-class Hobbit {
-  constructor(height, weight) {
-    this.height = height;
-    this.weight = weight;
-  }
-}
-```
-
-```js
-class Hobbit {
-  constructor(height, weight) {
-    this.height = height;
-    this.weight = weight;
-  }
-}
-var Frodo = new Hobbit();
-Frodo.height = 100;
-Frodo.weight = 300;
-console.log(Frodo); // Output: { height: 100, weight: 300 }
-```
-
-> Class `expressions` are not hoisted.
-
-```js
-var Square = new Polygon();
-Square.height = 10;
-Square.width = 10;
-console.log(Square); // Output: TypeError: Polygon is not a constructor
-var Polygon = class {
-  constructor(height, width) {
-    this.height = height;
-    this.width = width;
-  }
-};
-```
-
-```js
-var Square = new Polygon();
-Square.height = 10;
-Square.width = 10;
-console.log(Square); // Output: TypeError: Polygon is not a constructor
-var Polygon = class Polygon {
-  constructor(height, width) {
-    this.height = height;
-    this.width = width;
-  }
-};
-```
-
-```js
-var Polygon = class Polygon {
-  constructor(height, width) {
-    this.height = height;
-    this.width = width;
-  }
-};
-Square.height = 10;
-Square.width = 10;
-console.log(Square);
-```
+`Babel` transpiler is example of **transpiling** or `React-Native` behaviour which takes JavaScript code and transpiles this code for `Android`, `IOS` languages.
 
 #### `Currying`
 
