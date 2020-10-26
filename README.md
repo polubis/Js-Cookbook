@@ -199,6 +199,8 @@ JavaScript **concurrency model** is based on **event loop** algorythm. This mode
 
 > `setTimeout()` using `setTimeout` with a delay of `0` means calling when the stack is empty.
 
+![Event loop](https://miro.medium.com/max/2000/1*m5M4NV495oH4ADvpnItnVQ.png)
+
 ## Execution context
 
 The environment (value of `this`, **variables**, **objects**, and **functions** JavaScript code has access to at a particular time) in which the JavaScript code is executed.
@@ -286,8 +288,6 @@ variableObject = {
   d: undefined then pointer to the function defintion of d
 }
 ```
-
-![Event loop](https://miro.medium.com/max/2000/1*m5M4NV495oH4ADvpnItnVQ.png)
 
 ## Event delegation
 
