@@ -1050,6 +1050,29 @@ console.log(PI); // Ouput: SyntaxError: Missing initializer in const declaration
 PI=3.142;
 ```
 
+## Temporal Dead Zone
+
+Describes the state where variables are **un-reachable**. They are in **scope*, but they aren't **declared**.
+
+```js
+// This is the temporal dead zone for the age variable!
+// This is the temporal dead zone for the age variable!
+// This is the temporal dead zone for the age variable!
+console.log(age) // ReferenceError
+let age = 25; // Whew, we got there! No more TDZ
+console.log(age);
+```
+
+```js
+// Both the below variables will be hoisted to the top of their scope!
+console.log(typeof nonsenseThatDoesntExist); // Prints undefined
+console.log(typeof name); // Throws an error, cannot access 'name' before initialization
+
+let name = "Kealan";
+```
+
+[!TDZReferenceError](https://www.freecodecamp.org/news/content/images/2020/10/image-5.png)
+
 ## Transpiling
 
 **Source-to-source** compilation, are tools that read source code written in one programming language, and produce the equivalent code in another language. Languages you write that transpile to JavaScript are often called **compile-to-JS languages**, and are said to target JavaScript.
