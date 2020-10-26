@@ -739,6 +739,94 @@ Limitations:
 - First, the event must be bubbling. Some events do not bubble. Also, low-level handlers should not use event.stopPropagation().
 - Second, the delegation may add CPU load, because the container-level handler reacts on events in any place of the container, no matter whether they interest us or not. But usually the load is negligible, so we don’t take it into account.
 
+#### Execution context
+
+The environment (`value of this`, `variables`, `objects`, and `functions` JavaScript code has access to at a particular time) in which the JavaScript code is executed.
+
+- `Global execution context`
+
+This is the default execution context in which JS code start its execution when the file first loads in the browser. There is only one `global execution context`.
+
+- `Functional execution context`
+
+Created after function call. Have access to `global execution context` but not `vice versa`.
+
+- `Eval execution context`
+
+Context inside `eval` function.
+
+##### Execution context stack
+
+Data structure (last in first out data structure) to store all the execution stacks created during the life cycle of the script.
+
+```js
+var a = 10;
+function functionA() {
+	console.log("Start function A");
+	function functionB(){
+		console.log("In function B");
+	}
+	functionB();
+}
+functionA();
+console.log("GlobalContext");
+```
+
+![Execution context stack](https://miro.medium.com/max/700/1*bDebsOuhRx9NMyvLHY2zxA.gif)
+
+##### Execution context creation
+
+- `Creation phase` is the phase in which the JS engine has called a function but its execution has not started. In the creation phase, JS engine is in the compilation phase and it just scans over the function code to compile the code, it doesn’t execute any code.
+  - Creates the `Activation object` or the Variable object: Activation object is a special object in JS which contain all the variables, function arguments and inner functions   declaration information. As activation object is a special object it does not have the dunder proto property,
+  - Creates the `scope chain`: Once the activation object gets created, the JS engine initializes the scope chain which is a list of all the variables objects inside which the current function exists. This also includes the variable object of the global execution context. Scope chain also contains the current function variable object,
+  - Determines the value of `this`: After the scope chain, the JavaScript engine initializes the value of this.
+
+```js
+function funA (a, b) {
+  var c = 3;
+  
+  var d = 2;
+  
+  d = function() {
+    return a - b;
+  }
+}
+funA(3, 2);
+
+// RESULT
+executionContextObj = {
+ variableObject: {
+  argumentObject : {
+    0: a,
+    1: b,
+    length: 2
+  },
+  a: 3,
+  b: 2,
+  c: undefined, 
+  d: undefined // then pointer to the function defintion of d
+ }, // All the variable, arguments and inner function details of the funA
+ scopechain: [], // List of all the scopes inside which the current function is
+ this // Value of this 
+}
+```
+
+- `Execution phase` JS engines will again scan through the function to update the variable object with the values of the variables and will execute the code.
+
+```js
+variableObject = {
+  argumentObject : {
+    0: a,
+    1: b,
+    length: 2
+  },
+  a: 3,
+  b: 2,
+  c: 3,
+  d: undefined then pointer to the function defintion of d
+}
+```
+
 #### What `scope` is ?
 
 #### Explain `values and `types`
