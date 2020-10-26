@@ -67,7 +67,7 @@ https://www.digitalocean.com/community/tutorials/understanding-hoisting-in-javas
 Mechanism where **variables** and **function declarations** are moved to the top of their scope(memory) before code execution. 
 JavaScript Engine first declaring variables in memory and later initialises them.
 
-> To avoid hoisting problems always - `declare and initialise our variable before use`.
+> To avoid hoisting problems always declare and initialise our variable before use.
 
 ![Hoisting](https://cdn.scotch.io/8976/bNTL1QI3RFebh7C1JPYC_variable%20hoisting.png)
 
