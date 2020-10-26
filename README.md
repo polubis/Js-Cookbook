@@ -261,6 +261,60 @@ Object.defineProperty({}, 'prop', {
 
 #### `Prototype inheritance`
 
+When it comes to `inheritance`, JavaScript only has one construct: `objects`. Each object has a `private` property which holds a link to another object called its `prototype`. That prototype object has a prototype of its own, and so on until an object is reached with `null` as its prototype. By definition, null has no prototype, and acts as `the final link in this prototype chain`.
+
+```js
+function Person(first, last, age, gender, interests) {
+  // property and method definitions
+  this.name = {
+    'first': first,
+    'last' : last
+  };
+  this.age = age;
+  this.gender = gender;
+  //...see link in summary above for full definition
+}
+Person.prototype.farewell = function() { // prototype definition
+  alert(this.name.first + ' has left the building. Bye for now!');
+};
+
+let person1 = new Person('Bob', 'Smith', 32, 'male', ['music', 'skiing']);
+
+console.log(person1.__proto__); // Object {}
+console.log(Object.getPrototypeOf(person1)); // Object {}
+
+console.log(person1.__proto__.__proto__);  // Object {}
+console.log(Object.getPrototypeOf(person1.__proto__)); // Object {}
+
+console.log(person1.__proto__.__proto__.__proto__); // null
+console.log(Object.getPrototypeOf(person1.__proto__.__proto__)); // null
+```
+
+```js
+function Student() {
+    this.name = 'John';
+    this.gender = 'M';
+}
+var studObj = new Student();
+Student.prototype.sayHi= function(){
+    alert("Hi");
+};
+var studObj1 = new Student();
+var proto = Object.getPrototypeOf(studObj1);  // returns Student's prototype object
+alert(proto.constructor); // returns Student function 
+```
+
+![Person object shape](https://mdn.mozillademos.org/files/13853/object-available-members.png)
+
+![Protype chain](https://mdn.mozillademos.org/files/13891/MDN-Graphics-person-person-object-2.png)
+
+The browser initially checks to see if the person1 object has a `valueOf()` method available on it, as defined on its constructor, `Person()`, and it doesn't.
+So the browser checks to see if the person1's prototype object has a `valueOf()` method available on it. It doesn't, then the browser checks person1's prototype object's prototype object, and it has. So the method is called.
+
+> We want to reiterate that the `methods` and `properties` are not copied from one object to another in the prototype chain. They are accessed by walking up the chain as described above.
+
+> The prototype chain is traversed only while retrieving properties. If properties are set or deleted directly on the object, the prototype chain is not traversed.
+
 #### `Transpiling`
 
 `Source-to-source` compilation, are tools that read source code written in one programming language, and produce the equivalent code in another language. Languages you write that transpile to JavaScript are often called compile-to-JS languages, and are said to target JavaScript.
