@@ -9,28 +9,6 @@
 
 # Language core concepts
 
-## Function declarations
-
-Should be **used** in global scope.
-
-```js
-function hoisted() {
-  console.log('This function has been hoisted.');
-};
-```
-
-## Function expressions
-
-FE avoid polluting the global scope. Name can be avoided.
-Annonymous functions are invoked and forgotten immediately.
-Limits where the function is available, keeps your global scope light.
-
-```js
-var expression = function() {
-  console.log('Will this work?');
-};
-```
-
 ## Callback
 
 Function which is passed as argument to other function and executed inside or returned.
@@ -41,112 +19,6 @@ const fibb = (calc) => {
         calc();
     }
 }
-```
-
-## Reflection
-  
-  Language's ability to inspect and dynamically call classes, methods, attributes, etc. at runtime. If there is an option to do something without reflection - do it without reflection.
-
-  Slower than normal code execution and in some languages requires runtime permissions.
-
-  Allows to access things like private fields which can cause unexpected side effects.
-
-  Key mechanism to allow an application or framework to work with code that might not have even been written yet.
-
-  In JS `Reflect` object can't be created with `new` keyword.
-
-```js
-  // Reflection tools before ES6
-  Object.getOwnPropertyDescriptor(), Object.keys(), Object.isArray(), ...etc
-  // Reflection tools after ES6
-  class Person {
-      constructor(firstName, lastName) {
-          this.firstName = firstName;
-          this.lastName = lastName;
-      }
-      get fullName() {
-          return `${this.firstName} ${this.lastName}`;
-      }
-  };
-
-  let args = ['John', 'Doe'];
-
-  let john = Reflect.construct(
-      Person,
-      args
-  );
-
-  console.log(john instanceof Person);
-  console.log(john.fullName); // John Doe
-```
-
-## Script types
-
-Browser process HTML markup from `<head>` to `<body>`. So if we have `<script>` tag between HTML markup - rendering process will be blocked until script is downloaded and executed.
-
-```html
-<p>...content before script...</p>
-
-<script src="https://javascript.info/article/script-async-defer/long.js?speed=1"></script>
-
-<!-- This isn't visible until the script loads -->
-<p>...content after script...</p>
-```
-
-Workaround for that is - adding script at bottom - whole page will be rendered and after that script will be loaded. 
-In this scenario browser renders full html, starts download / execute script.
-
-```html
-<body>
-  ...all content is above the script...
-
-  <script src="https://javascript.info/article/script-async-defer/long.js?speed=1"></script>
-</body>
-```
-
-`defer` attribute allows to load script `in the background` and after full DOM render - execute script. Much faster becauase we rendering HTML and downloading script in the same time.
-
-- document order - as they go in the document
-- never block the page
-- always execute when the DOM is ready (but before DOMContentLoaded event)
-- wait for other scripts to being downloaded - keeps their relative order before execution
-```js
-// Download starts parallel to improve performance - but small.js must wait for long.js to be downloaded before exection.
-<script defer src="https://javascript.info/article/script-async-defer/long.js"></script> 
-<script defer src="https://javascript.info/article/script-async-defer/small.js"></script>
-```
-
-`async` behaves like `defer` but script is independent. 
-
-- load first order
-- browser doesn't block on `async` like `defer`
-- other scripts don't wait and `async` scripts don't wait for them
-- `DOmContentLoaded` and `async` scripts don't wait for each other
-   - `DOMcontentLoaded` may happen before `async` script (if finishes loading after the page is complete)
-   - or after `async` script (if script was small or was in HTTP-cache)
-- loads `in the background` and runs when ready
-
-`dynamic scripts` create via JavaScript. Starts loading as soon as it’s appended to the document. Behaves as `async` by default.
-
-```js
-let script = document.createElement('script');
-script.src = "/article/script-async-defer/long.js";
-document.body.append(script); // (*)
-```
-
-Behaviour can be changed via JavaScript. `async` set as false tells - "scripts will behave just like `defer`".
-
-```js
-function loadScript(src) {
-  let script = document.createElement('script');
-  script.src = src;
-  script.async = false;
-  document.body.append(script);
-}
-
-// long.js runs first because of async=false
-loadScript("/article/script-async-defer/long.js");
-loadScript("/article/script-async-defer/small.js");
 ```
 
 ## Event loop
@@ -162,20 +34,43 @@ JavaScript `concurrency model` is based on `event loop` algorythm. This model ne
 
 ![Event loop](https://miro.medium.com/max/2000/1*m5M4NV495oH4ADvpnItnVQ.png)
 
-#### `Object descriptors`
+## Function declarations
+
+Defined as soon as its surrounding function or script is executed.
+
+```js
+// Outputs: "Hello!"
+functionTwo();
+
+function functionTwo() {
+  console.log("Hello!");
+}
+```
+
+## Function expressions
+
+Defined when line of code is reached.
+
+```js
+// TypeError: functionOne is not a function
+functionOne();
+
+var functionOne = function() {
+  console.log("Hello!");
+};
+```
+
+## Object descriptors
 
 Metadata added to an object.
 
-`property data descriptors` - object assigned to an object’s property. Dictates how the JavaScript engine will behave regarding that property.
-
-They can be used to dictate how to work with objects.
-
-- `value` - the actual value we want the property to be (defaults undefined)
-- `enumerable` - whether the property should show up in operations that enumerate over an object’s keys, such as `for...in` loops or `Object.keys()` (defaults false)
-- `configurable` - indicates if we can later change the descriptor settings or be able to delete the property off the object (defaults false)
-- `writable` - tells if the value of the property can be changed (defaults false)
-
+- **property data descriptors** - object assigned to an object’s property. Dictates how the JavaScript engine will behave regarding that property. They can be used to dictate how to work with objects.
+	- `value` - the actual value we want the property to be (defaults undefined).
+	- `enumerable` - whether the property should show up in operations that enumerate over an object’s keys, such as `for...in` loops or `Object.keys()` (defaults false).
+	- `configurable` - indicates if we can later change the descriptor settings or be able to delete the property off the object (defaults false).
+	- `writable` - tells if the value of the property can be changed (defaults false).
 ```js
+
 const obj = {};
 obj.a = 1;
 Object.getOwnPropertyDescriptor(obj, 'a');
@@ -214,14 +109,11 @@ Object.defineProperties(
 );
 ```
 
-`property accessor descriptors` - object assigned to object's property. Hiddes implementation details, allows to perform additional operations. For accessor properties, there is no value or writable, but instead there are get and set functions. 
-
-Getters/setters can be used as wrappers over `real` property values to gain more control over operations with them.
-
-- `get` – a function without arguments, that works when a property is read
-- `set` – a function with one argument, that is called when the property is set
-- `enumerable` – same as for data properties
-- `configurable` – same as for data properties
+**property accessor descriptors** - object assigned to object's property. Hiddes implementation details, allows to perform additional operations. For accessor properties, there is no value or writable, but instead there are get and set functions. **Getters/setters** can be used as wrappers over **real** property values to gain more control over operations with them.
+- `get` – a function without arguments, that works when a property is read.
+- `set` – a function with one argument, that is called when the property is set.
+- `enumerable` – same as for data properties.
+- `configurable` – same as for data properties.
 
 ```js
 let user = {
@@ -244,7 +136,7 @@ alert(user.fullName); // John Smith
 for(let key in user) alert(key); // name, surname
 ```
 
-If we try to supply both get and value in the same descriptor, there will be an error.
+> If we try to supply both get and value in the same descriptor, there will be an error.
 
 ```js
 // Error: Invalid property descriptor.
@@ -255,6 +147,112 @@ Object.defineProperty({}, 'prop', {
 
   value: 2
 });
+```
+
+## Reflection
+
+  Language's ability to inspect and dynamically call **classes, methods, attributes, etc.** at runtime. If there is an option to do something without reflection - do it without reflection.
+
+> Slower than normal code execution and in some languages requires runtime permissions.
+
+> Allows to access things like private fields which can cause unexpected side effects.
+
+> Key mechanism to allow an application or framework to work with code that might not have even been written yet.
+
+> In JS `Reflect` object can't be created with `new` keyword.
+
+```js
+  // Reflection tools before ES6
+  Object.getOwnPropertyDescriptor(), Object.keys(), Object.isArray(), ...etc
+  // Reflection tools after ES6
+  class Person {
+      constructor(firstName, lastName) {
+          this.firstName = firstName;
+          this.lastName = lastName;
+      }
+      get fullName() {
+          return `${this.firstName} ${this.lastName}`;
+      }
+  };
+
+  let args = ['John', 'Doe'];
+
+  let john = Reflect.construct(
+      Person,
+      args
+  );
+
+  console.log(john instanceof Person);
+  console.log(john.fullName); // John Doe
+```
+
+## Script types
+
+Browser process HTML markup from `<head>` to `<body>`. So if we have `<script>` tag between HTML markup - rendering process will be blocked until script is **downloaded and executed**.
+
+```html
+<p>...content before script...</p>
+
+<script src="https://javascript.info/article/script-async-defer/long.js?speed=1"></script>
+
+<!-- This isn't visible until the script loads -->
+<p>...content after script...</p>
+```
+
+Workaround for that is - adding script at bottom - whole page will be rendered and after that script will be loaded. 
+In this scenario browser renders full html, **starts download / execute script**.
+
+```html
+<body>
+  ...all content is above the script...
+
+  <script src="https://javascript.info/article/script-async-defer/long.js?speed=1"></script>
+</body>
+```
+
+`defer` attribute allows to load script **in the background** and after full DOM render - execute script. Much faster becauase we rendering HTML and downloading script in the same time.
+
+- Document order - as they go in the document.
+- Never block the page.
+- Always execute when the DOM is ready (but before DOMContentLoaded event).
+- Wait for other scripts to being downloaded - keeps their relative order before execution.
+```js
+// Download starts parallel to improve performance - but small.js must wait for long.js to be downloaded before exection.
+<script defer src="https://javascript.info/article/script-async-defer/long.js"></script> 
+<script defer src="https://javascript.info/article/script-async-defer/small.js"></script>
+```
+
+`async` behaves like `defer` but script is independent. 
+
+- Load first order.
+- Browser doesn't block on `async` like `defer`.
+- Other scripts don't wait and `async` scripts don't wait for them.
+- `DOmContentLoaded` and `async` scripts don't wait for each other:
+   - `DOMcontentLoaded` may happen before `async` script (if finishes loading after the page is complete),
+   - or after `async` script (if script was small or was in HTTP-cache).
+- Loads `in the background` and runs when ready.
+
+**dynamic scripts** created via JavaScript. Starts loading as soon as it’s appended to the document. Behaves as `async` by default.
+
+```js
+let script = document.createElement('script');
+script.src = "/article/script-async-defer/long.js";
+document.body.append(script); // (*)
+```
+
+Behaviour can be changed via JavaScript. `async` set as false tells - "scripts will behave just like `defer`".
+
+```js
+function loadScript(src) {
+  let script = document.createElement('script');
+  script.src = src;
+  script.async = false;
+  document.body.append(script);
+}
+
+// long.js runs first because of async=false
+loadScript("/article/script-async-defer/long.js");
+loadScript("/article/script-async-defer/small.js");
 ```
 
 #### Why extending build-in JS objects is bad idea ?
