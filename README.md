@@ -9,7 +9,7 @@
 
 # Language core concepts
 
-#### `Function declarations`
+## Function declarations
 
 Should be used in global scope.
 
@@ -19,7 +19,7 @@ function hoisted() {
 };
 ```
 
-#### `Function expressions`
+## Function expressions
 
 FE avoid polluting the global scope. Name can be avoided.
 Annonymous functions are invoked and forgotten immediately.
@@ -31,7 +31,7 @@ var expression = function() {
 };
 ```
 
-#### `Callback`
+## Callback
 
 Function which is passed as argument to other function and executed inside or returned.
 
@@ -43,7 +43,7 @@ const fibb = (calc) => {
 }
 ```
 
-#### `Reflection`
+## Reflection
   
   Language's ability to inspect and dynamically call classes, methods, attributes, etc. at runtime. If there is an option to do something without reflection - do it without reflection.
 
@@ -80,7 +80,7 @@ const fibb = (calc) => {
   console.log(john.fullName); // John Doe
 ```
 
-#### `<Script>`
+## Script types
 
 Browser process HTML markup from `<head>` to `<body>`. So if we have `<script>` tag between HTML markup - rendering process will be blocked until script is downloaded and executed.
 
@@ -149,7 +149,7 @@ loadScript("/article/script-async-defer/long.js");
 loadScript("/article/script-async-defer/small.js");
 ```
 
-#### `Event loop`
+## Event loop
 
 JavaScript `concurrency model` is based on `event loop` algorythm. This model never blocks if all `hard` calculations are performed via `callbacks` as requests or `web workers` usage and if don't use legacay `synchronous` API's like `alert()`.
 
