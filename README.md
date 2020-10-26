@@ -1258,6 +1258,37 @@ loadScript("/article/script-async-defer/small.js");
 
 ## Variables
 
+### `var`
+
+- Function scoped / globally scoped.
+```js
+    var greeter = "hey hi";
+    function newFunction() {
+        var hello = "hello";
+    }
+```
+- Can be re-declared / updated
+```js
+    var greeter = "hey hi";
+    var greeter = "say Hello instead";
+    // OR
+    var greeter = "hey hi";
+    greeter = "say Hello instead";
+```
+
+Problem with `var`:
+
+```js
+    var greeter = "hey hi";
+    var times = 4;
+
+    if (times > 3) {
+        var greeter = "say Hello instead"; 
+    }
+    
+    console.log(greeter) // "say Hello instead"
+```
+
 ### `let`
 
 - Block scoped variable - not function scoped as `var`.
