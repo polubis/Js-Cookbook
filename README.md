@@ -664,6 +664,97 @@ const fibb = (n) => {
 }
 ```
 
+## Modules
+
+A **module** is a value that can be accessed by a **single reference**. If you have multiple pieces of data or functions that you want to expose in a module, they have to be **properties** on a **single object** that represents the **module**.
+
+Module hiddes implementation details and exposing only 1 object.
+
+### IIFE
+
+Anonymous function which returns an object, which is the placeholder of exported APIs. 
+
+```js
+// Define IIFE module with dependencies.
+const iifeCounterModule = ((dependencyModule1, dependencyModule2) => {
+    let count = 0;
+    return {
+        increase: () => ++count,
+        reset: () => {
+            count = 0;
+            console.log("Count is reset.");
+        }
+    };
+})(dependencyModule1, dependencyModule2);
+```
+
+### CJS - CommonJS module, or Node.js module
+
+Initially named **ServerJS**, is a **pattern** to define and consume modules. It is implemented by **Node,js**. By default, each `.js` file is a CommonJS module. A module variable and an exports variable are provided for a module (a file) to expose APIs. And a require function is provided to load and consume a module.
+
+```js
+// Define CommonJS module: commonJSCounterModule.js.
+const dependencyModule1 = require("./dependencyModule1");
+const dependencyModule2 = require("./dependencyModule2");
+
+let count = 0;
+const increase = () => ++count;
+const reset = () => {
+    count = 0;
+    console.log("Count is reset.");
+};
+
+exports.increase = increase;
+exports.reset = reset;
+// Or equivalently:
+module.exports = {
+    increase,
+    reset
+};
+```
+
+```js
+// Use CommonJS module.
+const { increase, reset } = require("./commonJSCounterModule");
+increase();
+reset();
+// Or equivelently:
+const commonJSCounterModule = require("./commonJSCounterModule");
+commonJSCounterModule.increase();
+commonJSCounterModule.reset();
+```
+
+### Asynchronous Module Definition, or RequireJS module
+
+**Pattern** to define and consume module. It is implemented by **RequireJS**. **AMD** provides a define function to define module, which accepts the module name, dependent modules’ names, and a factory function:
+
+```js
+// Define AMD module.
+define("amdCounterModule", ["dependencyModule1", "dependencyModule2"], (dependencyModule1, dependencyModule2) => {
+    let count = 0;
+    const increase = () => ++count;
+    const reset = () => {
+        count = 0;
+        console.log("Count is reset.");
+    };
+
+    return {
+        increase,
+        reset
+    };
+});
+```
+
+> The AMD require function is totally different from the **CommonJS** require function. **AMD** require accept the names of modules to be consumed, and pass the module to a function argument.
+
+```js
+// Use AMD module.
+require(["amdCounterModule"], amdCounterModule => {
+    amdCounterModule.increase();
+    amdCounterModule.reset();
+});
+```
+
 ## Object descriptors
 
 Metadata added to an object.
@@ -1232,6 +1323,64 @@ let name = "Kealan";
 #### `Reflect.Realm`
 
 # Design patterns
+
+## Module pattern
+
+Only single object created which exposing public API's.
+
+```js
+// Define IIFE module.
+const iifeCounterModule = (() => {
+    let count = 0;
+    return {
+        increase: () => ++count,
+        reset: () => {
+            count = 0;
+            console.log("Count is reset.");
+        }
+    };
+})();
+// Use IIFE module.
+iifeCounterModule.increase();
+iifeCounterModule.reset();
+
+// Define IIFE module with dependencies.
+const iifeCounterModule = ((dependencyModule1, dependencyModule2) => {
+    let count = 0;
+    return {
+        increase: () => ++count,
+        reset: () => {
+            count = 0;
+            console.log("Count is reset.");
+        }
+    };
+})(dependencyModule1, dependencyModule2);
+```
+
+## Reavealing module pattern
+
+Same as **module pattern** with one difference - public API's are assigned into variables.
+
+```js
+// Define revealing module.
+const revealingCounterModule = (() => {
+    let count = 0;
+    const increase = () => ++count;
+    const reset = () => {
+        count = 0;
+        console.log("Count is reset.");
+    };
+
+    return {
+        increase,
+        reset
+    };
+})();
+
+// Use revealing module.
+revealingCounterModule.increase();
+revealingCounterModule.reset();
+```
 
 #### `MVC`
 
