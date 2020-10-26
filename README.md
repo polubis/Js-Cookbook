@@ -827,7 +827,32 @@ variableObject = {
 }
 ```
 
-#### What `scope` is ?
+#### `Scope chain`
+
+The scope chain is a list of all the variable objects of functions inside which the current function exists. Scope chain also consists of the current function execution object.
+
+```js
+a = 1;
+var b = 2;
+cFunc = function(e) {
+  var c = 10;
+  var d = 15;
+  console.log(c);
+  console.log(a); 
+  function dFunc() {
+    var f = 5;
+    console.log(f)
+    console.log(c);
+    console.log(a); 
+  }
+  dFunc();
+}
+cFunc(10);
+
+// Scope chain of dFunc = [dFunc variable object, 
+                       // cFunc variable object,
+                        // Global execution context variable object]
+```
 
 #### Explain `values and `types`
 
