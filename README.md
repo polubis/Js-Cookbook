@@ -304,6 +304,30 @@ var proto = Object.getPrototypeOf(studObj1);  // returns Student's prototype obj
 alert(proto.constructor); // returns Student function 
 ```
 
+```js
+function Person(firstName, lastName) {
+    this.FirstName = firstName || "unknown";
+    this.LastName = lastName || "unknown";            
+}
+Person.prototype.getFullName = function () {
+    return this.FirstName + " " + this.LastName;
+}
+function Student(firstName, lastName, schoolName, grade)
+{
+    Person.call(this, firstName, lastName);
+
+    this.SchoolName = schoolName || "unknown";
+    this.Grade = grade || 0;
+}
+//Student.prototype = Person.prototype;
+Student.prototype = new Person();
+Student.prototype.constructor = Student;
+var std = new Student("James","Bond", "XYZ", 10);
+alert(std.getFullName()); // James Bond
+alert(std instanceof Student); // true
+alert(std instanceof Person); // true
+```
+
 ![Person object shape](https://mdn.mozillademos.org/files/13853/object-available-members.png)
 
 ![Protype chain](https://mdn.mozillademos.org/files/13891/MDN-Graphics-person-person-object-2.png)
