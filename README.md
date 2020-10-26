@@ -21,16 +21,62 @@ const fibb = (calc) => {
 }
 ```
 
+## Currying
+
+Functional programming technique - is a transformation of functions that translates a function from callable as `f(a, b, c)` into callable as `f(a)(b)(c)`.
+Increases code composition - we can create function with defined variables which will be available via **closure** and use them later.
+
+This technique requires **unary functions** - functions which takes only one argument.
+**unary functions** can be also called **1-ary** - **ary** is based of **arity** term which describes how many arguments function takes.
+
+- Curried functions works like **iterator**.
+- Can bo used to increase composition.
+- Great for memoization.
+
+```js
+const req = v => !!v;
+const min = (length) => v => v.length < length;
+const max = (length) => v => v.length > length;
+const makeValidatorsRunner = (...fns) => (value) => {
+  return fns.reduce((acc, fn) => {
+    return {
+      ...acc,
+      [idx]: fn(value)
+    }
+ }, {})    
+};
+const runLoginValidators = makeValidatorsRunner(req, min(2), max(25)); // remembers validators for later usage
+const runRegisterValidators = makeValidatorsRunner(req, min(4), max(50)); // remembers validators for later usage
+``` 
+
+Own `curry()` function.
+
+```js
+function curry(f) {
+  return function currify() {
+    const args = Array.prototype.slice.call(arguments);
+    return args.length >= f.length ? // f.length - tells how many args function needs, args.length - how many arguments were passed to function
+      f.apply(null, args) :
+      currify.bind(null, ...args)
+  }
+}
+const add = (a, b, c, d) => a + b + c + d;
+const curriedAdd = curry(add);
+console.log(
+  curriedAdd(4)(2)(16)(20)
+); // 42
+```
+
 ## Event loop
 
-JavaScript `concurrency model` is based on `event loop` algorythm. This model never blocks if all `hard` calculations are performed via `callbacks` as requests or `web workers` usage and if don't use legacay `synchronous` API's like `alert()`.
+*JavaScript **concurrency model** is based on **event loop** algorythm. This model never blocks if all **hard** calculations are performed via **callbacks** as requests or **web workers** usage and if don't use legacay **synchronous** API's like `alert()`.
 
-- `Heap` - manages memory allocation
-- `Stack` - handles functions execution order
-   - if a function is marked `asynchronous` it will go to the `callback queue`
-- `Callback queue` - runs callback only if stack is empty
+- **Heap** - manages memory allocation.
+- **Stack** - handles functions execution order:
+   - if a function is marked **asynchronous** it will go to the **callback queue**.
+- **Callback queue** - runs callback only if stack is empty
 
-> `setTimeout()` using setTimeout with a delay of `0` means calling when the stack is empty.
+> `setTimeout()` using `setTimeout` with a delay of `0` means calling when the stack is empty.
 
 ![Event loop](https://miro.medium.com/max/2000/1*m5M4NV495oH4ADvpnItnVQ.png)
 
@@ -335,6 +381,31 @@ Object.defineProperty({}, 'prop', {
 });
 ```
 
+## Partial application
+
+Technique of fixing a number of arguments to a function, producing another function of smaller arguments. Partial application produces functions of arbitrary number of arguments. The transformed function is different from the original — it needs less arguments (have smaller **arity**).
+
+```js
+const partial = (fn, ...argsToApply) => {
+  return (...restArgsToApply) => {
+    return fn(...argsToApply, ...restArgsToApply)
+  }
+}
+const getApiURL = (apiHostname, resourceName, resourceId) => {
+  return `https://${apiHostname}/api/${resourceName}/${resourceId}`
+}
+const getResourceURL = partial(getApiURL, 'localhost:3000')
+const getUserURL = userId => {
+  return getResourceURL('users', userId)
+}
+const getOrderURL = orderId => {
+  return getResourceURL('orders', orderId)
+}
+const getProductURL = productId => {
+  return getResourceURL('products', productId)
+}
+```
+
 ## Prototype inheritance
 
 When it comes to **inheritance**, JavaScript only has one construct: **objects**. Each object has a `private` property which holds a link to another object called its **prototype**. That prototype object has a prototype of its own, and so on until an object is reached with `null` as its prototype. By definition, null has no prototype, and acts as **the final link in this prototype chain**.
@@ -526,82 +597,6 @@ loadScript("/article/script-async-defer/small.js");
 **Source-to-source** compilation, are tools that read source code written in one programming language, and produce the equivalent code in another language. Languages you write that transpile to JavaScript are often called **compile-to-JS languages**, and are said to target JavaScript.
 
 `Babel` transpiler is example of **transpiling** or `React-Native` behaviour which takes JavaScript code and transpiles this code for `Android`, `IOS` languages.
-
-#### `Currying`
-
-Functional programming technique - is a transformation of functions that translates a function from callable as `f(a, b, c)` into callable as `f(a)(b)(c)`.
-Increases code composition - we can create function with defined variables which will be available via `closure` and use them later.
-
-This technique requires `unary functions` - functions which takes only one argument.
-`unary functions` can be also called `1-ary` - `ary` is based of `arity` term which describes how many arguments function takes.
-
-
-> Curried functions works like `iterator`
-> Can bo used to increase composition
-> Great for memoization
-
-```js
-const req = v => !!v;
-const min = (length) => v => v.length < length;
-const max = (length) => v => v.length > length;
-const makeValidatorsRunner = (...fns) => (value) => {
-  return fns.reduce((acc, fn) => {
-    return {
-      ...acc,
-      [idx]: fn(value)
-    }
- }, {})    
-};
-const runLoginValidators = makeValidatorsRunner(req, min(2), max(25)); // remembers validators for later usage
-const runRegisterValidators = makeValidatorsRunner(req, min(4), max(50)); // remembers validators for later usage
-``` 
-
-Own `curry` function.
-
-```js
-function curry(f) {
-  return function currify() {
-    const args = Array.prototype.slice.call(arguments);
-    return args.length >= f.length ? // f.length - tells how many args function needs, args.length - how many arguments were passed to function
-      f.apply(null, args) :
-      currify.bind(null, ...args)
-  }
-}
-const add = (a, b, c, d) => a + b + c + d;
-const curriedAdd = curry(add);
-console.log(
-  curriedAdd(4)(2)(16)(20)
-); // 42
-```
-
-#### `Partial application`
-
-Technique of fixing a number of arguments to a function, producing another function of smaller arguments.
-Partial application produces functions of arbitrary number of arguments. The transformed function is different from the original — it needs less arguments (have smaller `arity`).
-
-> Reduces code duplication
-> Increases code composition
-
-```js
-const partial = (fn, ...argsToApply) => {
-  return (...restArgsToApply) => {
-    return fn(...argsToApply, ...restArgsToApply)
-  }
-}
-const getApiURL = (apiHostname, resourceName, resourceId) => {
-  return `https://${apiHostname}/api/${resourceName}/${resourceId}`
-}
-const getResourceURL = partial(getApiURL, 'localhost:3000')
-const getUserURL = userId => {
-  return getResourceURL('users', userId)
-}
-const getOrderURL = orderId => {
-  return getResourceURL('orders', orderId)
-}
-const getProductURL = productId => {
-  return getResourceURL('products', productId)
-}
-```
 
 #### `Polyfill`
 
