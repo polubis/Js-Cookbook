@@ -195,8 +195,6 @@ fetch(
   .catch( error => console.error('Error:', error) );
 ```
 
-### `axios`
-
 ## Currying
 
 Functional programming technique - is a transformation of functions that translates a function from callable as `f(a, b, c)` into callable as `f(a)(b)(c)`.
