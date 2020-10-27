@@ -1375,6 +1375,7 @@ foo     = true;  // foo is now a boolean
 ### Data types - Primitives
 
 - `undefined` - `typeof instance === "undefined"`
+Variable which is declared but not initialized.
 - `Boolean` - `typeof instance === "boolean"`
 - `Number` - `typeof instance === "number"`
 - `String` - `typeof instance === "string"`
@@ -1384,7 +1385,7 @@ foo     = true;  // foo is now a boolean
 ### Structural types
 
 - `Object` - `typeof instance === "object"`
-Special **non-data** but **Structural** type for any constructed object instance also used as data structures: `new Object, new Array, new Map, new Set, new WeakMap, new WeakSet, new Date` and almost everything made with `new` keyword.
+Special **non-data** but **structural** type for any constructed object instance also used as data structures: `new Object, new Array, new Map, new Set, new WeakMap, new WeakSet, new Date` and almost everything made with `new` keyword.
 
 - `Function` - a **non-data** structure, though it also answers for `typeof` operator: `typeof instance === "function"`. This is merely a special shorthand for Functions, though every Function constructor is derived from Object constructor.
 
@@ -1392,6 +1393,12 @@ Special **non-data** but **Structural** type for any constructed object instance
 
  - `null` - `typeof instance === "object"`
  Special primitive type having additional usage for its value: if object is not inherited, then `null` is shown.
+ 
+# JS interview questions
+
+## `undefined` vs `non-defined`
+
+If a variable is accessed before defining then JS will show it as `not defined`, and if a variables is defined but not initialized I.e. no values is assigned it to it before accessing, then its `undefined`.
 
 #### `same-origin policy` 
 
@@ -1417,7 +1424,7 @@ Special **non-data** but **Structural** type for any constructed object instance
 
 #### Drawback of creating true `private` in js
 
-#### `undefined` vs `non-defined`
+
 
 #### `document load` vs `DOMContentLoaded` event
 
