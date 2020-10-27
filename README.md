@@ -1039,10 +1039,6 @@ const getProductURL = productId => {
 Piece of code (usually JavaScript on the Web) used to provide modern functionality on older browsers that do not natively support it.
 For example, a polyfill could be used to mimic the functionality of an HTML Canvas element on Microsoft Internet Explorer 7 using a Silverlight plugin or mimic support for CSS rem units, or text-shadow, or whatever you want.
 
-## Primitives
-
-`number`, `string`, `boolean`, `null`, `undefined`, `Symbol` (added in ES6).
-
 ## Prototype inheritance
 
 When it comes to **inheritance**, JavaScript only has one construct: **objects**. Each object has a `private` property which holds a link to another object called its **prototype**. That prototype object has a prototype of its own, and so on until an object is reached with `null` as its prototype. By definition, null has no prototype, and acts as **the final link in this prototype chain**.
@@ -1366,7 +1362,36 @@ let name = "Kealan";
 
 `Babel` transpiler is example of **transpiling** or `React-Native` behaviour which takes JavaScript code and transpiles this code for `Android`, `IOS` languages.
 
-#### Explain `values` and `types`
+## Types
+
+JavaScript is a **loosely typed** and **dynamic language**. Variables in JavaScript are not directly associated with any particular **value** type, and any **variable** can be assigned (and re-assigned) values of all types.
+
+```js
+let foo = 42;    // foo is now a number
+foo     = 'bar'; // foo is now a string
+foo     = true;  // foo is now a boolean
+```
+
+### Data types - Primitives
+
+- `undefined` - `typeof instance === "undefined"`
+- `Boolean` - `typeof instance === "boolean"`
+- `Number` - `typeof instance === "number"`
+- `String` - `typeof instance === "string"`
+- `BigInt` - `typeof instance === "bigint"`
+- `Symbol` - `typeof instance === "symbol"`
+
+### Structural types
+
+- `Object` - `typeof instance === "object"`
+Special **non-data** but **Structural** type for any constructed object instance also used as data structures: `new Object, new Array, new Map, new Set, new WeakMap, new WeakSet, new Date` and almost everything made with `new` keyword.
+
+- `Function` - a **non-data** structure, though it also answers for `typeof` operator: `typeof instance === "function"`. This is merely a special shorthand for Functions, though every Function constructor is derived from Object constructor.
+
+### Structural root primitive
+
+ - `null` - `typeof instance === "object"`
+ Special primitive type having additional usage for its value: if object is not inherited, then `null` is shown.
 
 #### `same-origin policy` 
 
