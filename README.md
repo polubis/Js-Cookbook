@@ -144,7 +144,7 @@ new Date(0) + 0          // 'Thu Jan 01 1970 02:00:00(EET)0'
 
 ## Communication with server
 
-### AJAX - Asynchronous JavaScript And XML
+### `AJAX` - Asynchronous JavaScript And XML
 
 In a nutshell, it is the use of the` XMLHttpRequest` object to communicate with **servers**. It can send and receive information in various formats, including `JSON`, `XML`, `HTML`, and `text` files. AJAX’s most appealing characteristic is its **asynchronous** nature, which means it can communicate with the server, exchange data, and update the page without having to **refresh the page**.
 
@@ -699,6 +699,66 @@ var Polygon = class Polygon {
 Square.height = 10;
 Square.width = 10;
 console.log(Square);
+```
+
+## `JSON` - JavaScript Object Notation
+
+The `JSON` format is syntactically identical to the code for creating JavaScript objects. Because of this similarity, a JavaScript program can easily convert `JSON` data into **native JavaScript objects**.
+
+- Data is in **name/value** pairs.
+- Data is separated by **commas**.
+- **Curly braces** hold objects.
+- **Square brackets** hold arrays.
+
+> `JSON` names require double quotes. JavaScript names do not.
+```json
+{
+	"employees":[
+	    {"firstName":"John", "lastName":"Doe"},
+	    {"firstName":"Anna", "lastName":"Smith"},
+	    {"firstName":"Peter", "lastName":"Jones"}
+	]
+}
+```
+
+```js
+var text = '{ "employees" : [' +
+'{ "firstName":"John" , "lastName":"Doe" },' +
+'{ "firstName":"Anna" , "lastName":"Smith" },' +
+'{ "firstName":"Peter" , "lastName":"Jones" } ]}';
+
+const jsObj = JSON.parse(text);
+const JSONtext = JSON.stringify(jsObj); // equal to text variable
+```
+
+### `JSON` data types
+
+`string`, `number,` `object JSON`, `array`, `boolean`, `null`.
+
+### `JSONP` - `JSON` with Padding
+
+Technique to overcome the `XMLHttpRequest` **same domain policy**. `AJAX` (`XMLHttpRequest`) request to a different domain. Instead of using `XMLHttpRequest` we have to use `<script>` tags. 
+
+```html
+<html>
+    <head>
+    </head>
+    <body>
+        <div id = 'twitterFeed'></div>
+        <script>
+        function myCallback(dataWeGotViaJsonp){
+            var text = '';
+            var len = dataWeGotViaJsonp.length;
+            for(var i=0;i<len;i++){
+                twitterEntry = dataWeGotViaJsonp[i];
+                text += '<p><img src = "' + twitterEntry.user.profile_image_url_https +'"/>' + twitterEntry['text'] + '</p>'
+            }
+            document.getElementById('twitterFeed').innerHTML = text;
+        }
+        </script>
+        <script type="text/javascript" src="http://twitter.com/status/user_timeline/padraicb.json?count=10&callback=myCallback"></script> // triggered after get data
+    </body>
+</html>
 ```
 
 ## Memoization
