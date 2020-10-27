@@ -142,6 +142,34 @@ new Date(0) - 0          // 0
 new Date(0) + 0          // 'Thu Jan 01 1970 02:00:00(EET)0'
 ```
 
+## Communication with server
+
+### AJAX - Asynchronous JavaScript And XML
+
+In a nutshell, it is the use of the` XMLHttpRequest` object to communicate with **servers**. It can send and receive information in various formats, including `JSON`, `XML`, `HTML`, and `text` files. AJAX’s most appealing characteristic is its **asynchronous** nature, which means it can communicate with the server, exchange data, and update the page without having to **refresh the page**.
+
+- 100% supported.
+- Sends cookies by default.
+- Supports timeout.
+- Errors always rejected
+
+```js
+function loadDoc() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      // do something with data
+      document.getElementById("demo").innerHTML =
+      	this.responseText;
+    }
+  };
+  xhttp.open("GET", "ajax_info.txt", true);
+  xhttp.send();
+}
+```
+
+> Right now almost all usess `Fetch API` or famous libs like `axios` instead of `XMLHttpRequest`
+
 ## Currying
 
 Functional programming technique - is a transformation of functions that translates a function from callable as `f(a, b, c)` into callable as `f(a)(b)(c)`.
@@ -1393,12 +1421,6 @@ Special **non-data** but **structural** type for any constructed object instance
 
  - `null` - `typeof instance === "object"`
  Special primitive type having additional usage for its value: if object is not inherited, then `null` is shown.
- 
-# JS interview questions
-
-## `undefined` vs `non-defined`
-
-If a variable is accessed before defining then JS will show it as `not defined`, and if a variables is defined but not initialized I.e. no values is assigned it to it before accessing, then its `undefined`.
 
 #### `same-origin policy` 
 
@@ -1408,11 +1430,7 @@ If a variable is accessed before defining then JS will show it as `not defined`,
 
 #### `Annonymous` vs `Named` functions
 
-#### `Temporal Dead Zone`
-
 #### `JSONP`
-
-#### `AJAX`
 
 #### `this` keyword
 
@@ -1424,15 +1442,7 @@ If a variable is accessed before defining then JS will show it as `not defined`,
 
 #### Drawback of creating true `private` in js
 
-
-
 #### `document load` vs `DOMContentLoaded` event
-
-#### `IIFEs`
-
-#### `AMD`
-
-#### `CommonJS`
 
 #### `Closures`
 
