@@ -151,7 +151,9 @@ In a nutshell, it is the use of the` XMLHttpRequest` object to communicate with 
 - 100% supported.
 - Sends cookies by default.
 - Supports timeout.
-- Errors always rejected
+- Errors always rejected.
+- Progress events supported.
+- Timeouts supported.
 
 ```js
 function loadDoc() {
@@ -168,7 +170,32 @@ function loadDoc() {
 }
 ```
 
-> Right now almost all usess `Fetch API` or famous libs like `axios` instead of `XMLHttpRequest`
+### `fetch` API
+
+Provides an interface for fetching resources (including across the network). It will seem familiar to anyone who has used `XMLHttpRequest`, but the new API provides a more powerful and flexible feature set.
+
+- 100% supported.
+- In some cases it does not sends cookies.
+- Cannot be aborted - until `AbortController` provided.
+- Errors like `404` not rejected.
+- No progress events supported.
+- Timeouts not supported.
+
+```js
+const controller = new AbortController();
+
+fetch(
+  'http://domain/service',
+  {
+    method: 'GET'
+    signal: controller.signal
+  })
+  .then( response => response.json() )
+  .then( json => console.log(json) )
+  .catch( error => console.error('Error:', error) );
+```
+
+### `axios`
 
 ## Currying
 
