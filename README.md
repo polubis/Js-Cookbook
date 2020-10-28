@@ -1711,7 +1711,15 @@ Special **non-data** but **structural** type for any constructed object instance
 
 ![MVC](https://mdn.mozillademos.org/files/16042/model-view-controller-light-blue.png)
 
-### Basic implementation (without View-Model) connection:
+```html
+<div id="root">
+  <button onclick="userController.display()">
+    Display user details
+  </button>
+</div>
+```
+
+### Partial MVC (without View-Model) connection:
 
 ```ts
 interface User {
@@ -1785,12 +1793,100 @@ class UserController {
 const userController = new UserController();
 ```
 
-```html
-<div id="root">
-  <button onclick="userController.display()">
-    Display user details
-  </button>
-</div>
+### Full MVC + Observer pattern:
+
+```js
+interface User {
+    id: number;
+    firstName: string;
+    lastName: string;
+}
+
+type UserObserver = (user: User) => void; 
+    
+class UserModel {
+    private _user: User;
+
+    private _observers: UserObserver[] = [];
+
+    get user(): User {
+        return this._user;
+    }
+
+    set user(user: User) {
+        this._user = user;
+        this._notify();
+    }
+
+    private _notify = (): void => {
+        this._observers.forEach(sb => sb(this.user));
+    }
+
+    subscribe = (observer: UserObserver): void => {
+        this._observers = [...this._observers, observer];
+    };
+
+    unsubscribe = (observer: UserObserver): void => {
+        this._observers = this._observers.filter(sb => sb !== observer);
+    };
+
+    load = (): Promise<void> => {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                const user = { id: 1, firstName: 'Piotr', lastName: 'Piotrowicz' } as User;
+                this.user = user;
+                resolve();
+            }, 500);
+        });
+    }
+}
+
+class UserView {
+    constructor(private _model: UserModel) {
+        this._model.subscribe(
+            user => {
+                this.render(user, document.getElementById('root'))
+            }
+        )
+    }
+
+    render = (user, target: HTMLElement): void => {
+        const ul = document.createElement('ul');
+
+        ul.appendChild(document.createRange().createContextualFragment(
+            `
+                <li>
+                    <span>${user.id}</span>
+                    <b>${user.firstName}</b>
+                    <b>${user.lastName}</b>
+                </li>`
+        ));
+
+        target.appendChild(ul);
+    }
+}
+
+class UserController {
+    private _view: UserView;
+    private _model: UserModel;
+
+    constructor() {
+        this._model = new UserModel();
+        this._view = new UserView(this._model);
+    }
+
+    display = async (): Promise<void> => {
+        const isUserDisplayed = !!this._model.user;
+
+        if (isUserDisplayed) {
+            return;
+        }
+
+        await this._model.load();
+    }
+}
+
+const userController = new UserController();
 ```
 
 ## MVVM
