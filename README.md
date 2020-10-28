@@ -2016,7 +2016,25 @@ const { display } = new Controller<User>({
 
 ## MVVM
 
+![MVVM](https://miro.medium.com/max/640/0*1ZrS8t3HvPzRAuqg.png)
+
 ## MVP
+
+Decouples different aspects in the code.
+
+- **Presenter** - Event Handling.
+- **View** - DOM Manipulation.
+- **Model** - Server communication (AJAX calls).
+
+![MVP](https://miro.medium.com/max/640/0*1ZrS8t3HvPzRAuqg.png)
+
+```html
+<div id="root">
+  <button onclick="userController.display()">
+    Display user details
+  </button>
+</div>
+```
 
 # Design patterns
 
