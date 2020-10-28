@@ -1889,6 +1889,131 @@ class UserController {
 const userController = new UserController();
 ```
 
+### MVC framework implementation
+
+- Hides implementation details.
+- Forces how to write code.
+- Creates layers.
+- Prefers composition over inheritance.
+- Unifies properties/methods the nomenclature.
+
+```js
+type Observer<T> = (data: T) => void;
+
+class Model<T> {
+    private _observers: Observer<T>[] = [];
+
+    get data(): T {
+        return this._data;
+    }
+
+    set data(data: T) {
+        this._data = data;
+        this._notify();
+    }
+
+    constructor(private _data: T) { }
+
+    private _notify = (): void => {
+        this._observers.forEach(ob => ob(this.data));
+    }
+
+    update = (data: T) => {
+        this.data = data;
+    }
+
+    sub = (observer: Observer<T>): void => {
+        this._observers = [...this._observers, observer];
+    };
+
+    unsub = (observer: Observer<T>): void => {
+        this._observers = this._observers.filter(ob => ob !== observer);
+    };
+}
+
+type Renderer<T> = (data: T) => string;
+
+class View<T> {
+    constructor(private _model: Model<T>, private _renderer: Renderer<T>, private _target: string) {
+        this._model.sub(this.render);
+    }
+
+    public render = (data: T): void => {
+        const foundTarget = document.querySelector(this._target);
+
+        if (foundTarget) {
+            foundTarget.appendChild(document.createRange().createContextualFragment(
+                this._renderer(data)
+            ));
+        }
+
+        throw new Error('Cannot found target');
+
+    };
+}
+
+interface Config<T> {
+    model: {
+        data: T;
+    }
+    view: {
+        renderer: Renderer<T>;
+        target: string;
+    }
+    display: (payload: { data: T, update: (data: T) => void }) => void;
+}
+
+class Controller<T> {
+    private _model: Model<T>;
+
+    private _view: View<T>;
+
+    constructor(private _config: Config<T>) {
+        this._model = new Model<T>(this._config.model.data);
+        this._view = new View<T>(this._model, this._config.view.renderer, this._config.view.target);
+    }
+
+    display = (): void => {
+        this._config.display({
+            data: this._model.data,
+            update: this._model.update,
+        });
+    }
+}
+
+interface User {
+    id: number;
+    firstName: string;
+    lastName: string;
+}
+
+const { display } = new Controller<User>({
+    model: {
+        data: null
+    },
+    view: {
+        renderer: (user) => `<div>${user.firstName}</div>`,
+        target: '#root'
+    },
+    display: async ({ data, update }): Promise<void> => {
+        if (!!data) {
+            return;
+        }
+
+        const getUsers = () => new Promise<User>((resolve) => {
+            setTimeout(() => {
+                const user = { id: 1, firstName: 'Piotr', lastName: 'Piotrowicz' } as User;
+                resolve(user);
+            }, 500);
+        });
+
+        const user = await getUsers();
+
+        update(user);
+    }
+});
+```
+
 ## MVVM
 
 ## MVP
