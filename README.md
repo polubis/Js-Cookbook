@@ -1705,13 +1705,13 @@ Special **non-data** but **structural** type for any constructed object instance
 
 **MVC** offers architectural benefits over standard JavaScript — it helps you write better organized, and therefore more maintainable code. This pattern has been used and extensively tested over multiple languages and generations of programmers.
 
-**Model** - Defines what data the app should contain. If the state of this data changes, then the model will usually notify the view (so the display can change as needed) and sometimes the controller (if different logic is needed to control the updated view).
-**View** - Defines how the app's data should be displayed.
-**Controller** - Contains logic that updates the model and/or view in response to input from the users of the app.
+- **Model** - Defines what data the app should contain. If the state of this data changes, then the model will usually notify the view (so the display can change as needed) and sometimes the controller (if different logic is needed to control the updated view).
+- **View** - Defines how the app's data should be displayed.
+- **Controller** - Contains logic that updates the model and/or view in response to input from the users of the app.
 
 ![MVC](https://mdn.mozillademos.org/files/16042/model-view-controller-light-blue.png)
 
-Basic implementation:
+### Basic implementation (without View-Model) connection:
 
 ```ts
 interface User {
@@ -1764,6 +1764,7 @@ class UserController {
     private _model: UserModel;
 
     constructor() {
+        // UserController handles communication between View & Model
         this._view = new UserView();
         this._model = new UserModel();
     }
