@@ -1269,6 +1269,62 @@ So the browser checks to see if the person1's prototype object has a `valueOf()`
   console.log(john.fullName); // John Doe
 ```
 
+## same-origin policy
+
+The **same-origin policy** is a critical security mechanism that restricts how a document or script loaded from one origin can interact with a resource from another origin. It helps isolate potentially malicious documents, reducing possible attack vectors.
+Two URLs have the same origin if the **protocol**, **port (if specified)**, and **host** are the same for both.
+
+- http://store.company.com/dir2/other.html - Same origin - Only the path differs.
+- http://store.company.com/dir/inner/another.html - Same origin - Only the path differs.
+- https://store.company.com/page.html - Failure - Different protocol.
+- http://store.company.com:81/dir/page.html - Failure Different port (http:// is port 80 by default).
+- http://news.company.com/dir/page.html	- Failure - Different host.
+
+### Origin inheritance
+
+Scripts executed from pages with an `about:blank` or `javascript: URL` inherit the origin of the document containing that URL, since these types of URLs do not contain information about an origin server.
+
+> `about:blank` is often used as a URL of new, empty popup windows into which the parent script writes content (e.g. via the `Window.open()` mechanism). If this popup also contains JavaScript, that script would inherit the same origin as the script that created it.
+
+### Cross-origin network access
+
+The **same-origin policy** controls interactions between two different origins, such as when you use `XMLHttpRequest` or an `<img>` element. These interactions are typically placed into three categories:
+
+- Cross-origin writes are typically allowed. Examples are links, redirects, and form submissions. Some HTTP requests require **preflight**.
+- Cross-origin embedding is typically allowed: `<script>`, `<link>`, `<img />`, `<video>`, `<audio>`.
+- Cross-origin reads are typically disallowed, but read access is often leaked by embedding. For example, you can read the dimensions of an embedded image, the actions of an embedded script, or the availability of an embedded resource.
+
+### CORS - Cross-Origin Resource Sharing
+
+Mechanism that uses additional `HTTP` headers to tell browsers to give a web application running at one origin, access to selected resources from a different origin. A web application executes a **cross-origin HTTP** request when it requests a resource that has a different origin **(domain, protocol, or port)** from its own.
+
+> Example of a cross-origin request: the front-end JavaScript code served from https://domain-a.com uses `XMLHttpRequest` to make a request for https://domain-b.com/data.json.
+
+This **cross-origin** sharing standard can enable cross-site HTTP requests for:
+
+- Invocations of the XMLHttpRequest or `fetch()` APIs.
+- Web Fonts (for cross-domain font usage in `@font-face` within CSS),
+- WebGL textures.
+- Images/video frames drawn to a canvas using `drawImage()`.
+- CSS Shapes from images.
+
+### Simple requests
+
+Some requests don’t trigger a **CORS preflight**. Those are called **simple requests** - `GET`, `HEAD`, `POST` - and many others.
+
+### Preflight requests
+
+First send an `HTTP` request by the `OPTIONS` method to the resource on the other domain, to determine if the actual request is safe to send. Cross-site requests are preflighted like this since they may have implications to user data.
+
+```js
+const xhr = new XMLHttpRequest();
+xhr.open('POST', 'https://bar.other/resources/post-here/'); // preflighted request
+xhr.setRequestHeader('X-PINGOTHER', 'pingpong');
+xhr.setRequestHeader('Content-Type', 'application/xml');
+xhr.onreadystatechange = handler;
+xhr.send('<person><name>Arun</name></person>'); 
+```
+
 ## Scope chain
 
 The scope chain is a list of all the variable objects of functions inside which the current function exists. Scope chain also consists of the current function execution object.
@@ -1506,8 +1562,6 @@ Special **non-data** but **structural** type for any constructed object instance
 
  - `null` - `typeof instance === "object"`
  Special primitive type having additional usage for its value: if object is not inherited, then `null` is shown.
-
-#### `same-origin policy` 
 
 #### How to force `strict mode` in Node
 
