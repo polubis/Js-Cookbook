@@ -1699,6 +1699,103 @@ Special **non-data** but **structural** type for any constructed object instance
 
 #### `Reflect.Realm`
 
+# Architectural patterns
+
+## MVC - Model View Controller
+
+**MVC** offers architectural benefits over standard JavaScript — it helps you write better organized, and therefore more maintainable code. This pattern has been used and extensively tested over multiple languages and generations of programmers.
+
+**Model** - Defines what data the app should contain. If the state of this data changes, then the model will usually notify the view (so the display can change as needed) and sometimes the controller (if different logic is needed to control the updated view).
+**View** - Defines how the app's data should be displayed.
+**Controller** - Contains logic that updates the model and/or view in response to input from the users of the app.
+
+![MVC](https://mdn.mozillademos.org/files/16042/model-view-controller-light-blue.png)
+
+Basic implementation:
+
+```ts
+interface User {
+    id: number;
+    firstName: string;
+    lastName: string;
+}
+
+class UserModel {
+    private _user: User;
+
+    get user(): User {
+        return this._user;
+    }
+
+    set user(user: User) {
+        this._user = user;
+    }
+
+    load = (): Promise<void> => {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                const user = { id: 1, firstName: 'Piotr', lastName: 'Piotrowicz' } as User;
+                this.user = user;
+                resolve();
+            }, 500);
+        });
+    }
+}
+
+class UserView {
+    render = (user, target: HTMLElement): void => {
+        const ul = document.createElement('ul');
+
+        ul.appendChild(document.createRange().createContextualFragment(
+            `
+                <li>
+                    <span>${user.id}</span>
+                    <b>${user.firstName}</b>
+                    <b>${user.lastName}</b>
+                </li>`
+        ));
+
+        target.appendChild(ul);
+    }
+}
+
+class UserController {
+    private _view: UserView;
+    private _model: UserModel;
+
+    constructor() {
+        this._view = new UserView();
+        this._model = new UserModel();
+    }
+
+    display = async (): Promise<void> => {
+        const isUserDisplayed = !!this._model.user;
+
+        if (isUserDisplayed) {
+            return;
+        }
+
+        await this._model.load();
+
+        this._view.render(this._model.user, document.getElementById('root'));
+    }
+}
+
+const userController = new UserController();
+```
+
+```html
+<div id="root">
+  <button onclick="userController.display()">
+    Display user details
+  </button>
+</div>
+```
+
+## MVVM
+
+## MVP
+
 # Design patterns
 
 ## Module pattern
@@ -1734,7 +1831,7 @@ const iifeCounterModule = ((dependencyModule1, dependencyModule2) => {
 })(dependencyModule1, dependencyModule2);
 ```
 
-## Reavealing module pattern
+### Reavealing module pattern
 
 Same as **module pattern** with one difference - public API's are assigned into variables.
 
@@ -1758,12 +1855,6 @@ const revealingCounterModule = (() => {
 revealingCounterModule.increase();
 revealingCounterModule.reset();
 ```
-
-#### `MVC`
-
-#### `MVVM`
-
-#### `MVP`
 
 #### `Flux`
 
