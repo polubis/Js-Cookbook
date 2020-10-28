@@ -1827,7 +1827,7 @@ class UserModel {
     };
 
     unsubscribe = (observer: UserObserver): void => {
-        this._observers = this._observers.filter(sb => sb !== observer);
+        this._observers = this._observers.filter(ob => ob !== observer);
     };
 
     load = (): Promise<void> => {
