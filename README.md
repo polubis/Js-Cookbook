@@ -1327,7 +1327,38 @@ Object.defineProperty({}, 'prop', {
 
 ## Name shadowing
 
+Occurs when a **variable** is declared in certain scope has the same name defined on it’s outer scope.
+
+```js
+var a  = 5;
+
+const Fn = () => {
+    var a = 6; 
+
+    console.log(a); // 6
+}
+
+Fn();
+```
+
 ## `NaN`
+
+The global NaN property is a value representing Not-A-Number.
+
+```js
+function sanitise(x) {
+  if (isNaN(x)) {
+    return NaN;
+  }
+  return x;
+}
+
+console.log(sanitise('1'));
+// expected output: "1"
+
+console.log(sanitise('NotANumber'));
+// expected output: NaN
+```
 
 ## Native objects
 
@@ -1368,6 +1399,172 @@ Piece of code (usually JavaScript on the Web) used to provide modern functionali
 For example, a polyfill could be used to mimic the functionality of an HTML Canvas element on Microsoft Internet Explorer 7 using a Silverlight plugin or mimic support for CSS rem units, or text-shadow, or whatever you want.
 
 ## Promise
+
+The `Promise` object represents the eventual completion (or failure) of an asynchronous operation and its resulting value. `PromiseStatus` can have three different values: `pending`, `resolved`, or `rejected`. 
+
+> For `pending` status value will be always `undefined`.
+
+```js
+const promise = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    reject();
+  }, 500);
+});
+
+promise
+  .then(
+    () => {
+      console.log("ok");
+    },
+    () => {
+      console.log("error"); // called
+      return Promise.reject();
+    }
+  )
+  .then(
+    (res) => {
+      console.log("ok");
+    },
+    () => {
+      console.log("error"); // called
+    }
+  )
+  .catch(() => {
+    console.log("error"); // not called
+  })
+  .finally(() => {
+    console.log("finalized");
+  });
+
+```
+
+![Promise object](https://miro.medium.com/max/469/1*n6s4IswZBVUIHc2K3apONA.png)
+
+![Promise](https://miro.medium.com/max/875/1*0mBlni5vsYZE2wFzfVv8EA.png)
+
+## `async` & `await`
+
+The word `async` before a function means one simple thing: a function always returns a `promise`. Other values are wrapped in a **resolved promise automatically**.
+
+```js
+const getUsers = async () => {
+  return { id: 0, firstName: "Piotr" };
+};
+// EQUAL TO
+const getUsers = () => Promise.resolve();
+
+getUsers().then() // { id: 0;, firstName: 'Piotr' }
+```
+
+The `await` makes JavaScript wait until that promise settles and returns its result.
+
+```js
+async function f() {
+
+  let promise = new Promise((resolve, reject) => {
+    setTimeout(() => resolve("done!"), 1000)
+  });
+ 
+  try {
+     let result = await promise; // wait until the promise resolves (*) 
+  }
+  catch {
+     // handle error
+  }
+
+  alert(result); // "done!"
+}
+
+f();
+```
+
+### `Promise.all()`
+
+Takes an iterable of promises as an input, and returns a single `Promise`.  Runs almost **parallel** - depends on CPU.
+
+- Resolves when **all** resolves.
+- It rejects immediately upon any of the input **promises** rejecting or **non-promises** throwing an error, and will reject with this first rejection message / error.
+
+```js
+const getUsers = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        id: 0,
+        firstName: "Piotr",
+      });
+    }, 500);
+  });
+};
+
+const getBooks = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({ id: 0, name: "Harry Potter" });
+    }, 500);
+  });
+};
+
+Promise.all([getUsers(), getBooks()]).then((res) => {
+  console.log(res);
+});
+
+```
+
+### `Promise.race()`
+
+Returns a promise that fulfills or rejects as soon as one of the promises in an iterable fulfills or rejects, with the value or reason from that promise.
+
+```js
+const promise1 = new Promise((resolve, reject) => {
+  setTimeout(resolve, 500, 'one');
+});
+
+const promise2 = new Promise((resolve, reject) => {
+  setTimeout(resolve, 100, 'two');
+});
+
+Promise.race([promise1, promise2]).then((value) => {
+  console.log(value);
+  // Both resolve, but promise2 is faster
+});
+// expected output: "two"
+```
+
+### `Promise.any()`
+
+Takes an iterable of `Promise` objects and, as soon as one of the promises in the iterable fulfills, returns a single promise that resolves with the value from that promise. If no promises in the iterable fulfill (if all of the given promises are rejected), then the returned promise is rejected with an `AggregateError`, a new subclass of `Error` that groups together individual errors. Essentially, this method is the opposite of `Promise.all()`.
+
+```js
+const promise1 = Promise.reject(0);
+const promise2 = new Promise((resolve) => setTimeout(resolve, 100, 'quick'));
+const promise3 = new Promise((resolve) => setTimeout(resolve, 500, 'slow'));
+
+const promises = [promise1, promise2, promise3];
+
+Promise.any(promises).then((value) => console.log(value));
+
+// expected output: "quick"
+```
+
+### `Promise.allSettled()`
+
+Returns a promise that resolves after all of the given promises have either fulfilled or rejected, with an array of objects that each describes the outcome of each promise.
+It is typically used when you have multiple asynchronous tasks that are not dependent on one another to complete successfully, or you'd always like to know the result of each promise.
+In comparison, the Promise returned by `Promise.all()` may be more appropriate if the tasks are dependent on each other / if you'd like to immediately reject upon any of them rejecting.
+
+```js
+const promise1 = Promise.resolve(3);
+const promise2 = new Promise((resolve, reject) => setTimeout(reject, 100, 'foo'));
+const promises = [promise1, promise2];
+
+Promise.allSettled(promises).
+  then((results) => results.forEach((result) => console.log(result.status)));
+
+// expected output:
+// "fulfilled"
+// "rejected"
+```
 
 ## Prototype inheritance
 
@@ -1675,9 +1872,19 @@ employee.address.city = "Noida"; // attributes of child object can be modified
 console.log(employee.address.city) // Output: "Noida"
 ```
 
-## `strict-mode` vs `non-strict`
+## `strict-mode`
+
+- Eliminates some JavaScript silent errors by changing them to `throw` errors.
+- Fixes mistakes that make it difficult for JavaScript engines to perform optimizations: strict mode code can sometimes be made to run faster than identical code that's not strict mode.
+- Prohibits some syntax likely to be defined in future versions of ECMAScript,
+- `this` global bind as `undefined`,
+- using variables without declarations throws an errror,
+- changing values of readonly properties throws an error,
+- some security fixes.
 
 ## Strict equality `===`
+
+Checks whether its two operands are equal, returning a `Boolean` result. Unlike the `==`, the strict equality operator always considers operands of different types to be different.
 
 ## Variables
 
