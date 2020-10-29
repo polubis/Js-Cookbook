@@ -7,6 +7,12 @@
 #### ES2019 a.k.a. ES10
 #### ES2020 a.k.a. ES11
 
+## `addEventListener()` vs `on[EVENTNAME]`
+
+## `areObjectsSame()`
+
+## Arrow functions
+
 ## Callback
 
 Function which is passed as argument to other function and executed inside or returned.
@@ -258,6 +264,40 @@ console.log(
   curriedAdd(4)(2)(16)(20)
 ); // 42
 ```
+
+## Deep freeze
+
+## `document load` event
+
+## `DOMContentLoaded` event
+
+## Drawback of true `private`
+
+One drawback of creating private method in Javascript is **memory-inefficient** because a copy of the `private` method will be created every time a new instance is created.
+
+```js
+function contact(first, last) {
+    this.firstName = first;
+    this.lastName = last;
+    this.mobile;
+
+    // private method
+    var formatPhoneNumber = function(number) {
+        // format phone number based on input
+    };
+
+    // public method
+    this.setMobileNumber = function(number) {
+        this.mobile = formatPhoneNumber(number);
+    };
+}
+
+var rob = new contact('Rob', 'Sanderson');
+var don = new contact('Donald', 'Trump');
+var andy = new contact('Andy', 'Whitehall');
+```
+
+## Enum in JavaScript
 
 ## Event loop
 
@@ -719,6 +759,14 @@ Square.width = 10;
 console.log(Square);
 ```
 
+## Host objects
+
+Objects supplied by the host environment to complete the execution environment of ECMAScript.
+
+Examples: `window`, `document`, `location`, `history`, `XMLHttpRequest`, `setTimeout`, `getElementsByTagName`, `querySelectorAll`, ...etc
+
+## `instance of`
+
 ## `JSON` - JavaScript Object Notation
 
 The `JSON` format is syntactically identical to the code for creating JavaScript objects. Because of this similarity, a JavaScript program can easily convert `JSON` data into **native JavaScript objects**.
@@ -793,6 +841,10 @@ function init() {
 }
 init();
 ```
+
+## `load event`
+
+## Loose equality `==`
 
 ## Memoization
 
@@ -1155,7 +1207,23 @@ Object.defineProperty({}, 'prop', {
 });
 ```
 
+## Named functions
+
+- we can get name of the function `functionInstance.name`,
+- printed in stack traces,
+- can be reused
+
 ## Name shadowing
+
+## `NaN`
+
+## Native objects
+
+Object in an ECMAScript implementation whose semantics are fully defined by this specification rather than by the host environment.
+
+Examples: `Date`, `Math`, `parseInt`, `eval`, `indexOf`, ...etc.
+
+## Pass by reference vs pass by value
 
 ## Partial application
 
@@ -1186,6 +1254,8 @@ const getProductURL = productId => {
 
 Piece of code (usually JavaScript on the Web) used to provide modern functionality on older browsers that do not natively support it.
 For example, a polyfill could be used to mimic the functionality of an HTML Canvas element on Microsoft Internet Explorer 7 using a Silverlight plugin or mimic support for CSS rem units, or text-shadow, or whatever you want.
+
+## Promise
 
 ## Prototype inheritance
 
@@ -1471,6 +1541,10 @@ loadScript("/article/script-async-defer/long.js");
 loadScript("/article/script-async-defer/small.js");
 ```
 
+## `strict-mode` vs `non-strict`
+
+## Strict equality `===`
+
 ## Variables
 
 ### `var`
@@ -1714,64 +1788,6 @@ Special **non-data** but **structural** type for any constructed object instance
 
  - `null` - `typeof instance === "object"`
  Special primitive type having additional usage for its value: if object is not inherited, then `null` is shown.
-
-#### How to force `strict mode` in Node
-
-#### `Host objects` vs `Native objects`
-
-#### `Annonymous` vs `Named` functions
-
-#### `deep-freeze` - how this can be implemented ?
-
-#### `pass by reference` vs `pass by value`
-
-#### How compare 2 objects ?
-
-#### Drawback of creating true `private` in js
-
-#### `document load` vs `DOMContentLoaded` event
-
-#### `Closures`
-
-#### `Enums` in pure JS
-
-# `ES5` Language syntax
-
-#### `Promise`
-
-#### `Object.freeze`
-
-#### `call()`
-
-#### `apply()`
-
-#### `bind()`
-
-#### `function constructors`
-
-#### Loose equality `==`
-
-#### Strit equality `===`
-
-#### `load event` - purpose, other solutions 
-
-#### `strict mode` vs `non strict`
-
-#### `typeof` operator
-
-#### `instanceof` operator
-
-#### `new` keyword
-
-#### `var` keyword
-
-#### `undefined` value
-
-#### `null` value
-
-#### `NaN` value
-
-#### `throw Error('msg')` vs `throw new Error('msg')`
 
 # `ES6` Language syntax
 
