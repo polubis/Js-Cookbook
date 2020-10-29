@@ -2206,6 +2206,141 @@ Special **non-data** but **structural** type for any constructed object instance
 
 # SOLID
 
+## S — Single responsibility principle
+
+A `class`, `function`, `module` should have one and only one reason to change, meaning that a `class`, `function`, `module` should only have one job.
+
+> Do
+```js
+export class Comment {
+  // ...
+  update({content, likesCount, isLikedByUser}) {
+    saveCommentRepository
+      .save(this.model)
+      .then((updatedModel) => {
+        this.model = updatedModel;
+        this.render();
+      }, (error) => {
+        throw error;
+      });
+  }
+}
+
+export class SaveCommentRepository {
+  save(model) {
+    return $.post({
+      url: 'some/funny/url/',
+      data: model.toJSON()
+    });
+  }
+}
+```
+
+> Don't do
+```js
+// How NOT TO write JS
+export class Comment {
+  // ...
+  update(newModel) {
+    $.post({
+        url: 'some/funny/url/',
+        data: model.toJSON()
+      }).then((updatedModel) => {
+        this.model = updatedModel;
+      }, (error) => {
+        throw new Error(error.message);
+      });
+  }
+}
+```
+
+## O — Open closed principle
+
+Objects or entities should be open for extension, but closed for modification. The goal is to make the system easy to extend without incurring a high impact of change.
+Software systems must be allowed to change their behavior by adding new code rather than changing the existing code.
+
+> Do
+```js
+export class EditInput extends Input {
+  send() {
+    const content = this.rootEl.textContent;
+    editCommentRepository
+      .save(content)
+      .then((updatedModel) => {
+        this.model.update(updatedModel);
+        this.addEditedHistoryView(updatedModel);
+        this.render();
+      }, (error) => {
+        // ...
+      });
+  }
+}
+export class Input {
+  send() {
+    const content = this.rootEl.textContent;
+    saveCommentRepository
+      .save(content)
+      .then((updatedModel) => {
+        this.model.update(updatedModel);
+        this.render();
+      }, (error) => {
+        // ...
+      });
+  }
+}
+```
+
+> Don't do
+```js
+export class Input {
+  send() {
+    const content = this.rootEl.textContent;
+    if (this.model.isEmpty()) {
+      saveCommentRepository
+        .save(content)
+        .then((updatedModel) => {
+          this.model.update(updatedModel);
+          this.render();
+        }, (error) => {
+          // ...
+        });
+    } else {
+      editCommentRepository
+        .save(content)
+        .then((updatedModel) => {
+          this.model.update(updatedModel);
+          this.addEditedHistoryView(updatedModel);
+          this.render();
+        }, (error) => {
+          // ...
+        });
+    }
+  }
+}
+```
+
+## L — Liskov substitution principle
+
+Subclass should override the parent class methods in a way that does not break functionality from a client’s point of view.
+"If it looks like a duck, quacks like a duck, but needs batteries - you probably have the wrong abstraction".
+
+> Do
+```js
+
+```
+
+> Don't do
+```js
+```
+
+## I — Interface segregation principle
+
+A client should never be forced to implement an interface that it doesn’t use or clients shouldn’t be forced to depend on methods they do not use.
+
+## D — Dependency Inversion principle
+
+Entities must depend on abstractions not on concretions. It states that the high level module must not depend on the low level module, but they should depend on abstractions.
+
 # ORP - Object oriented programming
 
 ## Abstraction
@@ -2898,5 +3033,40 @@ revealingCounterModule.reset();
 
 #### `redux-saga`
 
+git rebase 
+git cherry pick
+git merge strategies
 
+SOLID
+DRY
+Repeat if Needed
+n+1
+Sql injection
+XSS
+
+Nulish operator
+Op chaining
+
+Generator 
+Iterator
+
+oop		bx model
+
+rem em	
+reedux
+react
+storages
+proxy
+big int
+symbol
+
+koolejka itp
+
+cqrs
+
+react angular
+
+di
+
+shallow equal vs depth
 
