@@ -2204,6 +2204,211 @@ Special **non-data** but **structural** type for any constructed object instance
 
 #### `Reflect.Realm`
 
+# SOLID
+
+# ORP - Object oriented programming
+
+## Abstraction
+
+Way of creating a simple model of a more complex real-world entities, which contains the only important properties from the perspective of the context of an application. Abstraction manages complexity of a system by hiding internal details and composing it in several smaller systems.
+
+![Abstraction](https://miro.medium.com/max/875/1*D95h8JObfAxrM0b3vxCD8w.jpeg)
+
+```js
+class Person {
+    constructor({firstName, lastName, job}) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.job = job;
+        this.skills = [];
+        Person._amount = Person._amount || 0;
+        Person._amount++;
+    }
+
+    static get amount() {
+        return Person._amount;
+    }
+    
+    get fullName() {
+        return `${this.firstName} ${this.lastName}`;
+    }
+
+    set fullName(fN) {
+        if (/[A-Za-z]\s[A-Za-z]/.test(fN)) {
+            [this.firstName, this.lastName] = fN.split(' ');
+        } else {
+            throw Error('Bad fullname');
+        }
+    }
+
+    learn(skill) {
+        this.skills.push(skill);
+    }
+}
+
+class Job {
+    constructor(company, position, salary) {
+        this.company = company;
+        this.position = position;
+        this.salary = salary;
+    }
+}
+
+const john = new Person({
+    firstName: 'John',
+    lastName: 'Doe',
+    job: new Job('Youtube', 'developer', 200000)
+});
+
+const roger = new Person({
+    firstName: 'Roger',
+    lastName: 'Federer',
+    job: new Job('ATP', 'tennis', 1000000)
+});
+
+john.fullName = 'Mike Smith';
+john.learn('es6');
+roger.learn('programming');
+john.learn('es7');
+```
+
+## Inheritance
+
+Approach of sharing common functionality within a collection of classes. It provides an ability to avoid code duplication in a class that needs the same data and functions which another class already has. At the same time, it allows us to override or extend functionality that should have a different behavior.
+
+![Inheritance](https://miro.medium.com/max/875/1*UKdo9OtMxozL7Evz0-vORw.png)
+
+```js
+class ClassA {
+    constructor() {
+        this.propA = 'A';
+    }
+
+    methodA() {
+        return this.propA;
+    }
+}
+
+class ClassB extends ClassA {
+    constructor() {
+        super();
+        this.propB = 'B';
+    }
+
+    methodA() {
+        return 'NEW B';
+    }
+
+    methodB() {
+        return this.propB + this.methodA();
+    }
+}
+
+class ClassC extends ClassB {
+    constructor() {
+        super();
+        this.propC = 'C';
+         this.testProp = 1;
+    }
+
+    methodC() {
+        return this.propC + super.methodB();
+    }
+}
+```
+
+## Polymorphism
+
+Ability to create a property, a function, or an object that has more than one realization. In other words, it is an ability of multiple object types to implement the same functionality that can work in a different way but supports a common interface.
+
+```js
+class Car {
+   drive() {
+	console.log('Car driving');
+   }
+}
+
+class Opel extends Car {
+   drive() {
+	console.log('Opel driving');
+   }
+}
+
+class Nissan {
+   drive() {
+	console.log('Nissan driving');
+   }
+}
+```
+
+![Polymorphism](https://miro.medium.com/max/875/1*Pu67br76VEd7Aoa5ieMj5Q.jpeg)
+
+## Encapsulation
+
+Encapsulation as a concept of bundling data related variables and properties with behavioral methods in one class or code unit. Also encapsulation is an approach for restricting direct access to some of the data structure elements (fields, properties, methods, etc).
+
+```js
+class Car {
+    #speed = 0;
+    #engine = TURN.OFF;
+    model;
+    speedLimit;
+
+    get speed() {
+        return this.#speed;
+    }
+
+    constructor(model, speedLimit = 100) {
+        this.model = model;
+        this.speedLimit = speedLimit;
+    }
+
+    async drive(speed = 10) {
+        this.#engine = TURN.ON;
+        await this.setSpeed(speed);
+        console.log(`Ridding with speed: ${this.#speed}`);
+        return this.#speed;
+    }
+
+    async stop() {
+        await this.setSpeed(0);
+        this.engine = TURN.OFF;
+        return this.#speed;
+    }
+
+    async setSpeed(speed) {
+        return new Promise((resolve, reject) => {
+            if (this.engine === TURN.OFF) {
+                reject('Turn on engine!');
+            } else if (this.speedLimit < speed) {
+                reject(`Can't reach speed: ${speed}. Max speed limit is ${this.speedLimit}`);
+            } else {
+                const interval = setInterval(async () => {
+                    console.log('current speed:', this.#speed);
+                    if (this.#speed < speed) {
+                        this.#speed++;
+                    } else if (this.#speed > speed) {
+                        this.#speed--;
+                    } else {
+                        resolve(this.#speed);
+                        clearInterval(interval);
+                    }
+                }, 100);
+            }
+        });
+    }
+
+    toString() {
+        return `Car: ${this.model}; Engine turned on: ${this.#engine}; ` + (this.#engine ? `Current speed: ${this.#speed}` : '');
+    }
+}
+
+const TURN = {
+    OFF: false,
+    ON: true
+}
+```
+
 # Architectural patterns
 
 ## MVC - Model View Controller
