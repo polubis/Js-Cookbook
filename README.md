@@ -1525,6 +1525,108 @@ let name = "Kealan";
 
 ![TDZReferenceError](https://www.freecodecamp.org/news/content/images/2020/10/image-5.png)
 
+## `this`
+
+Refers to an object, that object which is **executing the current bit** of javascript code. To understand `this` keyword, only we need to know how, **when and from where** the function is called, does not matter **how and where** function is declared or defined. In other words, every javascript function while executing has a reference to its current execution context, called `this`.
+
+### Default binding of `this`
+
+In `strict mode` default value of `this` keyword is `undefined` otherwise `this` keyword act as **global object**.
+
+```js
+// "use strict"
+
+function bike() {
+  console.log(this.name);
+}
+
+var name = "Ninja";
+
+bike(); // "Ninja"
+```
+
+```js
+"use strict"
+
+function bike() {
+  console.log(this.name);
+}
+
+var name = "Ninja";
+
+bike(); // TypeError: Cannot read property name of undefined
+```
+
+### Implict binding of `this`
+
+When there is an object property which we are calling as a **method** then that object becomes `this` object or **execution context object** for that method.
+
+```js
+function bike() {
+  console.log(this.name);
+}
+
+var obj1 = { name: "Pulsar", bike: bike };
+var obj2 = { name: "Gixxer", bike: bike };
+
+obj1.bike();      // "Pulsar"
+obj2.bike();      // "Gixxer"
+```
+
+### Explicit binding of `this`
+
+When we use `call()` and `apply()` method with calling function, both of those methods take as their first parameter as **execution context**.
+
+```js
+function bike() {
+  console.log(this.name);
+}
+
+var obj = { name: "Pulsar" }
+
+bike.call(obj);   // "Pulsar"
+bike.apply(obj, ['argument1', 'argument2']); // Pulsar
+```
+
+### Fixed / Hard binding of `this`
+
+Foces `this` object to be same always no matter from where and how it gets called.
+
+```js
+var bike = function() {
+  console.log(this.name);
+}
+var name = "Ninja";
+var obj1 = { name: "Pulsar" };
+var obj2 = { name: "Gixxer" };
+
+var originalBikeFun = bike;
+bike = function() {
+  originalBikeFun.call(obj1);
+};
+
+bike(); // 'Pulsar'
+bike.call(obj2); // 'Pulsar'
+```
+
+### `new` keyword and `this` binding
+
+Bind `this` with the newly created object.
+
+```js
+function bike() {
+  var name = "Ninja";
+  this.maker = "Kawasaki";
+  console.log(this.name + " " + maker);  // undefined Bajaj
+}
+
+var name = "Pulsar";
+var maker = "Bajaj";
+
+obj = new bike();
+console.log(obj.maker);                  // "Kawasaki"
+```
+
 ## Transpiling
 
 **Source-to-source** compilation, are tools that read source code written in one programming language, and produce the equivalent code in another language. Languages you write that transpile to JavaScript are often called **compile-to-JS languages**, and are said to target JavaScript.
@@ -1568,10 +1670,6 @@ Special **non-data** but **structural** type for any constructed object instance
 #### `Host objects` vs `Native objects`
 
 #### `Annonymous` vs `Named` functions
-
-#### `JSONP`
-
-#### `this` keyword
 
 #### `deep-freeze` - how this can be implemented ?
 
