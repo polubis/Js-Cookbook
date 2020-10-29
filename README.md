@@ -7,11 +7,48 @@
 #### ES2019 a.k.a. ES10
 #### ES2020 a.k.a. ES11
 
-## `addEventListener()` vs `on[EVENTNAME]`
-
 ## `areObjectsSame()`
 
-## Arrow functions
+```js
+function isEquivalent(a, b) {
+    // Create arrays of property names
+    var aProps = Object.getOwnPropertyNames(a);
+    var bProps = Object.getOwnPropertyNames(b);
+
+    // If number of properties is different,
+    // objects are not equivalent
+    if (aProps.length != bProps.length) {
+        return false;
+    }
+
+    for (var i = 0; i < aProps.length; i++) {
+        var propName = aProps[i];
+
+        // If values of same property are not equal,
+        // objects are not equivalent
+        if (a[propName] !== b[propName]) {
+            return false;
+        }
+    }
+
+    // If we made it this far, objects
+    // are considered equivalent
+    return true;
+}
+
+// Outputs: true
+console.log(isEquivalent(bobaFett, jangoFett));
+```
+
+## Arrow functions expression
+
+An arrow **function expression is a compact alternative** to a **traditional function expression**, but is limited and can't be used in all situations.
+
+- Does not have its own bindings to this or super, and should not be used as methods.
+- Does not have `arguments`, or `new.target` keywords - use `...rest` operator for arguments instead.
+- Not suitable for `call, apply and bind methods`, which generally rely on establishing a scope.
+- Can not be used as `constructors`.
+- Can not use `yield`, within its body.
 
 ## Callback
 
@@ -267,9 +304,61 @@ console.log(
 
 ## Deep freeze
 
+```js
+function deepFreeze(object) {
+  // Retrieve the property names defined on object
+  const propNames = Object.getOwnPropertyNames(object);
+
+  // Freeze properties before freezing self
+  
+  for (const name of propNames) {
+    const value = object[name];
+
+    if (value && typeof value === "object") { 
+      deepFreeze(value);
+    }
+  }
+
+  return Object.freeze(object);
+}
+
+const obj2 = {
+  internal: {
+    a: null
+  }
+};
+
+deepFreeze(obj2);
+
+obj2.internal.a = 'anotherValue'; // fails silently in non-strict mode
+obj2.internal.a; // null
+```
+
 ## `document load` event
 
+Fired when the whole page has loaded, including all dependent resources such as stylesheets and images.
+
+```js
+window.addEventListener('load', (event) => {
+  console.log('page is fully loaded');
+});
+```
+
 ## `DOMContentLoaded` event
+
+The `DOMContentLoaded` event fires when the initial HTML document has been completely loaded and parsed, without waiting for stylesheets, images, and subframes to finish loading.
+
+```js
+function doSomething() {
+  console.info('DOM loaded');
+}
+
+if (document.readyState === 'loading') {  // Loading hasn't finished yet
+  document.addEventListener('DOMContentLoaded', doSomething);
+} else {  // `DOMContentLoaded` has already fired
+  doSomething();
+}
+```
 
 ## Drawback of true `private`
 
@@ -298,6 +387,8 @@ var andy = new contact('Andy', 'Whitehall');
 ```
 
 ## Enum in JavaScript
+
+
 
 ## Event loop
 
@@ -1539,6 +1630,28 @@ function loadScript(src) {
 // long.js runs first because of async=false
 loadScript("/article/script-async-defer/long.js");
 loadScript("/article/script-async-defer/small.js");
+```
+
+## Shallow freeze
+
+The result of calling `Object.freeze(object)` only applies to the immediate properties of object itself and will prevent future property addition, removal or value re-assignment operations only on object. If the value of those properties are objects themselves, those objects are not frozen and may be the target of property addition, removal or value re-assignment operations.
+
+```js
+const employee = {
+  name: "Mayank",
+  designation: "Developer",
+  address: {
+    street: "Rohini",
+    city: "Delhi"
+  }
+};
+
+Object.freeze(employee);
+
+employee.name = "Dummy"; // fails silently in non-strict mode
+employee.address.city = "Noida"; // attributes of child object can be modified
+
+console.log(employee.address.city) // Output: "Noida"
 ```
 
 ## `strict-mode` vs `non-strict`
