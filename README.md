@@ -19,6 +19,24 @@ const fibb = (calc) => {
 }
 ```
 
+## Closure
+
+Function which returns other function. Allows to "use" variables later with next function call. **Closure** is transformed to object behind the scenes.
+
+```js
+function makeFunc() {
+  var name = 'Mozilla';
+  function displayName() {
+    alert(name);
+  }
+  return displayName;
+}
+
+var myFunc = makeFunc();
+myFunc();
+```
+
+
 ## Coercion
 
 https://dorey.github.io/JavaScript-Equality-Table/
@@ -761,6 +779,21 @@ Technique to overcome the `XMLHttpRequest` **same domain policy**. `AJAX` (`XMLH
 </html>
 ```
 
+## Lexical scoping
+
+Every inner level can access its outer levels.
+
+```js
+function init() {
+  var name = 'Mozilla'; // name is a local variable created by init
+  function displayName() { // displayName() is the inner function, a closure
+    alert(name); // use variable declared in the parent function
+  }
+  displayName();
+}
+init();
+```
+
 ## Memoization
 
 Memoization is an optimization technique that speeds up applications by storing the results of expensive function calls and returning the cached result when the same inputs occur again.
@@ -1122,6 +1155,8 @@ Object.defineProperty({}, 'prop', {
 });
 ```
 
+## Name shadowing
+
 ## Partial application
 
 Technique of fixing a number of arguments to a function, producing another function of smaller arguments. Partial application produces functions of arbitrary number of arguments. The transformed function is different from the original — it needs less arguments (have smaller **arity**).
@@ -1267,6 +1302,21 @@ So the browser checks to see if the person1's prototype object has a `valueOf()`
 
   console.log(john instanceof Person);
   console.log(john.fullName); // John Doe
+```
+
+## Rounding problem
+
+`number` type varialbes acts like `float` in JavaScript. This generates problems when comparing values or displaying.
+
+> `Number.EPSILON` property represents the difference between 1 and the smallest floating point number greater than 1.
+```js
+function areEqual(num1, num2) {
+	return Math.abs( num1 - num2 ) < Number.EPSILON;
+}
+
+console.log(0.1 + 0.2); // 0.3000000004
+console.log(0.1 + 0.2 === 0.3); // false
+console.log(areEqual(0.1 + 0.2, 0.1)); // true
 ```
 
 ## same-origin policy
