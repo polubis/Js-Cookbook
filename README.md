@@ -2261,62 +2261,28 @@ Software systems must be allowed to change their behavior by adding new code rat
 
 > Do
 ```js
-export class EditInput extends Input {
-  send() {
-    const content = this.rootEl.textContent;
-    editCommentRepository
-      .save(content)
-      .then((updatedModel) => {
-        this.model.update(updatedModel);
-        this.addEditedHistoryView(updatedModel);
-        this.render();
-      }, (error) => {
-        // ...
-      });
-  }
+const users = ['adam', 'pawel'];
+
+const usersMaker = {
+   add: (user) => {
+  	users.push(user);
+   }
 }
-export class Input {
-  send() {
-    const content = this.rootEl.textContent;
-    saveCommentRepository
-      .save(content)
-      .then((updatedModel) => {
-        this.model.update(updatedModel);
-        this.render();
-      }, (error) => {
-        // ...
-      });
-  }
-}
+
+export default usersMAker;
+
+usersMaker.add('new-user');
 ```
 
 > Don't do
 ```js
-export class Input {
-  send() {
-    const content = this.rootEl.textContent;
-    if (this.model.isEmpty()) {
-      saveCommentRepository
-        .save(content)
-        .then((updatedModel) => {
-          this.model.update(updatedModel);
-          this.render();
-        }, (error) => {
-          // ...
-        });
-    } else {
-      editCommentRepository
-        .save(content)
-        .then((updatedModel) => {
-          this.model.update(updatedModel);
-          this.addEditedHistoryView(updatedModel);
-          this.render();
-        }, (error) => {
-          // ...
-        });
-    }
-  }
+const users = ['adam', 'pawel', 'new-user'];
+
+const usersMaker = {
+  
 }
+
+export default usersMAker;
 ```
 
 ## L — Liskov substitution principle
@@ -2326,20 +2292,244 @@ Subclass should override the parent class methods in a way that does not break f
 
 > Do
 ```js
+class Shape {
+  setColor(color) {
+    // ...
+  }
 
+  render(area) {
+    // ...
+  }
+}
+
+class Rectangle extends Shape {
+  constructor(width, height) {
+    super();
+    this.width = width;
+    this.height = height;
+  }
+
+  getArea() {
+    return this.width * this.height;
+  }
+}
+
+class Square extends Shape {
+  constructor(length) {
+    super();
+    this.length = length;
+  }
+
+  getArea() {
+    return this.length * this.length;
+  }
+}
+
+function renderLargeShapes(shapes) {
+  shapes.forEach((shape) => {
+    const area = shape.getArea();
+    shape.render(area);
+  });
+}
+
+const shapes = [new Rectangle(4, 5), new Rectangle(4, 5), new Square(5)];
+renderLargeShapes(shapes);
 ```
 
 > Don't do
 ```js
+class Rectangle {
+  constructor() {
+    this.width = 0;
+    this.height = 0;
+  }
+
+  setColor(color) {
+    // ...
+  }
+
+  render(area) {
+    // ...
+  }
+
+  setWidth(width) {
+    this.width = width;
+  }
+
+  setHeight(height) {
+    this.height = height;
+  }
+
+  getArea() {
+    return this.width * this.height;
+  }
+}
+
+class Square extends Rectangle {
+  setWidth(width) {
+    this.width = width;
+    this.height = width;
+  }
+
+  setHeight(height) {
+    this.width = height;
+    this.height = height;
+  }
+}
+
+function renderLargeRectangles(rectangles) {
+  rectangles.forEach((rectangle) => {
+    rectangle.setWidth(4);
+    rectangle.setHeight(5);
+    const area = rectangle.getArea(); // BAD: Returns 25 for Square. Should be 20.
+    rectangle.render(area);
+  });
+}
+
+const rectangles = [new Rectangle(), new Rectangle(), new Square()];
+renderLargeRectangles(rectangles);
 ```
 
 ## I — Interface segregation principle
 
 A client should never be forced to implement an interface that it doesn’t use or clients shouldn’t be forced to depend on methods they do not use.
 
+> Do
+```js
+class DOMTraverser {
+  constructor(settings) {
+    this.settings = settings;
+    this.options = settings.options;
+    this.setup();
+  }
+
+  setup() {
+    this.rootNode = this.settings.rootNode;
+    this.setupOptions();
+  }
+
+  setupOptions() {
+    if (this.options.animationModule) {
+      // ...
+    }
+  }
+
+  traverse() {
+    // ...
+  }
+}
+
+const $ = new DOMTraverser({
+  rootNode: document.getElementsByTagName('body'),
+  options: {
+    animationModule() {}
+  }
+});
+```
+
+> Don't do
+
+```js
+class DOMTraverser {
+  constructor(settings) {
+    this.settings = settings;
+    this.setup();
+  }
+
+  setup() {
+    this.rootNode = this.settings.rootNode;
+    this.animationModule.setup();
+  }
+
+  traverse() {
+    // ...
+  }
+}
+
+const $ = new DOMTraverser({
+  rootNode: document.getElementsByTagName('body'),
+  animationModule() {} // Most of the time, we won't need to animate when traversing.
+  // ...
+});
+```
+
 ## D — Dependency Inversion principle
 
 Entities must depend on abstractions not on concretions. It states that the high level module must not depend on the low level module, but they should depend on abstractions.
+
+> Do
+```js
+class InventoryTracker {
+  constructor(items, requester) {
+    this.items = items;
+    this.requester = requester;
+  }
+
+  requestItems() {
+    this.items.forEach((item) => {
+      this.requester.requestItem(item);
+    });
+  }
+}
+
+class InventoryRequesterV1 {
+  constructor() {
+    this.REQ_METHODS = ['HTTP'];
+  }
+
+  requestItem(item) {
+    // ...
+  }
+}
+
+class InventoryRequesterV2 {
+  constructor() {
+    this.REQ_METHODS = ['WS'];
+  }
+
+  requestItem(item) {
+    // ...
+  }
+}
+
+// By constructing our dependencies externally and injecting them, we can easily
+// substitute our request module for a fancy new one that uses WebSockets.
+const inventoryTracker = new InventoryTracker(['apples', 'bananas'], new InventoryRequesterV2());
+inventoryTracker.requestItems();
+```
+
+> Don't do
+
+```js
+class InventoryRequester {
+  constructor() {
+    this.REQ_METHODS = ['HTTP'];
+  }
+
+  requestItem(item) {
+    // ...
+  }
+}
+
+class InventoryTracker {
+  constructor(items) {
+    this.items = items;
+
+    // BAD: We have created a dependency on a specific request implementation.
+    // We should just have requestItems depend on a request method: `request`
+    this.requester = new InventoryRequester();
+  }
+
+  requestItems() {
+    this.items.forEach((item) => {
+      this.requester.requestItem(item);
+    });
+  }
+}
+
+const inventoryTracker = new InventoryTracker(['apples', 'bananas']);
+inventoryTracker.requestItems();
+```
 
 # ORP - Object oriented programming
 
