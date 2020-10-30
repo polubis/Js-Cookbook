@@ -302,6 +302,10 @@ console.log(
 ); // 42
 ```
 
+## Data persistence
+
+![Data persistence](https://i.stack.imgur.com/cI5kT.jpg)
+
 ## Deep freeze
 
 ```js
