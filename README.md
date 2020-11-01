@@ -3253,10 +3253,6 @@ revealingCounterModule.reset();
 
 # React
 
-#### What React is ?
-
-#### `ref`
-
 #### `VirtualDOM`
 
 #### `context` and `Context API`
@@ -3297,7 +3293,41 @@ revealingCounterModule.reset();
 
 #### `forceUpdate`
 
-# React patterns
+# React
+
+## Event pooling
+
+Performance improvement used by React before version 17. Properties of the event only exist while the callback is active. Adding async to the mix, or storing the event for future use, will fail.
+
+```js
+class MyComponent extends React.Component {
+  handleClick(e) {
+    console.log("The event currentTarget is", e.currentTarget); // DOM element
+    setTimeout(() => {
+      console.log("event.currentTarget was", e.currentTarget); // null
+    }, 1000);
+  }
+  render() {
+    return <button onClick={this.handleClick}>Fire event!</button>;
+  }
+}
+```
+
+## Refs
+
+Refs provide a way to access DOM nodes or React elements created in the render method. In the typical React dataflow, props are the only way that parent components interact with their `children`. To modify a child, you re-render it with new `props`. However, there are a few cases where you need to imperatively modify a child outside of the typical dataflow.
+
+Use in:
+
+- Managing focus, text selection, or media playback.
+- Triggering imperative animations.
+- Integrating with third-party DOM libraries.
+
+## `SyntheticEvent`
+
+Cross-browser wrapper class around browser's native event. Normalizes events so that they have consistent properties across different browsers.
+
+> If you need underlying browser event - use `nativeEvent` property.
 
 #### `HOC`
 
@@ -3310,8 +3340,6 @@ revealingCounterModule.reset();
 #### `Render slot`
 
 #### `Proxy component`
-
-# React ecosystem
 
 #### `redux`
 
