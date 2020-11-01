@@ -3077,7 +3077,11 @@ Decouples different aspects in the code.
 
 # Design patterns
 
-## Module pattern
+## Creational patterns
+
+## Structural patterns
+
+### Module pattern
 
 Only single object created which exposing public API's.
 
@@ -3110,7 +3114,7 @@ const iifeCounterModule = ((dependencyModule1, dependencyModule2) => {
 })(dependencyModule1, dependencyModule2);
 ```
 
-### Reavealing module pattern
+#### Reavealing module pattern
 
 Same as **module pattern** with one difference - public API's are assigned into variables.
 
@@ -3135,19 +3139,19 @@ revealingCounterModule.increase();
 revealingCounterModule.reset();
 ```
 
+## Behavioral patterns
+
+## Dependency injection
+
+## Factory
+
+## Mediator
+
+## Observer
+
+## Prototype
+
 #### `Flux`
-
-#### `Prototype`
-
-#### `Module`
-
-#### `Factory`
-
-#### `Dependency injection`
-
-#### `Observer`
-
-#### `Mediator`
 
 #### `Decorator`
 
