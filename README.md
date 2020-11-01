@@ -3079,6 +3079,96 @@ Decouples different aspects in the code.
 
 ## Creational patterns
 
+### Abstract factory
+
+An Abstract Factory creates objects that are related by a **common theme.**
+
+Suppose we have two **factories** whose task it is to create file readers - `PDF`, `XML`. One is the `XMLReaderFactory` which creates `XMLReader` and `PDFReaderFactory` which creates `PDFReader`. Both **factories** and **products** extends from their abstractions. 
+
+Abstract factory hide object creation details and keeps your code base unified.
+
+![Abstract factory](https://www.dofactory.com/img/diagrams/javascript/javascript-abstract-factory.jpg)
+
+```ts
+// ABSTRACT PRODUCT
+abstract class Reader {
+  abstract name: string;
+  abstract read(): string;
+}
+
+// CONCRETE PRODUCT
+class XMLReader extends Reader {
+  constructor(public name: string) {
+    super();
+  }
+
+  read(): string {
+    return "Readed xml file";
+  }
+}
+
+// CONCRETE PRODUCT
+class PDFReader extends Reader {
+  constructor(public name: string) {
+    super();
+  }
+
+  read(): string {
+    return "Readed pdf file";
+  }
+}
+
+enum ReaderType {
+  XML = "XML",
+  PDF = "PDF",
+}
+
+// ABSTRACT FACTORY
+abstract class ReaderFactory<T> {
+  abstract create(name: string): T;
+
+  static getFactory(type: ReaderType) {
+    switch (type) {
+      case ReaderType.XML:
+        return new XMLReaderFactory();
+
+      case ReaderType.PDF:
+        return new PDFReaderFactory();
+
+      default:
+        throw new Error(`No implementation for given type ${type}`);
+    }
+  }
+}
+
+// CONCRETE FACTORY
+class XMLReaderFactory extends ReaderFactory<XMLReader> {
+  constructor() {
+    super();
+  }
+
+  create(name: string): XMLReader {
+    return new XMLReader(name);
+  }
+}
+
+// CONCRETE FACTORY
+class PDFReaderFactory extends ReaderFactory<PDFReader> {
+  create(name: string): PDFReader {
+    return new PDFReader(name);
+  }
+}
+
+const pdfFactory = ReaderFactory.getFactory(ReaderType.PDF);
+const xmlFactory = ReaderFactory.getFactory(ReaderType.XML);
+
+const pdf = pdfFactory.create('My pdf file');
+const xml = xmlFactory.create('My xml file');
+
+console.log(pdf.read()); // Readed pdf file
+console.log(xml.read()); // Readed xml file
+```
+
 ## Structural patterns
 
 ### Module pattern
