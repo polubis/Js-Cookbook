@@ -978,6 +978,14 @@ const fibb = (n) => {
 }
 ```
 
+## `Map`
+
+The `Map` object holds **key-value pairs** and remembers the original insertion order of the keys. Any value (both objects and primitive values) may be used as either a key or a value. A `Map` object iterates its elements in insertion order — a for...of loop returns an array of `[key, value]` for each iteration.
+
+- A `Map` does not contain any keys by default. It only contains what is explicitly put into it - no prototype added - only own properties.
+
+## `WeakMap`
+
 ## Modules
 
 A **module** is a value that can be accessed by a **single reference**. If you have multiple pieces of data or functions that you want to expose in a module, they have to be **properties** on a **single object** that represents the **module**.
@@ -1371,6 +1379,29 @@ Object in an ECMAScript implementation whose semantics are fully defined by this
 Examples: `Date`, `Math`, `parseInt`, `eval`, `indexOf`, ...etc.
 
 ## Pass by reference vs pass by value
+
+The variable doesn't "hold" the object - it holds a reference. You can assign that reference to another **variable**, and now both reference the same object. 
+
+JavaScript always **pass by value** (even when that value is a reference). There's no way to alter the value held by a variable passed as a parameter, which would be possible if JavaScript supported passing by reference.
+
+```js
+function changeStuff(a, b, c)
+{
+  a = a * 10;
+  b.item = "changed";
+  c = {item: "changed"};
+}
+
+var num = 10; // 10
+var obj1 = {item: "unchanged"}; 
+var obj2 = {item: "unchanged"}; 
+
+changeStuff(num, obj1, obj2);
+
+console.log(num); // 10
+console.log(obj1.item); // changed
+console.log(obj2.item); // unchanged
+```
 
 ## Partial application
 
