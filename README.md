@@ -40,16 +40,6 @@ function isEquivalent(a, b) {
 console.log(isEquivalent(bobaFett, jangoFett));
 ```
 
-## Arrow functions expression
-
-An arrow **function expression is a compact alternative** to a **traditional function expression**, but is limited and can't be used in all situations.
-
-- Does not have its own bindings to this or super, and should not be used as methods.
-- Does not have `arguments`, or `new.target` keywords - use `...rest` operator for arguments instead.
-- Not suitable for `call, apply and bind methods`, which generally rely on establishing a scope.
-- Can not be used as `constructors`.
-- Can not use `yield`, within its body.
-
 ## Callback
 
 Function which is passed as argument to other function and executed inside or returned.
@@ -977,15 +967,7 @@ const fibb = (n) => {
   // some expensive calculations
 }
 ```
-
-## `Map`
-
-The `Map` object holds **key-value pairs** and remembers the original insertion order of the keys. Any value (both objects and primitive values) may be used as either a key or a value. A `Map` object iterates its elements in insertion order — a for...of loop returns an array of `[key, value]` for each iteration.
-
-- A `Map` does not contain any keys by default. It only contains what is explicitly put into it - no prototype added - only own properties.
-
-## `WeakMap`
-
+ 
 ## Modules
 
 A **module** is a value that can be accessed by a **single reference**. If you have multiple pieces of data or functions that you want to expose in a module, they have to be **properties** on a **single object** that represents the **module**.
@@ -1433,174 +1415,6 @@ const getProductURL = productId => {
 Piece of code (usually JavaScript on the Web) used to provide modern functionality on older browsers that do not natively support it.
 For example, a polyfill could be used to mimic the functionality of an HTML Canvas element on Microsoft Internet Explorer 7 using a Silverlight plugin or mimic support for CSS rem units, or text-shadow, or whatever you want.
 
-## Promise
-
-The `Promise` object represents the eventual completion (or failure) of an asynchronous operation and its resulting value. `PromiseStatus` can have three different values: `pending`, `resolved`, or `rejected`. 
-
-> For `pending` status value will be always `undefined`.
-
-```js
-const promise = new Promise((resolve, reject) => {
-  setTimeout(() => {
-    reject();
-  }, 500);
-});
-
-promise
-  .then(
-    () => {
-      console.log("ok");
-    },
-    () => {
-      console.log("error"); // called
-      return Promise.reject();
-    }
-  )
-  .then(
-    (res) => {
-      console.log("ok");
-    },
-    () => {
-      console.log("error"); // called
-    }
-  )
-  .catch(() => {
-    console.log("error"); // not called
-  })
-  .finally(() => {
-    console.log("finalized");
-  });
-
-```
-
-![Promise object](https://miro.medium.com/max/469/1*n6s4IswZBVUIHc2K3apONA.png)
-
-![Promise](https://miro.medium.com/max/875/1*0mBlni5vsYZE2wFzfVv8EA.png)
-
-## `async` & `await`
-
-The word `async` before a function means one simple thing: a function always returns a `promise`. Other values are wrapped in a **resolved promise automatically**.
-
-```js
-const getUsers = async () => {
-  return { id: 0, firstName: "Piotr" };
-};
-// EQUAL TO
-const getUsers = () => Promise.resolve();
-
-getUsers().then() // { id: 0;, firstName: 'Piotr' }
-```
-
-The `await` makes JavaScript wait until that promise settles and returns its result.
-
-```js
-async function f() {
-
-  let promise = new Promise((resolve, reject) => {
-    setTimeout(() => resolve("done!"), 1000)
-  });
- 
-  try {
-     let result = await promise; // wait until the promise resolves (*) 
-  }
-  catch {
-     // handle error
-  }
-
-  alert(result); // "done!"
-}
-
-f();
-```
-
-### `Promise.all()`
-
-Takes an iterable of promises as an input, and returns a single `Promise`.  Runs almost **parallel** - depends on CPU.
-
-- Resolves when **all** resolves.
-- It rejects immediately upon any of the input **promises** rejecting or **non-promises** throwing an error, and will reject with this first rejection message / error.
-
-```js
-const getUsers = () => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        id: 0,
-        firstName: "Piotr",
-      });
-    }, 500);
-  });
-};
-
-const getBooks = () => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({ id: 0, name: "Harry Potter" });
-    }, 500);
-  });
-};
-
-Promise.all([getUsers(), getBooks()]).then((res) => {
-  console.log(res);
-});
-
-```
-
-### `Promise.race()`
-
-Returns a promise that fulfills or rejects as soon as one of the promises in an iterable fulfills or rejects, with the value or reason from that promise.
-
-```js
-const promise1 = new Promise((resolve, reject) => {
-  setTimeout(resolve, 500, 'one');
-});
-
-const promise2 = new Promise((resolve, reject) => {
-  setTimeout(resolve, 100, 'two');
-});
-
-Promise.race([promise1, promise2]).then((value) => {
-  console.log(value);
-  // Both resolve, but promise2 is faster
-});
-// expected output: "two"
-```
-
-### `Promise.any()`
-
-Takes an iterable of `Promise` objects and, as soon as one of the promises in the iterable fulfills, returns a single promise that resolves with the value from that promise. If no promises in the iterable fulfill (if all of the given promises are rejected), then the returned promise is rejected with an `AggregateError`, a new subclass of `Error` that groups together individual errors. Essentially, this method is the opposite of `Promise.all()`.
-
-```js
-const promise1 = Promise.reject(0);
-const promise2 = new Promise((resolve) => setTimeout(resolve, 100, 'quick'));
-const promise3 = new Promise((resolve) => setTimeout(resolve, 500, 'slow'));
-
-const promises = [promise1, promise2, promise3];
-
-Promise.any(promises).then((value) => console.log(value));
-
-// expected output: "quick"
-```
-
-### `Promise.allSettled()`
-
-Returns a promise that resolves after all of the given promises have either fulfilled or rejected, with an array of objects that each describes the outcome of each promise.
-It is typically used when you have multiple asynchronous tasks that are not dependent on one another to complete successfully, or you'd always like to know the result of each promise.
-In comparison, the Promise returned by `Promise.all()` may be more appropriate if the tasks are dependent on each other / if you'd like to immediately reject upon any of them rejecting.
-
-```js
-const promise1 = Promise.resolve(3);
-const promise2 = new Promise((resolve, reject) => setTimeout(reject, 100, 'foo'));
-const promises = [promise1, promise2];
-
-Promise.allSettled(promises).
-  then((results) => results.forEach((result) => console.log(result.status)));
-
-// expected output:
-// "fulfilled"
-// "rejected"
-```
-
 ## Prototype inheritance
 
 When it comes to **inheritance**, JavaScript only has one construct: **objects**. Each object has a `private` property which holds a link to another object called its **prototype**. That prototype object has a prototype of its own, and so on until an object is reached with `null` as its prototype. By definition, null has no prototype, and acts as **the final link in this prototype chain**.
@@ -1921,9 +1735,7 @@ console.log(employee.address.city) // Output: "Noida"
 
 Checks whether its two operands are equal, returning a `Boolean` result. Unlike the `==`, the strict equality operator always considers operands of different types to be different.
 
-## Variables
-
-### `var`
+## `var`
 
 - Function scoped / globally scoped.
 ```js
@@ -1952,54 +1764,6 @@ Problem with `var`:
     }
     
     console.log(greeter) // "say Hello instead"
-```
-
-### `let`
-
-- Block scoped variable - not function scoped as `var`.
-- `let` variables are block hoisted.
-- Remain uninitialised at the beginning of execution.
-
-```js
-console.log(hoist); // Output: ReferenceError: hoist is not defined ...
-let hoist = 'The variable has been hoisted.';
-```
-
-```js
-let hoist;
-console.log(hoist); // Output: undefined
-hoist = 'Hoisted'
-```
-
-### `const`
-
-- Works same as `let`.
-- Value cannot be modified once assigned.
-
-```js
-const PI = 3.142;
-PI = 22/7; // Let's reassign the value of PI
-console.log(PI); // Output: TypeError: Assignment to constant variable.
-```
-
-```js
-console.log(hoist); // Output: ReferenceError: hoist is not defined
-const hoist = 'The variable has been hoisted.';
-```
-
-```js
-function getCircumference(radius) {
-  console.log(circumference)
-  circumference = PI*radius*2;
-  const PI = 22/7;
-}
-getCircumference(2) // ReferenceError: circumference is not defined
-```
-
-```js
-const PI;
-console.log(PI); // Ouput: SyntaxError: Missing initializer in const declaration
-PI=3.142;
 ```
 
 ## Temporal Dead Zone
@@ -2165,33 +1929,953 @@ Special **non-data** but **structural** type for any constructed object instance
  - `null` - `typeof instance === "object"`
  Special primitive type having additional usage for its value: if object is not inherited, then `null` is shown.
 
-# `ES6` Language syntax
+# ES6 features
 
-#### `spread syntax`
+## `Array` methods
 
-#### `dynamic import`
+```js
+Array.from(document.querySelectorAll('*')) // Returns a real Array
+Array.of(1, 2, 3) // Similar to new Array(...), but without special one-arg behavior
+[0, 0, 0].fill(7, 1) // [0,7,7]
+[1, 2, 3].find(x => x == 3) // 3
+[1, 2, 3].findIndex(x => x == 2) // 1
+[1, 2, 3, 4, 5].copyWithin(3, 0) // [1, 2, 3, 1, 2]
+["a", "b", "c"].entries() // iterator [0, "a"], [1,"b"], [2,"c"]
+["a", "b", "c"].keys() // iterator 0, 1, 2
+["a", "b", "c"].values() // iterator "a", "b", "c"
+```
 
-#### `modules`
+## Arrow functions expression
 
-#### `rest syntax`
+An arrow **function expression is a compact alternative** to a **traditional function expression**, but is limited and can't be used in all situations.
 
-#### `classes`
+- Does not have its own bindings to this or super, and should not be used as methods.
+- Does not have `arguments`, or `new.target` keywords - use `...rest` operator for arguments instead.
+- Not suitable for `call, apply and bind methods`, which generally rely on establishing a scope.
+- Can not be used as `constructors`.
+- Can not use `yield`, within its body.
 
-#### `arrow functions`
+```js
+// Expression bodies
+var odds = evens.map(v => v + 1);
+var nums = evens.map((v, i) => v + i);
+var pairs = evens.map(v => ({even: v, odd: v + 1}));
 
-#### `symbols`
+// Statement bodies
+nums.forEach(v => {
+  if (v % 5 === 0)
+    fives.push(v);
+});
 
-#### `generators`
+// Lexical this
+var bob = {
+  _name: "Bob",
+  _friends: [],
+  printFriends() {
+    this._friends.forEach(f =>
+      console.log(this._name + " knows " + f));
+  }
+}
+```
 
-#### `WeakMap`
+## Build-in modules syntax
 
-#### `Map`
+```js
+// lib/mathplusplus.js
+export * from "lib/math";
+export var e = 2.71828182846;
+export default function(x) {
+    return Math.log(x);
+}
 
-#### `Set`
+// app.js
+import ln, {pi, e} from "lib/mathplusplus";
+alert("2π = " + ln(e)*pi*2);
+```
 
-#### `WeakSet`
+## `class`
 
-# `ES7` Language syntax
+Simple sugar over the prototype-based **OO** pattern. Having a single convenient declarative form makes class patterns easier to use, and encourages interoperability. Classes support **prototype-based inheritance**, `super` calls, instance and `static` methods and `constructors`.
+
+```js
+class SkinnedMesh extends THREE.Mesh {
+  constructor(geometry, materials) {
+    super(geometry, materials);
+
+    this.idMatrix = SkinnedMesh.defaultMatrix();
+    this.bones = [];
+    this.boneMatrices = [];
+    //...
+  }
+  update(camera) {
+    //...
+    super.update();
+  }
+  get boneCount() {
+    return this.bones.length;
+  }
+  set matrixType(matrixType) {
+    this.idMatrix = SkinnedMesh[matrixType]();
+  }
+  static defaultMatrix() {
+    return new THREE.Matrix4();
+  }
+}
+```
+
+## `const`
+
+- Works same as `let`.
+- Value cannot be modified once assigned.
+
+```js
+const PI = 3.142;
+PI = 22/7; // Let's reassign the value of PI
+console.log(PI); // Output: TypeError: Assignment to constant variable.
+```
+
+```js
+console.log(hoist); // Output: ReferenceError: hoist is not defined
+const hoist = 'The variable has been hoisted.';
+```
+
+```js
+function getCircumference(radius) {
+  console.log(circumference)
+  circumference = PI*radius*2;
+  const PI = 22/7;
+}
+getCircumference(2) // ReferenceError: circumference is not defined
+```
+
+```js
+const PI;
+console.log(PI); // Ouput: SyntaxError: Missing initializer in const declaration
+PI=3.142;
+```
+
+## Destructuring
+
+```js
+// list matching
+var [a, , b] = [1,2,3];
+
+// object matching
+var { op: a, lhs: { op: b }, rhs: c }
+       = getASTNode()
+
+// object matching shorthand
+// binds `op`, `lhs` and `rhs` in scope
+var {op, lhs, rhs} = getASTNode()
+
+// Can be used in parameter position
+function g({name: x}) {
+  console.log(x);
+}
+g({name: 5})
+
+// Fail-soft destructuring
+var [a] = [];
+a === undefined;
+
+// Fail-soft destructuring with defaults
+var [a = 1] = [];
+a === 1;
+```
+
+## Default
+
+```js
+function f(x, y=12) {
+  // y is 12 if not passed (or passed as undefined)
+  return x + y;
+}
+f(3) == 15
+```
+
+## Enhanced object literals
+
+```js
+var obj = {
+    // __proto__
+    __proto__: theProtoObj,
+    // Shorthand for ‘handler: handler’
+    handler,
+    // Methods
+    toString() {
+     // Super calls
+     return "d " + super.toString();
+    },
+    // Computed (dynamic) property names
+    [ 'prop_' + (() => 42)() ]: 42
+};
+```
+
+## Generators
+
+While custom `iterators` are a useful tool, their creation requires careful programming due to the need to explicitly maintain their **internal state**. `Generator` functions provide a powerful alternative: they allow you to define an iterative algorithm by writing a single function whose execution is not continuous. Generator functions are written using the `function*` syntax.
+
+- `yield` usage pauses execution and saves state.
+- If all `yields` called - then returns `{ done: true, value: undefined }`.
+- Using `return` keyword ends generator.
+- Using `return` is equal to `next()` after last `yield`.
+
+> Used in sequences which are expensive to compute.
+
+```js
+function*  generatorFunc() {
+  yield 'a';
+  return 'b'; // Generator ends here.
+  yield 'a'; // Will never be executed. 
+}
+```
+
+```js
+function* generatorFunction() { // Line 1
+  console.log('This will be executed first.');
+  yield 'Hello, ';   // Line 2
+  console.log('I will be printed after the pause');  
+  yield 'World!';
+}
+const generatorObject = generatorFunction(); // Line 3
+console.log(generatorObject.next().value); // Line 4
+console.log(generatorObject.next().value); // Line 5
+console.log(generatorObject.next().value); // Line 6
+// This will be executed first.
+// Hello, 
+// I will be printed after the pause
+// World!
+// undefined
+```
+
+```js
+function* fibonacci() {
+  let current = 0;
+  let next = 1;
+  while (true) {
+    let reset = yield current;
+    [current, next] = [next, next + current];
+    if (reset) {
+        current = 0;
+        next = 1;
+    }
+  }
+}
+
+const sequence = fibonacci();
+console.log(sequence.next().value);     // 0
+console.log(sequence.next().value);     // 1
+console.log(sequence.next().value);     // 1
+console.log(sequence.next().value);     // 2
+console.log(sequence.next().value);     // 3
+console.log(sequence.next().value);     // 5
+console.log(sequence.next().value);     // 8
+console.log(sequence.next(true).value); // 0
+console.log(sequence.next().value);     // 1
+console.log(sequence.next().value);     // 1
+console.log(sequence.next().value);     // 2
+```
+
+## Iterables & `for...of`
+
+An `object` is **iterable** if it defines its iteration behavior, such as what values are looped over in a `for...of` construct. Some built-in types, such as `Array` or `Map`, have a default iteration behavior, while other types (such as `Object`) do not.
+
+```js
+let fibonacci = {
+  [Symbol.iterator]() {
+    let pre = 0, cur = 1;
+    return {
+      next() {
+        [pre, cur] = [cur, pre + cur];
+        return { done: false, value: cur }
+      }
+    }
+  }
+}
+
+for (var n of fibonacci) {
+  // truncate the sequence at 1000
+  if (n > 1000)
+    break;
+  console.log(n);
+}
+```
+
+## Iterators
+
+Object which defines a sequence and potentially a `return` value upon its termination. Specifically, an iterator is any `object` which `implements` the `Iterator` protocol by having a `next()` method that `returns` an `object` with two properties: 
+
+Once created, an iterator object can be iterated explicitly by repeatedly calling `next()`. Iterating over an iterator is said to consume the iterator, because it is generally only possible to do once. After a terminating value has been yielded additional calls to `next()` should simply continue to return `{ done: true }`.
+
+- `value` - next value in iteration sequence.
+- `done` - this is `true` if the last value in the sequence has already been consumed. If value is present alongside done, it is the iterator's `return` value.
+
+> Used in sequences which are expensive to compute.
+
+```js
+function makeRangeIterator(start = 0, end = Infinity, step = 1) {
+    let nextIndex = start;
+    let iterationCount = 0;
+
+    const rangeIterator = {
+       next: function() {
+           let result;
+           if (nextIndex < end) {
+               result = { value: nextIndex, done: false }
+               nextIndex += step;
+               iterationCount++;
+               return result;
+           }
+           return { value: iterationCount, done: true }
+       }
+    };
+    return rangeIterator;
+}
+
+const it = makeRangeIterator(1, 10, 2);
+
+let result = it.next();
+while (!result.done) {
+ console.log(result.value); // 1 3 5 7 9
+ result = it.next();
+}
+
+console.log("Iterated over sequence of size: ", result.value); // [5 numbers returned, that took interval in between: 0 to 10]
+```
+
+## `let`
+
+- Block scoped variable - not function scoped as `var`.
+- `let` variables are block hoisted.
+- Remain uninitialised at the beginning of execution.
+
+```js
+console.log(hoist); // Output: ReferenceError: hoist is not defined ...
+let hoist = 'The variable has been hoisted.';
+```
+
+```js
+let hoist;
+console.log(hoist); // Output: undefined
+hoist = 'Hoisted'
+```
+
+## Math methods
+
+```js
+Math.acosh(3) // 1.762747174039086
+Math.hypot(3, 4) // 5
+Math.imul(Math.pow(2, 32) - 1, Math.pow(2, 32) - 2) // 2
+```
+
+## `Map`
+
+The `Map` object holds **key-value pairs** and remembers the original insertion order of the keys. Any value (both objects and primitive values) may be used as either a key or a value. A `Map` object iterates its elements in insertion order — a for...of loop returns an array of `[key, value]` for each iteration.
+
+> Maps mutates values - so fe. in React - you must use new Map(currMap.set()) - to trigget re-render.
+
+- A `Map` does not contain any keys by default. It only contains what is explicitly put into it - no prototype added - only own properties.
+- Key can be any value `function`, `object`, or **primitive**.
+- Keys are ordered.
+- The number of items in a `Map` is easily retrieved from its `size` property.
+- A `Map` is an iterable, so it can be directly iterated.
+- Performs better in scenarios involving frequent additions and removals of **key-value** pairs.
+- Problems with garbage collecting becuase of object references.
+
+> Don't do
+```js
+let wrongMap = new Map()
+wrongMap['bla'] = 'blaa' // don't do
+wrongMap['bla2'] = 'blaaa2' don't do
+
+console.log(wrongMap)  // Map { bla: 'blaa', bla2: 'blaaa2' }
+
+wrongMap.has('bla')    // false
+wrongMap.delete('bla') // false
+console.log(wrongMap)  // Map { bla: 'blaa', bla2: 'blaaa2' }
+```
+
+> Do
+```js
+let contacts = new Map()
+contacts.set('Jessie', {phone: "213-555-1234", address: "123 N 1st Ave"})
+contacts.has('Jessie') // true
+contacts.get('Hilary') // undefined
+contacts.set('Hilary', {phone: "617-555-4321", address: "321 S 2nd St"})
+contacts.get('Jessie') // {phone: "213-555-1234", address: "123 N 1st Ave"}
+contacts.delete('Raymond') // false
+contacts.delete('Jessie') // true
+console.log(contacts.size) // 1
+```
+
+```js
+let myMap = new Map()
+myMap.set(0, 'zero')
+myMap.set(1, 'one')
+
+for (let [key, value] of myMap) {
+  console.log(key + ' = ' + value)
+}
+// 0 = zero
+// 1 = one
+
+for (let key of myMap.keys()) {
+  console.log(key)
+}
+// 0
+// 1
+
+for (let value of myMap.values()) {
+  console.log(value)
+}
+// zero
+// one
+
+for (let [key, value] of myMap.entries()) {
+  console.log(key + ' = ' + value)
+}
+// 0 = zero
+// 1 = one
+```
+
+## Module loaders
+
+```js
+// Dynamic loading – ‘System’ is default loader
+System.import('lib/math').then(function(m) {
+  alert("2π = " + m.sum(m.pi, m.pi));
+});
+
+// Create execution sandboxes – new Loaders
+var loader = new Loader({
+  global: fixup(window) // replace ‘console.log’
+});
+loader.eval("console.log('hello world!');");
+
+// Directly manipulate module cache
+System.get('jquery');
+System.set('jquery', Module({$: $})); // WARNING: not yet finalized
+```
+
+## Number methods
+
+```js
+Number.EPSILON
+Number.isInteger(Infinity) // false
+Number.isNaN("NaN") // false
+```
+
+## Object methods
+
+```js
+Object.assign(Point, { origin: new Point(0,0) })
+```
+
+## Promise
+
+The `Promise` object represents the eventual completion (or failure) of an asynchronous operation and its resulting value. `PromiseStatus` can have three different values: `pending`, `resolved`, or `rejected`. 
+
+> For `pending` status value will be always `undefined`.
+
+```js
+const promise = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    reject();
+  }, 500);
+});
+
+promise
+  .then(
+    () => {
+      console.log("ok");
+    },
+    () => {
+      console.log("error"); // called
+      return Promise.reject();
+    }
+  )
+  .then(
+    (res) => {
+      console.log("ok");
+    },
+    () => {
+      console.log("error"); // called
+    }
+  )
+  .catch(() => {
+    console.log("error"); // not called
+  })
+  .finally(() => {
+    console.log("finalized");
+  });
+
+```
+
+![Promise object](https://miro.medium.com/max/469/1*n6s4IswZBVUIHc2K3apONA.png)
+
+![Promise](https://miro.medium.com/max/875/1*0mBlni5vsYZE2wFzfVv8EA.png)
+
+## `async` & `await`
+
+The word `async` before a function means one simple thing: a function always returns a `promise`. Other values are wrapped in a **resolved promise automatically**.
+
+```js
+const getUsers = async () => {
+  return { id: 0, firstName: "Piotr" };
+};
+// EQUAL TO
+const getUsers = () => Promise.resolve();
+
+getUsers().then() // { id: 0;, firstName: 'Piotr' }
+```
+
+The `await` makes JavaScript wait until that promise settles and returns its result.
+
+```js
+async function f() {
+
+  let promise = new Promise((resolve, reject) => {
+    setTimeout(() => resolve("done!"), 1000)
+  });
+ 
+  try {
+     let result = await promise; // wait until the promise resolves (*) 
+  }
+  catch {
+     // handle error
+  }
+
+  alert(result); // "done!"
+}
+
+f();
+```
+
+### `Promise.all()`
+
+Takes an iterable of promises as an input, and returns a single `Promise`.  Runs almost **parallel** - depends on CPU.
+
+- Resolves when **all** resolves.
+- It rejects immediately upon any of the input **promises** rejecting or **non-promises** throwing an error, and will reject with this first rejection message / error.
+
+```js
+const getUsers = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        id: 0,
+        firstName: "Piotr",
+      });
+    }, 500);
+  });
+};
+
+const getBooks = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({ id: 0, name: "Harry Potter" });
+    }, 500);
+  });
+};
+
+Promise.all([getUsers(), getBooks()]).then((res) => {
+  console.log(res);
+});
+
+```
+
+### `Promise.race()`
+
+Returns a promise that fulfills or rejects as soon as one of the promises in an iterable fulfills or rejects, with the value or reason from that promise.
+
+```js
+const promise1 = new Promise((resolve, reject) => {
+  setTimeout(resolve, 500, 'one');
+});
+
+const promise2 = new Promise((resolve, reject) => {
+  setTimeout(resolve, 100, 'two');
+});
+
+Promise.race([promise1, promise2]).then((value) => {
+  console.log(value);
+  // Both resolve, but promise2 is faster
+});
+// expected output: "two"
+```
+
+### `Promise.any()`
+
+Takes an iterable of `Promise` objects and, as soon as one of the promises in the iterable fulfills, returns a single promise that resolves with the value from that promise. If no promises in the iterable fulfill (if all of the given promises are rejected), then the returned promise is rejected with an `AggregateError`, a new subclass of `Error` that groups together individual errors. Essentially, this method is the opposite of `Promise.all()`.
+
+```js
+const promise1 = Promise.reject(0);
+const promise2 = new Promise((resolve) => setTimeout(resolve, 100, 'quick'));
+const promise3 = new Promise((resolve) => setTimeout(resolve, 500, 'slow'));
+
+const promises = [promise1, promise2, promise3];
+
+Promise.any(promises).then((value) => console.log(value));
+
+// expected output: "quick"
+```
+
+### `Promise.allSettled()`
+
+Returns a promise that resolves after all of the given promises have either fulfilled or rejected, with an array of objects that each describes the outcome of each promise.
+It is typically used when you have multiple asynchronous tasks that are not dependent on one another to complete successfully, or you'd always like to know the result of each promise.
+In comparison, the Promise returned by `Promise.all()` may be more appropriate if the tasks are dependent on each other / if you'd like to immediately reject upon any of them rejecting.
+
+```js
+const promise1 = Promise.resolve(3);
+const promise2 = new Promise((resolve, reject) => setTimeout(reject, 100, 'foo'));
+const promises = [promise1, promise2];
+
+Promise.allSettled(promises).
+  then((results) => results.forEach((result) => console.log(result.status)));
+
+// expected output:
+// "fulfilled"
+// "rejected"
+```
+
+## Proxy
+
+Enables you to create a proxy for another object, which can intercept and redefine fundamental operations for that object. `Proxy` object is created with two parameters:
+
+- `target`: the original object which you want to proxy.
+- `handler`: an object that defines which operations will be intercepted and how to redefine intercepted operations.
+
+```js
+const target = {
+  message1: "hello",
+  message2: "everyone"
+};
+
+const handler3 = {
+  get: function (target, prop, receiver) {
+    if (prop === "message2") {
+      return "world";
+    }
+    return Reflect.get(...arguments);
+  },
+};
+
+const proxy3 = new Proxy(target, handler3);
+
+console.log(proxy3.message1); // hello
+console.log(proxy3.message2); // world
+```
+
+## Reflect
+
+```js
+  // Reflection tools before ES6
+  Object.getOwnPropertyDescriptor(), Object.keys(), Object.isArray(), ...etc
+  // Reflection tools after ES6
+  class Person {
+      constructor(firstName, lastName) {
+          this.firstName = firstName;
+          this.lastName = lastName;
+      }
+      get fullName() {
+          return `${this.firstName} ${this.lastName}`;
+      }
+  };
+
+  let args = ['John', 'Doe'];
+
+  let john = Reflect.construct(
+      Person,
+      args
+  );
+
+  console.log(john instanceof Person);
+  console.log(john.fullName); // John Doe
+```
+
+## Rest operator
+
+```js
+function f(x, ...y) {
+  // y is an Array
+  // same as arguments
+  return x * y.length;
+}
+f(3, "hello", true) == 6
+```
+
+## `Set`
+
+Stores unique values of any type, whether primitive values or `object` references. Set objects are collections of values. You can iterate through the elements of a set in insertion order. A value in the Set may only occur once - it is unique in the Set's collection.
+
+```js
+let mySet = new Set()
+
+mySet.add(1)           // Set [ 1 ]
+mySet.add(5)           // Set [ 1, 5 ]
+mySet.add(5)           // Set [ 1, 5 ]
+mySet.add('some text') // Set [ 1, 5, 'some text' ]
+let o = {a: 1, b: 2}
+mySet.add(o)
+
+mySet.add({a: 1, b: 2})   // o is referencing a different object, so this is okay
+
+mySet.has(1)              // true
+mySet.has(3)              // false, since 3 has not been added to the set
+mySet.has(5)              // true
+mySet.has(Math.sqrt(25))  // true
+mySet.has('Some Text'.toLowerCase()) // true
+mySet.has(o)       // true
+
+mySet.size         // 5
+
+mySet.delete(5)    // removes 5 from the set
+mySet.has(5)       // false, 5 has been removed
+
+mySet.size         // 4, since we just removed one value
+
+console.log(mySet)
+// logs Set(4) [ 1, "some text", {…}, {…} ] in Firefox
+// logs Set(4) { 1, "some text", {…}, {…} } in Chrome
+```
+
+```js
+// iterate over items in set
+// logs the items in the order: 1, "some text", {"a": 1, "b": 2}, {"a": 1, "b": 2} 
+for (let item of mySet) console.log(item)
+
+// logs the items in the order: 1, "some text", {"a": 1, "b": 2}, {"a": 1, "b": 2} 
+for (let item of mySet.keys()) console.log(item)
+ 
+// logs the items in the order: 1, "some text", {"a": 1, "b": 2}, {"a": 1, "b": 2} 
+for (let item of mySet.values()) console.log(item)
+
+// logs the items in the order: 1, "some text", {"a": 1, "b": 2}, {"a": 1, "b": 2} 
+// (key and value are the same here)
+for (let [key, value] of mySet.entries()) console.log(key)
+
+// convert Set object to an Array object, with Array.from
+let myArr = Array.from(mySet) // [1, "some text", {"a": 1, "b": 2}, {"a": 1, "b": 2}]
+
+// the following will also work if run in an HTML document
+mySet.add(document.body)
+mySet.has(document.querySelector('body')) // true
+
+// converting between Set and Array
+mySet2 = new Set([1, 2, 3, 4])
+mySet2.size                    // 4
+[...mySet2]                    // [1, 2, 3, 4]
+
+// intersect can be simulated via 
+let intersection = new Set([...set1].filter(x => set2.has(x)))
+
+// difference can be simulated via
+let difference = new Set([...set1].filter(x => !set2.has(x)))
+
+// Iterate set entries with forEach()
+mySet.forEach(function(value) {
+  console.log(value)
+})
+
+// 1
+// 2
+// 3
+// 4
+```
+
+```js
+// Use to remove duplicate elements from the array 
+
+const numbers = [2,3,4,4,2,3,3,4,4,5,5,6,6,7,5,32,3,4,5]
+
+console.log([...new Set(numbers)]) 
+
+// [2, 3, 4, 5, 6, 7, 32]
+```
+
+## Spread operator
+
+```js
+function f(x, y, z) {
+  return x + y + z;
+}
+// Pass each elem of array as argument
+f(...[1,2,3]) == 6
+```
+
+## Subsclassable built-ins
+
+```js
+// Pseudo-code of Array
+class Array {
+    constructor(...args) { /* ... */ }
+    static [Symbol.create]() {
+        // Install special [[DefineOwnProperty]]
+        // to magically update 'length'
+    }
+}
+
+// User code of Array subclass
+class MyArray extends Array {
+    constructor(...args) { super(...args); }
+}
+
+var arr = new MyArray();
+arr[1] = 12;
+arr.length == 2
+```
+
+## String methods
+
+```js
+"abcde".includes("cd") // true
+"abc".repeat(3) // "abcabcabc"
+```
+
+## Symbols
+
+The original motivation for introducing symbols to Javascript was to enable private properties. They ended up being severely downgraded. They are no longer `private`, since you can find them via `reflection`, for example, using `Object.getOwnPropertySymbol`s or `proxy`. Right now used only for avoid name clashes.
+
+```js
+let sym = new Symbol()  // TypeError
+Symbol('foo') === Symbol('foo')  // false
+let sym = Symbol('foo')
+typeof sym      // "symbol" 
+let symObj = Object(sym)
+typeof symObj   // "object"
+```
+
+## Unicode
+
+```js
+// same as ES5.1
+"𠮷".length == 2
+
+// new RegExp behaviour, opt-in ‘u’
+"𠮷".match(/./u)[0].length == 2
+
+// new form
+"\u{20BB7}"=="𠮷"=="\uD842\uDFB7"
+
+// new String ops
+"𠮷".codePointAt(0) == 0x20BB7
+
+// for-of iterates code points
+for(var c of "𠮷") {
+  console.log(c);
+}
+```
+
+## Tails calls
+
+Calls in tail-position are guaranteed to not grow the stack unboundedly. Makes recursive algorithms safe in the face of unbounded inputs.
+
+```js
+function factorial(n, acc = 1) {
+    'use strict';
+    if (n <= 1) return acc;
+    return factorial(n - 1, n * acc);
+}
+
+// Stack overflow in most implementations today,
+// but safe on arbitrary inputs in ES6
+factorial(100000)
+```
+
+## `WeakMap`
+
+The `WeakMap` object is a collection of **key/value pairs** in which the keys are weakly referenced.
+
+- There is no option to iterate through keys.
+- No option to retrieve keys.
+- Keys can only have `Object` type.
+- Objects doesn't avert garbage collection if there are no references to the object which is acting like a key.
+
+```js
+const wm1 = new WeakMap(),
+      wm2 = new WeakMap(),
+      wm3 = new WeakMap();
+const o1 = {},
+      o2 = function() {},
+      o3 = window;
+
+wm1.set(o1, 37);
+wm1.set(o2, 'azerty');
+wm2.set(o1, o2); // a value can be anything, including an object or a function
+wm2.set(o3, undefined);
+wm2.set(wm1, wm2); // keys and values can be any objects. Even WeakMaps!
+
+wm1.get(o2); // "azerty"
+wm2.get(o2); // undefined, because there is no key for o2 on wm2
+wm2.get(o3); // undefined, because that is the set value
+
+wm1.has(o2); // true
+wm2.has(o2); // false
+wm2.has(o3); // true (even if the value itself is 'undefined')
+
+wm3.set(o1, 37);
+wm3.get(o1); // 37
+
+wm1.has(o1); // true
+wm1.delete(o1);
+wm1.has(o1); // false
+```
+
+## `WeakSet`
+
+Stores weakly held objects in a collection.
+
+- `WeakSets` are collections of objects only. They cannot contain arbitrary values of any type.
+- The `WeakSet` is weak, meaning references to objects in a `WeakSet` are held weakly. If no other references to an object stored in the WeakSet exist, those objects can be garbage collected.
+
+> Circular references detection
+```js
+// Execute a callback on everything stored inside an object
+function execRecursively(fn, subject, _refs = null){
+  if(!_refs)
+    _refs = new WeakSet();
+  
+  // Avoid infinite recursion
+  if(_refs.has(subject))
+    return;
+
+  fn(subject);
+  if("object" === typeof subject){
+    _refs.add(subject);
+    for(let key in subject)
+      execRecursively(fn, subject[key], _refs);
+  }
+}
+
+const foo = {
+  foo: "Foo",
+  bar: {
+    bar: "Bar"
+  }
+};
+
+foo.bar.baz = foo; // Circular reference!
+execRecursively(obj => console.log(obj), foo);
+```
+
+## Template strings
+
+```js
+const renderDomNode = (target) => {
+   const div = document.createElement('div');
+   const content = `
+   	<div>
+           Some markdown
+	</div>
+   `;
+   
+   target.appendChild(target);
+}
+renderDomNode();
+```
+
+# ES7 features
 
 #### `async/await`
 
