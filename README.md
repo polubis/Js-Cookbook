@@ -3908,7 +3908,57 @@ const userForm = new Form(
 ![Builder](https://www.dofactory.com/img/diagrams/javascript/javascript-builder.jpg)
 
 ```ts
+type Data<T> = {
+    [K in keyof T]: T[K];
+};
 
+type Errors<T, R> = {
+    [K in keyof T]: R;
+};
+
+type Fn<T, R> = (value: T) => R;
+
+
+type Fns<T, R> = {
+    [K in keyof T]?: Fn<T[K], R>[];
+};
+
+abstract class Form<T extends Data<T>, R> { // ABSTRACT PRODUCT
+    dirty: boolean;
+    errors: Errors<T, R>;
+    invalid: boolean;
+
+    get keys(): (keyof T)[] {
+        return Object.keys(this.data) as (keyof T)[];
+    }
+
+    constructor(public data: T, public fns: Fns<T, R> = {}) {
+
+    }
+
+    // protected checkForErrors(): Errors<T, R> {
+    //     return this.keys.reduce((acc, key): Errors<T, R> => {
+    //         const value = this.data[key];
+    //         const result = this.fns[key] ? this.fns[key].some((fn) => fn(value)) : false;
+
+    //         return {
+    //             ...acc,
+    //             [key]: result,
+    //         };
+    //     }, {} as Errors<T, R>);
+    // }
+}
+
+class BaseForm<T extends Data<T>> extends Form<T, boolean> { // PRODUCT
+    constructor(data: T, fns?: Fns<T, boolean>) {
+        super(data, fns);
+    }
+
+    // setValidationResult(): void {
+    //     this.errors = this.checkForErrors();
+    //     this.invalid = this.errors.some
+    // }
+}
 ```
 
 ## Structural patterns
