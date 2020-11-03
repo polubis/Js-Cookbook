@@ -3884,6 +3884,33 @@ console.log(pdf.read()); // Readed pdf file
 console.log(xml.read()); // Readed xml file
 ```
 
+### Builder
+
+The Builder pattern allows a client to construct a complex object by specifying the type and content only. Construction details are hidden from the client entirely.
+
+The most common motivation for using **Builder** is to simplify client code that creates **complex objects**. The client can still direct the steps taken by the **Builder** without knowing how the actual work is accomplished. Builders frequently encapsulate construction of **Composite objects** because the procedures involved are often repetitive and complex.
+
+Object can be created step by step with dedicated methods. Also this pattern simplifies constructors.
+
+```ts
+// YOU SHOULD USE BUILDER HERE
+const userForm = new Form(
+    data,
+    metaData,
+    events,
+    validators,
+    view,
+    strategies,
+    // ... and many others
+)
+```
+
+![Builder](https://www.dofactory.com/img/diagrams/javascript/javascript-builder.jpg)
+
+```ts
+
+```
+
 ## Structural patterns
 
 ### Module pattern
