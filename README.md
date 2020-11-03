@@ -2927,7 +2927,15 @@ renderDomNode();
 
 ## `n+1` problem
 
-We have 2 tables: `Author` and `Book`. They are
+We have 2 tables: `Author` and `Book`. They are in **one** `Author` to **many** `Books` relationship. If you use `MySql` and some `ORM` like `sequalize` in `NodeJS` your pseudo code will looks like:
+
+```js
+route: '/authors/books',
+method: 'GET',
+handler: async () => ORM.getAuthors().getTheirBooks(); // call to database
+```
+
+DB call is transformed to:
 
 ```sql
 SELECT *
@@ -2935,8 +2943,26 @@ FROM authors;
 -- pretend this returns 3 authors
 SELECT *
 FROM books
-WHERE author_id in (1, 2, 3); -- an array of the author's ids // instea
+WHERE author_id in (1, 2, 3); -- an array of the author's ids
 ```
+
+This is correct - only 2 queries to DB for your data. `n+1` problem occurs when behind the scenes your query looks like that:
+
+```sql
+SELECT *
+FROM authors; 
+SELECT *
+FROM books 
+WHERE author_id in (1); 
+SELECT * 
+FROM books 
+WHERE author_id in (2); 
+SELECT *
+FROM books 
+WHERE author_id in (3); 
+```
+
+Instead of combinig authors ids to one query we have `n` queries based on first query response and `1` which is always first query.
 
 # SOLID
 
