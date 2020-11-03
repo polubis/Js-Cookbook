@@ -2923,6 +2923,21 @@ renderDomNode();
 
 #### `Reflect.Realm`
 
+# Terms
+
+## `n+1` problem
+
+We have 2 tables: `Author` and `Book`. They are
+
+```sql
+SELECT *
+FROM authors;
+-- pretend this returns 3 authors
+SELECT *
+FROM books
+WHERE author_id in (1, 2, 3); -- an array of the author's ids // instea
+```
+
 # SOLID
 
 ## S — Single responsibility principle
