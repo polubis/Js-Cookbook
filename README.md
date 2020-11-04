@@ -3843,6 +3843,11 @@ Suppose we have two **factories** whose task it is to create file readers - `PDF
 
 Abstract factory hide object creation details and keeps your code base unified.
 
+```ts
+// Typical abstract factory use case
+const xmlReader = new XMLReader();
+```
+
 ![Abstract factory](https://www.dofactory.com/img/diagrams/javascript/javascript-abstract-factory.jpg)
 
 ```ts
@@ -3934,22 +3939,21 @@ The most common motivation for using **Builder** is to simplify client code that
 Object can be created step by step with dedicated methods. Also this pattern simplifies constructors.
 
 ```ts
-// YOU SHOULD USE BUILDER HERE
-const userForm = new Form(
-    data,
-    metaData,
-    events,
-    validators,
-    view,
-    strategies,
-    // ... and many others
-)
+// Typical builder usage case
+const button = new Button(
+    // target
+    // styles
+    // events
+    // hooks
+    // template
+    ...
+);
 ```
 
 ![Builder](https://www.dofactory.com/img/diagrams/javascript/javascript-builder.jpg)
 
 ```ts
-interface Styles {
+interface Styles { // Helper interface
     background?: string;
     border?: string;
     color?: string;
@@ -4063,6 +4067,116 @@ class ComponentsLibrary { // Director
         return this._builder.get()
     }
 }
+```
+
+### Factory method
+
+Used in applications that manage, maintain, or manipulate collections of objects that are different but at the same time have many characteristics (methods and properties) in common. An example would be a collection of documents with a mix of **Xml documents, Pdf documents, and Rtf documents**.
+
+![FactoryMethod](https://www.dofactory.com/img/diagrams/javascript/javascript-factory-method.jpg)
+
+```ts
+interface Doc { // Abstract product
+  ext: string;
+  toString(): string;
+}
+
+enum DocType {
+  PDF = "pdf",
+  WORD = "word",
+}
+
+class WordDoc implements Doc { // Concrete product
+  ext = "doc";
+
+  toString(): string {
+    return "";
+  }
+}
+
+class PdfDoc implements Doc { // Concrete product
+  ext = "pdf";
+
+  toString(): string {
+    return "";
+  }
+}
+
+class DocCreator { // Creator
+  create(type: DocType): Doc {
+    if (type === DocType.WORD) {
+      return new WordDoc();
+    } else if (type === DocType.PDF) {
+      return new PdfDoc();
+    }
+
+    throw new Error('No document for given type');
+  }
+}
+```
+
+### Prototype
+
+Used to create objects which needs some pre-defined values or to avoid boilerplate when we would like to have exact object.
+
+![Prototype](https://www.dofactory.com/img/diagrams/javascript/javascript-prototype.jpg)
+
+```ts
+interface Cloneable<T> {
+    clone(): T;
+}
+
+class Data<T> {
+    constructor(public value: T, public isLoading = false, public error = '') {}
+}
+
+class DataPrototype implements Cloneable<Data<number>> {
+    constructor(public proto: Data<number>) {}
+
+    clone(): Data<number> {
+        const data = new Data(
+            this.proto.value,
+            this.proto.isLoading,
+            this.proto.error
+        );
+
+        return data;
+    }
+}
+
+const dataProto = new Data(1, false, '');
+const data = new DataPrototype(dataProto); // some code saved - no need to pass all constructor props
+
+console.log(data.clone())
+```
+
+### Singleton
+
+Limits the number of instances of a particular object to just one. This single instance is called the **singleton**.
+
+![Singleton](https://www.dofactory.com/img/diagrams/javascript/javascript-singleton.jpg)
+
+```js
+class User {
+    constructor() {}
+}
+
+class AuthProvider {
+    private _user: User;
+
+    get user(): User {
+        if (this._user) {
+            return this._user;
+        }
+
+        const user = new User();
+        this._user = user;
+
+        return user;
+    }
+}
+
+const provider = new AuthProvider();
 ```
 
 ## Structural patterns
