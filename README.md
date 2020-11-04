@@ -3949,56 +3949,119 @@ const userForm = new Form(
 ![Builder](https://www.dofactory.com/img/diagrams/javascript/javascript-builder.jpg)
 
 ```ts
-type Data<T> = {
-    [K in keyof T]: T[K];
-};
-
-type Errors<T, R> = {
-    [K in keyof T]: R;
-};
-
-type Fn<T, R> = (value: T) => R;
-
-
-type Fns<T, R> = {
-    [K in keyof T]?: Fn<T[K], R>[];
-};
-
-abstract class Form<T extends Data<T>, R> { // ABSTRACT PRODUCT
-    dirty: boolean;
-    errors: Errors<T, R>;
-    invalid: boolean;
-
-    get keys(): (keyof T)[] {
-        return Object.keys(this.data) as (keyof T)[];
-    }
-
-    constructor(public data: T, public fns: Fns<T, R> = {}) {
-
-    }
-
-    // protected checkForErrors(): Errors<T, R> {
-    //     return this.keys.reduce((acc, key): Errors<T, R> => {
-    //         const value = this.data[key];
-    //         const result = this.fns[key] ? this.fns[key].some((fn) => fn(value)) : false;
-
-    //         return {
-    //             ...acc,
-    //             [key]: result,
-    //         };
-    //     }, {} as Errors<T, R>);
-    // }
+interface Styles {
+    background?: string;
+    border?: string;
+    color?: string;
+    height?: string;
+    outline?: string;
+    width?: string;
 }
 
-class BaseForm<T extends Data<T>> extends Form<T, boolean> { // PRODUCT
-    constructor(data: T, fns?: Fns<T, boolean>) {
-        super(data, fns);
+abstract class UiElement { // abstract product
+    private _events: Function[];
+    private _styles: Styles = {};
+
+    get styles(): string {
+        return Object.entries(this._styles).map(([key, value]) => {
+            return `${key}: ${value}`;
+        }).join(';')
     }
 
-    // setValidationResult(): void {
-    //     this.errors = this.checkForErrors();
-    //     this.invalid = this.errors.some
-    // }
+    get template() {
+        return `
+            <button style=${this.styles}>
+
+            </button>
+        `
+    }
+
+    constructor(styles: Styles = {}) {
+        this.addEvents = this.addEvents.bind(this);
+        this.addStyles = this.addStyles.bind(this);
+        this.addStyles(styles);
+    }
+
+    addEvents(...events: Function[]): void {
+        this._events = [...this._events, ...events];
+    }
+
+    addStyles(styles: Partial<Styles>): void {
+        this._styles = {
+            ...this._styles,
+            ...styles
+        };
+    }
+}
+
+interface Builder { // abstract builder
+    create(): void;
+    applySize(): void;
+    applyTheme(): void;
+    applyEvents(): void;
+    get(): UiElement;
+}
+
+class Button extends UiElement { // Concrete product
+    constructor() {
+        super({
+            border: 'none',
+            outline: 'none'
+        });
+    }
+}
+
+class ButtonBuilder implements Builder { // Concrete builder
+    private _button: Button;
+
+    create(): void {
+        this._button = new Button();
+    }
+
+    applySize(): void {
+        this._button.addStyles({
+            height: '100px',
+            width: '100px'
+        })
+    }
+
+    applyTheme(): void {
+        this._button.addStyles({
+            color: '#fff',
+            background: '#333ccc'
+        });
+    }
+
+    applyEvents(): void {
+        this._button.addEvents(
+            () => {
+                console.log('Mounted')
+            }
+        );
+    }
+
+    get(): Button {
+        return this._button;
+    }
+}
+
+class ComponentsLibrary { // Director
+    constructor(private _builder: Builder) { }
+
+    buildStaticButton(): Button {
+        this._builder.create();
+        this._builder.applySize();
+
+        return this._builder.get()
+    }
+
+    buildPrimaryButton(): Button {
+        this._builder.create();
+        this._builder.applySize();
+        this._builder.applyTheme();
+
+        return this._builder.get()
+    }
 }
 ```
 
