@@ -4181,6 +4181,63 @@ const provider = new AuthProvider();
 
 ## Structural patterns
 
+### Adapter / Wrapper
+
+Translates one interface (an object's properties and methods) to another. Adapters allows programming components to work together that otherwise wouldn't because of mismatched interfaces. Maps old interface to new one without any changes to implementation.
+
+![Adapter](https://www.dofactory.com/img/diagrams/javascript/javascript-adapter.jpg)
+
+```ts
+class OldImplementation {
+  name: string;
+  email: string;
+  phone: number;
+
+  request(name: string, email: string, phone: number): void {
+    this.name = name;
+    console.log(this.name);
+    this.email = email;
+    console.log(this.email);
+    this.phone = phone;
+    console.log(this.phone);
+  }
+}
+
+class NewImplementation {
+  name: string;
+  email: string;
+  phone: number;
+
+  setName(name: string): void {
+    this.name = name;
+    console.log(this.name);
+  }
+
+  setEmail(email: string): void {
+    this.email = email;
+    console.log(this.email);
+  }
+
+  setPhone(phone: number): void {
+    this.phone = phone;
+    console.log(this.phone);
+  }
+}
+
+class Adapter {
+  request(name: string, email: string, phone: number): void {
+    const newOkImplementation = new NewImplementation();
+
+    newOkImplementation.setName(name);
+    newOkImplementation.setEmail(email);
+    newOkImplementation.setPhone(phone);
+  }
+}
+
+new OldImplementation().request('Piotr', 'piotr@wp.pl', 112333223); // OLD IMPLEMENTATION
+new Adapter().request('Piotr', 'piotr@wp.pl', 112333223); // NEW IMPLEMENTATION
+```
+
 ### Module pattern
 
 Only single object created which exposing public API's.
