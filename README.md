@@ -1699,6 +1699,35 @@ loadScript("/article/script-async-defer/long.js");
 loadScript("/article/script-async-defer/small.js");
 ```
 
+## Security
+
+### Cross-Site Scripting (XSS)
+
+Attacker injects client-side scripts through the website into the browsers of other users.  Because the injected code comes to the browser from the site, the code is trusted and can do things like send the user's site authorization cookie to the attacker. When the attacker has the cookie, they can log into a site as though they were the user and do anything the user can, such as access their credit card details, see contact details, or change passwords.
+
+The best defense against **XSS** vulnerabilities is to remove or disable any markup that can potentially contain instructions to run the code. For HTML this includes elements, such as `<script>, <object>, <embed>, and <link>`.
+
+The process of modifying user data so that it can't be used to run scripts or otherwise affect the execution of server code is known as input **sanitization**.
+
+### SQL injection
+
+Enable malicious users to execute arbitrary `SQL` code on a database, allowing data to be **accessed, modified, or deleted** irrespective of the user's permissions.
+
+```sql
+statement = "SELECT * FROM users WHERE name = '" + userName + "';" // WORKS AS EXPECTED
+SELECT * FROM users WHERE name = 'a';DROP TABLE users; SELECT * FROM userinfo WHERE 't' = 't'; // ATTACK
+```
+
+### Cross-Site Request Forgery (CSRF)
+
+Allows a malicious user to execute actions using the credentials of another user without that user’s knowledge or consent. 
+
+This type of attack is best explained by example. John is a malicious user who knows that a particular site allows logged-in users to send money to a specified account using an `HTTP POST` request that includes the account name and an amount of money. John constructs a form that includes his bank details and an amount of money as hidden fields, and emails it to other site users (with the Submit button disguised as a link to a "get rich quick" site).
+
+If a user clicks the submit button, an `HTTP POST` request will be sent to the server containing the transaction details and any client-side cookies that the browser associated with the site (adding associated site cookies to requests is normal browser behavior). The server will check the cookies, and use them to determine whether or not the user is logged in and has permission to make the transaction.
+
+One way to prevent this type of attack is for the server to require that `POST` requests include a user-specific site-generated secret. The secret would be supplied by the server when sending the web form used to make transfers.
+
 ## Shallow freeze
 
 The result of calling `Object.freeze(object)` only applies to the immediate properties of object itself and will prevent future property addition, removal or value re-assignment operations only on object. If the value of those properties are objects themselves, those objects are not frozen and may be the target of property addition, removal or value re-assignment operations.
@@ -4367,26 +4396,6 @@ revealingCounterModule.reset();
 
 ## Behavioral patterns
 
-## Dependency injection
-
-## Factory
-
-## Mediator
-
-## Observer
-
-## Prototype
-
-#### `Flux`
-
-#### `Decorator`
-
-#### `Proxy`
-
-#### `Facade`
-
-#### `Flyweight`
-
 # React
 
 #### `VirtualDOM`
@@ -4489,28 +4498,17 @@ git rebase
 git cherry pick
 git merge strategies
 
-SOLID
-DRY
 Repeat if Needed
-n+1
-Sql injection
-XSS
 
 Nulish operator
 Op chaining
 
-Generator 
-Iterator
-
-oop		bx model
+		bx model
 
 rem em	
 reedux
 react
-storages
-proxy
 big int
-symbol
 
 koolejka itp
 
