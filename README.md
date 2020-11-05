@@ -4336,6 +4336,101 @@ userController.events.onHover();
 postController.events.onMouseLeave();
 ```
 
+### Composite
+
+Each item in the collection can hold other collections themselves, creating deeply nested structures. A tree control is a perfect example of a Composite pattern. The nodes of the tree either contain an individual object (leaf node) or a group of objects (a subtree of nodes).
+
+![Composite](https://www.dofactory.com/img/diagrams/javascript/javascript-composite.jpg)
+
+```ts
+class Component {
+  children: Component[] = [];
+
+  get level(): number {
+    const getLevel = (component: Component | null, level: number): number => {
+      if (component !== null) {
+        return getLevel(component.parent, level + 1);
+      }
+
+      return level;
+    };
+
+    return getLevel(this.parent, 0);
+  }
+
+  constructor(public name: string, public parent: Component | null = null) {
+    this._traverseForLevel = this._traverseForLevel.bind(this);
+    this.addChildren = this.addChildren.bind(this);
+  }
+
+  private _traverseForLevel(
+    component: Component | null,
+    level: number
+  ): number {
+    if (component !== null) {
+      return this._traverseForLevel(component.parent, level + 1);
+    }
+
+    return level;
+  }
+
+  addChildren(children: Component): void {
+    children.parent = this;
+    this.children.push(children);
+  }
+
+  removeChildren(name: string): void {
+    this.children = this.children.filter(c => c.name !== name);
+  }
+
+  findChildren(name: string): Component | null {
+    const getChildren = (children: Component[]): Component | null => {
+      const foundChildren = children.find(c => c.name === name);
+
+      if (foundChildren) {
+        return foundChildren;
+      }
+
+      for(let i = 0; i < children.length; i++) {
+        return getChildren(children[i].children);
+      }
+    };
+
+    return getChildren(this.children)
+  }
+
+  findParent(name: string): Component | null {
+    const getParent = (component: Component | null): Component | null => {
+      if (component === null) {
+        return null;
+      }
+
+      if (component.name === name) {
+        return component;
+      }
+
+      return getParent(component.parent);
+    };
+
+    return getParent(this.parent);
+  }
+}
+
+const root = new Component("root");
+const leaf = new Component("leaf");
+leaf.addChildren(new Component("leaf1"));
+
+root.addChildren(leaf);
+root.addChildren(leaf);
+
+console.log(root.children[0].level);
+console.log(root.children[0].children[0].level);
+
+console.log(root.children[0].children[0].findParent('root').name);
+
+console.log(root.findChildren('leaf1').name);
+```
+
 ### Module pattern
 
 Only single object created which exposing public API's.
