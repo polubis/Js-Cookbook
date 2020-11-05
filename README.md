@@ -4238,6 +4238,73 @@ new OldImplementation().request('Piotr', 'piotr@wp.pl', 112333223); // OLD IMPLE
 new Adapter().request('Piotr', 'piotr@wp.pl', 112333223); // NEW IMPLEMENTATION
 ```
 
+### Bridge / Double adapter
+
+Allows two components, a client and a service, to work together with each component having its own interface. Bridge is a high-level architectural pattern and its main goal is to write better code through two levels of abstraction. It facilitates very loose coupling of objects.
+
+```ts
+type ControllerEvents = Partial<{
+  onClick(): void;
+  onHover(): void;
+  onMouseLeave(): void;
+}>;
+
+interface Controller { // Abstraction
+  events: Partial<ControllerEvents>;
+}
+
+class UserController implements Controller { // RefinedAbstraction 
+  constructor(private _service: Service) {}
+
+  events: ControllerEvents = {
+    onClick: () => {
+      this._service.get();
+    },
+    onHover: () => {
+      this._service.post();
+    }
+  };
+}
+
+class PostController implements Controller { // RefinedAbstraction 
+  constructor(private _service: Service) {}
+
+  events: ControllerEvents = {
+    onMouseLeave: () => {
+      this._service.get();
+    },
+    onHover: () => {
+      this._service.post();
+    }
+  };
+}
+
+interface Service { // Implementor 
+  get(): void;
+  post(): void;
+}
+
+class UserService implements Service { // ConcreteImplementor 
+  get(): void {
+    console.log('Get implementation');
+  }
+
+  post(): void {
+    console.log('Post implementation');
+  }
+}
+
+// Client
+
+const userService = new UserService();
+const userController = new UserController(userService);
+const postController = new PostController(userService);
+
+userController.events.onClick();
+userController.events.onHover();
+postController.events.onMouseLeave();
+```
+
 ### Module pattern
 
 Only single object created which exposing public API's.
