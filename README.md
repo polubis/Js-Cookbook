@@ -1,239 +1,4 @@
-- [Standards naming](#standards-naming)
-      - [ES2015 a.k.a. ES6](#es2015-aka-es6)
-      - [ES2016 a.k.a. ES7](#es2016-aka-es7)
-      - [ES2017 a.k.a. ES8](#es2017-aka-es8)
-      - [ES2018 a.k.a. ES9](#es2018-aka-es9)
-      - [ES2019 a.k.a. ES10](#es2019-aka-es10)
-      - [ES2020 a.k.a. ES11](#es2020-aka-es11)
-  * [`areObjectsSame()`](#-areobjectssame---)
-  * [Callback](#callback)
-  * [Closure](#closure)
-  * [Coercion](#coercion)
-    + [String conversion](#string-conversion)
-    + [Boolean conversion](#boolean-conversion)
-    + [Number conversion](#number-conversion)
-    + [Objects conversion](#objects-conversion)
-  * [Communication with server](#communication-with-server)
-    + [`AJAX` - Asynchronous JavaScript And XML](#-ajax----asynchronous-javascript-and-xml)
-    + [`fetch` API](#-fetch--api)
-  * [Currying](#currying)
-  * [Data persistence](#data-persistence)
-  * [Deep freeze](#deep-freeze)
-  * [`document load` event](#-document-load--event)
-  * [`DOMContentLoaded` event](#-domcontentloaded--event)
-  * [Drawback of true `private`](#drawback-of-true--private-)
-  * [Enum in JavaScript](#enum-in-javascript)
-  * [Event loop](#event-loop)
-  * [Execution context](#execution-context)
-    + [Execution context stack](#execution-context-stack)
-    + [Execution context creation](#execution-context-creation)
-  * [Event delegation](#event-delegation)
-  * [Event propagation phases](#event-propagation-phases)
-    + [Event capturing](#event-capturing)
-    + [Event bubbling](#event-bubbling)
-  * [Function declarations](#function-declarations)
-  * [Function expressions](#function-expressions)
-  * [Higher order function](#higher-order-function)
-  * [Hoisting](#hoisting)
-  * [Host objects](#host-objects)
-  * [`instance of`](#-instance-of-)
-  * [`JSON` - JavaScript Object Notation](#-json----javascript-object-notation)
-    + [`JSON` data types](#-json--data-types)
-    + [`JSONP` - `JSON` with Padding](#-jsonp-----json--with-padding)
-  * [Lexical scoping](#lexical-scoping)
-  * [Loose equality `==`](#loose-equality-----)
-  * [Memoization](#memoization)
-  * [Modules](#modules)
-    + [IIFE](#iife)
-    + [CJS - CommonJS module, or Node.js module](#cjs---commonjs-module--or-nodejs-module)
-    + [Asynchronous Module Definition, or RequireJS module](#asynchronous-module-definition--or-requirejs-module)
-    + [UMD module: Universal Module Definition, or UmdJS module](#umd-module--universal-module-definition--or-umdjs-module)
-    + [ES module: ECMAScript 2015, or ES6 module](#es-module--ecmascript-2015--or-es6-module)
-    + [ES dynamic module: ECMAScript 2020, or ES11 dynamic module](#es-dynamic-module--ecmascript-2020--or-es11-dynamic-module)
-    + [System module: SystemJS module](#system-module--systemjs-module)
-  * [Object descriptors](#object-descriptors)
-  * [Named functions](#named-functions)
-  * [Name shadowing](#name-shadowing)
-  * [`NaN`](#-nan-)
-  * [Native objects](#native-objects)
-  * [Pass by reference vs pass by value](#pass-by-reference-vs-pass-by-value)
-  * [Partial application](#partial-application)
-  * [Polyfill](#polyfill)
-  * [Prototype inheritance](#prototype-inheritance)
-  * [Reflection](#reflection)
-  * [Rounding problem](#rounding-problem)
-  * [same-origin policy](#same-origin-policy)
-    + [Origin inheritance](#origin-inheritance)
-    + [Cross-origin network access](#cross-origin-network-access)
-    + [CORS - Cross-Origin Resource Sharing](#cors---cross-origin-resource-sharing)
-    + [Simple requests](#simple-requests)
-    + [Preflight requests](#preflight-requests)
-  * [Scope chain](#scope-chain)
-  * [Script types](#script-types)
-  * [Security](#security)
-    + [Cross-Site Scripting (XSS)](#cross-site-scripting--xss-)
-    + [SQL injection](#sql-injection)
-    + [Cross-Site Request Forgery (CSRF)](#cross-site-request-forgery--csrf-)
-  * [Shallow freeze](#shallow-freeze)
-  * [`strict-mode`](#-strict-mode-)
-  * [Strict equality `===`](#strict-equality------)
-  * [`var`](#-var-)
-  * [Temporal Dead Zone](#temporal-dead-zone)
-  * [`this`](#-this-)
-    + [Default binding of `this`](#default-binding-of--this-)
-    + [Implict binding of `this`](#implict-binding-of--this-)
-    + [Explicit binding of `this`](#explicit-binding-of--this-)
-    + [Fixed / Hard binding of `this`](#fixed---hard-binding-of--this-)
-    + [`new` keyword and `this` binding](#-new--keyword-and--this--binding)
-  * [Transpiling](#transpiling)
-  * [Types](#types)
-    + [Data types - Primitives](#data-types---primitives)
-    + [Structural types](#structural-types)
-    + [Structural root primitive](#structural-root-primitive)
-- [ES6 features](#es6-features)
-  * [`Array` methods](#-array--methods)
-  * [Arrow functions expression](#arrow-functions-expression)
-  * [Build-in modules syntax](#build-in-modules-syntax)
-  * [`class`](#-class-)
-  * [`const`](#-const-)
-  * [Destructuring](#destructuring)
-  * [Default](#default)
-  * [Enhanced object literals](#enhanced-object-literals)
-  * [Generators](#generators)
-  * [Iterables & `for...of`](#iterables----forof-)
-  * [Iterators](#iterators)
-  * [`let`](#-let-)
-  * [Math methods](#math-methods)
-  * [`Map`](#-map-)
-  * [Module loaders](#module-loaders)
-  * [Number methods](#number-methods)
-  * [Object methods](#object-methods)
-  * [Promise](#promise)
-  * [`async` & `await`](#-async-----await-)
-    + [`Promise.all()`](#-promiseall---)
-    + [`Promise.race()`](#-promiserace---)
-    + [`Promise.any()`](#-promiseany---)
-    + [`Promise.allSettled()`](#-promiseallsettled---)
-  * [Proxy](#proxy)
-  * [Reflect](#reflect)
-  * [Rest operator](#rest-operator)
-  * [`Set`](#-set-)
-  * [Spread operator](#spread-operator)
-  * [Subsclassable built-ins](#subsclassable-built-ins)
-  * [String methods](#string-methods)
-  * [Symbols](#symbols)
-  * [Unicode](#unicode)
-  * [Tails calls](#tails-calls)
-  * [`WeakMap`](#-weakmap-)
-  * [`WeakSet`](#-weakset-)
-  * [Template strings](#template-strings)
-- [ES7 features](#es7-features)
-      - [`async/await`](#-async-await-)
-      - [`Exponentiation Operator`](#-exponentiation-operator-)
-      - [`Async generators`](#-async-generators-)
-      - [`Object.getOwnPropertyDescriptors`](#-objectgetownpropertydescriptors-)
-      - [`Object.values`](#-objectvalues-)
-      - [`Object.entries`](#-objectentries-)
-      - [`Array.prototype.includes`](#-arrayprototypeincludes-)
-      - [`Typed Objects`](#-typed-objects-)
-      - [`Trailing commas in function syntax`](#-trailing-commas-in-function-syntax-)
-      - [`Class decorators`](#-class-decorators-)
-      - [`Class properties`](#-class-properties-)
-      - [`Map.prototype.toJSON`](#-mapprototypetojson-)
-      - [`Set.prototype.toJSON`](#-setprototypetojson-)
-      - [`String.prototype.at`](#-stringprototypeat-)
-      - [`Object rest properties`](#-object-rest-properties-)
-      - [`Object spread properties`](#-object-spread-properties-)
-      - [`String.prototype.padLeft`](#-stringprototypepadleft-)
-      - [`String.prototype.padRight`](#-stringprototypepadright-)
-      - [`String.prototype.trimLeft`](#-stringprototypetrimleft-)
-      - [`String.prototype.trimRight`](#-stringprototypetrimright-)
-      - [`Regexp.escape`](#-regexpescape-)
-      - [`Bind Operator`](#-bind-operator-)
-      - [`Reflect.Realm`](#-reflectrealm-)
-- [Terms](#terms)
-  * [`n+1` problem](#-n-1--problem)
-- [SOLID](#solid)
-  * [S — Single responsibility principle](#s---single-responsibility-principle)
-  * [O — Open closed principle](#o---open-closed-principle)
-  * [L — Liskov substitution principle](#l---liskov-substitution-principle)
-  * [I — Interface segregation principle](#i---interface-segregation-principle)
-  * [D — Dependency Inversion principle](#d---dependency-inversion-principle)
-- [ORP - Object oriented programming](#orp---object-oriented-programming)
-  * [Abstraction](#abstraction)
-  * [Inheritance](#inheritance)
-  * [Polymorphism](#polymorphism)
-  * [Encapsulation](#encapsulation)
-- [Architectural patterns](#architectural-patterns)
-  * [MVC - Model View Controller](#mvc---model-view-controller)
-    + [Partial MVC (without View-Model) connection:](#partial-mvc--without-view-model--connection-)
-    + [Full MVC + Observer pattern:](#full-mvc---observer-pattern-)
-    + [MVC framework implementation](#mvc-framework-implementation)
-  * [MVVM](#mvvm)
-  * [MVP](#mvp)
-- [Design patterns](#design-patterns)
-  * [Creational patterns](#creational-patterns)
-    + [Abstract factory](#abstract-factory)
-    + [Builder](#builder)
-    + [Factory method](#factory-method)
-    + [Prototype](#prototype)
-    + [Singleton](#singleton)
-  * [Structural patterns](#structural-patterns)
-    + [Adapter / Wrapper](#adapter---wrapper)
-    + [Bridge / Double adapter](#bridge---double-adapter)
-    + [Composite](#composite)
-    + [Module pattern](#module-pattern)
-      - [Reavealing module pattern](#reavealing-module-pattern)
-  * [Behavioral patterns](#behavioral-patterns)
-- [React](#react)
-      - [`VirtualDOM`](#-virtualdom-)
-      - [`context` and `Context API`](#-context--and--context-api-)
-      - [`Lifecycle hooks`](#-lifecycle-hooks-)
-      - [`Lifecycle methods`](#-lifecycle-methods-)
-      - [`key` prop](#-key--prop)
-      - [`Element` vs `Component`](#-element--vs--component-)
-      - [`diffing` algorythm](#-diffing--algorythm)
-      - [`Synthetic event`](#-synthetic-event-)
-      - [`Performance improvements`](#-performance-improvements-)
-      - [`Event handling`](#-event-handling-)
-      - [`Why components must be capitalized`](#-why-components-must-be-capitalized-)
-      - [`JSX`](#-jsx-)
-      - [`createElement`](#-createelement-)
-      - [`cloneElement`](#-cloneelement-)
-      - [`ErrorBoundaries`](#-errorboundaries-)
-      - [`ForwardRef`](#-forwardref-)
-      - [`useRef`](#-useref-)
-      - [`createRef`](#-createref-)
-      - [`strict mode` in React](#-strict-mode--in-react)
-      - [`forceUpdate`](#-forceupdate-)
-- [React](#react-1)
-  * [Event pooling](#event-pooling)
-  * [Refs](#refs)
-  * [`SyntheticEvent`](#-syntheticevent-)
-      - [`HOC`](#-hoc-)
-      - [`Render prop`](#-render-prop-)
-      - [`Compound component`](#-compound-component-)
-      - [`Function as a child`](#-function-as-a-child-)
-      - [`Render slot`](#-render-slot-)
-      - [`Proxy component`](#-proxy-component-)
-      - [`redux`](#-redux-)
-      - [`redux-thunk`](#-redux-thunk-)
-      - [`redux-observable`](#-redux-observable-)
-      - [`redux-saga`](#-redux-saga-)
-
-<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
-
-
-# Standards naming
-
-#### ES2015 a.k.a. ES6
-#### ES2016 a.k.a. ES7
-#### ES2017 a.k.a. ES8
-#### ES2018 a.k.a. ES9
-#### ES2019 a.k.a. ES10
-#### ES2020 a.k.a. ES11
-
-## `areObjectsSame()`
+## areObjectsSame()
 
 ```js
 function isEquivalent(a, b) {
@@ -421,7 +186,7 @@ new Date(0) + 0          // 'Thu Jan 01 1970 02:00:00(EET)0'
 
 ## Communication with server
 
-### `AJAX` - Asynchronous JavaScript And XML
+### AJAX - Asynchronous JavaScript And XML
 
 In a nutshell, it is the use of the` XMLHttpRequest` object to communicate with **servers**. It can send and receive information in various formats, including `JSON`, `XML`, `HTML`, and `text` files. AJAX’s most appealing characteristic is its **asynchronous** nature, which means it can communicate with the server, exchange data, and update the page without having to **refresh the page**.
 
@@ -447,7 +212,7 @@ function loadDoc() {
 }
 ```
 
-### `fetch` API
+### fetch API
 
 Provides an interface for fetching resources (including across the network). It will seem familiar to anyone who has used `XMLHttpRequest`, but the new API provides a more powerful and flexible feature set.
 
@@ -554,7 +319,7 @@ obj2.internal.a = 'anotherValue'; // fails silently in non-strict mode
 obj2.internal.a; // null
 ```
 
-## `document load` event
+## document load event
 
 Fired when the whole page has loaded, including all dependent resources such as stylesheets and images.
 
@@ -564,7 +329,7 @@ window.addEventListener('load', (event) => {
 });
 ```
 
-## `DOMContentLoaded` event
+## DOMContentLoaded event
 
 The `DOMContentLoaded` event fires when the initial HTML document has been completely loaded and parsed, without waiting for stylesheets, images, and subframes to finish loading.
 
@@ -580,7 +345,7 @@ if (document.readyState === 'loading') {  // Loading hasn't finished yet
 }
 ```
 
-## Drawback of true `private`
+## Drawback of true private
 
 One drawback of creating private method in Javascript is **memory-inefficient** because a copy of the `private` method will be created every time a new instance is created.
 
@@ -1078,7 +843,7 @@ Objects supplied by the host environment to complete the execution environment o
 
 Examples: `window`, `document`, `location`, `history`, `XMLHttpRequest`, `setTimeout`, `getElementsByTagName`, `querySelectorAll`, ...etc
 
-## `instance of`
+## instance of
 
 The `instanceof` operator tests to see if the prototype property of a constructor appears anywhere in the prototype chain of an object. The return value is a `boolean` value. 
 
@@ -1097,7 +862,7 @@ console.log(auto instanceof Object);
 // expected output: true
 ```
 
-## `JSON` - JavaScript Object Notation
+## JSON - JavaScript Object Notation
 
 The `JSON` format is syntactically identical to the code for creating JavaScript objects. Because of this similarity, a JavaScript program can easily convert `JSON` data into **native JavaScript objects**.
 
@@ -1127,11 +892,11 @@ const jsObj = JSON.parse(text);
 const JSONtext = JSON.stringify(jsObj); // equal to text variable
 ```
 
-### `JSON` data types
+### JSON data types
 
 `string`, `number,` `object JSON`, `array`, `boolean`, `null`.
 
-### `JSONP` - `JSON` with Padding
+### JSONP - JSON with Padding
 
 Technique to overcome the `XMLHttpRequest` **same domain policy**. `AJAX` (`XMLHttpRequest`) request to a different domain. Instead of using `XMLHttpRequest` we have to use `<script>` tags. 
 
@@ -1172,7 +937,7 @@ function init() {
 init();
 ```
 
-## Loose equality `==`
+## Loose equality ==
 
 Compares equality after doing any necessary type conversions.
 
@@ -1561,7 +1326,7 @@ const Fn = () => {
 Fn();
 ```
 
-## `NaN`
+## NaN
 
 The global NaN property is a value representing Not-A-Number.
 
@@ -1976,7 +1741,7 @@ employee.address.city = "Noida"; // attributes of child object can be modified
 console.log(employee.address.city) // Output: "Noida"
 ```
 
-## `strict-mode`
+## strict-mode
 
 - Eliminates some JavaScript silent errors by changing them to `throw` errors.
 - Fixes mistakes that make it difficult for JavaScript engines to perform optimizations: strict mode code can sometimes be made to run faster than identical code that's not strict mode.
@@ -1986,7 +1751,7 @@ console.log(employee.address.city) // Output: "Noida"
 - changing values of readonly properties throws an error,
 - some security fixes.
 
-## Strict equality `===`
+## Strict equality ===
 
 Checks whether its two operands are equal, returning a `Boolean` result. Unlike the `==`, the strict equality operator always considers operands of different types to be different.
 
@@ -2044,11 +1809,11 @@ let name = "Kealan";
 
 ![TDZReferenceError](https://www.freecodecamp.org/news/content/images/2020/10/image-5.png)
 
-## `this`
+## this
 
 Refers to an object, that object which is **executing the current bit** of javascript code. To understand `this` keyword, only we need to know how, **when and from where** the function is called, does not matter **how and where** function is declared or defined. In other words, every javascript function while executing has a reference to its current execution context, called `this`.
 
-### Default binding of `this`
+### Default binding of this
 
 In `strict mode` default value of `this` keyword is `undefined` otherwise `this` keyword act as **global object**.
 
@@ -2076,7 +1841,7 @@ var name = "Ninja";
 bike(); // TypeError: Cannot read property name of undefined
 ```
 
-### Implict binding of `this`
+### Implict binding of this
 
 When there is an object property which we are calling as a **method** then that object becomes `this` object or **execution context object** for that method.
 
@@ -2092,7 +1857,7 @@ obj1.bike();      // "Pulsar"
 obj2.bike();      // "Gixxer"
 ```
 
-### Explicit binding of `this`
+### Explicit binding of this
 
 When we use `call()` and `apply()` method with calling function, both of those methods take as their first parameter as **execution context**.
 
@@ -2107,7 +1872,7 @@ bike.call(obj);   // "Pulsar"
 bike.apply(obj, ['argument1', 'argument2']); // Pulsar
 ```
 
-### Fixed / Hard binding of `this`
+### Fixed / Hard binding of this
 
 Foces `this` object to be same always no matter from where and how it gets called.
 
@@ -2128,7 +1893,7 @@ bike(); // 'Pulsar'
 bike.call(obj2); // 'Pulsar'
 ```
 
-### `new` keyword and `this` binding
+### new keyword and this binding
 
 Bind `this` with the newly created object.
 
@@ -2186,7 +1951,7 @@ Special **non-data** but **structural** type for any constructed object instance
 
 # ES6 features
 
-## `Array` methods
+## Array methods
 
 ```js
 Array.from(document.querySelectorAll('*')) // Returns a real Array
@@ -2248,7 +2013,7 @@ import ln, {pi, e} from "lib/mathplusplus";
 alert("2π = " + ln(e)*pi*2);
 ```
 
-## `class`
+## class
 
 Simple sugar over the prototype-based **OO** pattern. Having a single convenient declarative form makes class patterns easier to use, and encourages interoperability. Classes support **prototype-based inheritance**, `super` calls, instance and `static` methods and `constructors`.
 
@@ -2278,7 +2043,7 @@ class SkinnedMesh extends THREE.Mesh {
 }
 ```
 
-## `const`
+## const
 
 - Works same as `let`.
 - Value cannot be modified once assigned.
@@ -2431,7 +2196,7 @@ console.log(sequence.next().value);     // 1
 console.log(sequence.next().value);     // 2
 ```
 
-## Iterables & `for...of`
+## Iterables & for...of
 
 An `object` is **iterable** if it defines its iteration behavior, such as what values are looped over in a `for...of` construct. Some built-in types, such as `Array` or `Map`, have a default iteration behavior, while other types (such as `Object`) do not.
 
@@ -2498,7 +2263,7 @@ while (!result.done) {
 console.log("Iterated over sequence of size: ", result.value); // [5 numbers returned, that took interval in between: 0 to 10]
 ```
 
-## `let`
+## let
 
 - Block scoped variable - not function scoped as `var`.
 - `let` variables are block hoisted.
@@ -2523,7 +2288,7 @@ Math.hypot(3, 4) // 5
 Math.imul(Math.pow(2, 32) - 1, Math.pow(2, 32) - 2) // 2
 ```
 
-## `Map`
+## Map
 
 The `Map` object holds **key-value pairs** and remembers the original insertion order of the keys. Any value (both objects and primitive values) may be used as either a key or a value. A `Map` object iterates its elements in insertion order — a for...of loop returns an array of `[key, value]` for each iteration.
 
@@ -2670,7 +2435,7 @@ promise
 
 ![Promise](https://miro.medium.com/max/875/1*0mBlni5vsYZE2wFzfVv8EA.png)
 
-## `async` & `await`
+## async & await
 
 The word `async` before a function means one simple thing: a function always returns a `promise`. Other values are wrapped in a **resolved promise automatically**.
 
@@ -2706,7 +2471,7 @@ async function f() {
 f();
 ```
 
-### `Promise.all()`
+### Promise.all()
 
 Takes an iterable of promises as an input, and returns a single `Promise`.  Runs almost **parallel** - depends on CPU.
 
@@ -2739,7 +2504,7 @@ Promise.all([getUsers(), getBooks()]).then((res) => {
 
 ```
 
-### `Promise.race()`
+### Promise.race()
 
 Returns a promise that fulfills or rejects as soon as one of the promises in an iterable fulfills or rejects, with the value or reason from that promise.
 
@@ -2759,7 +2524,7 @@ Promise.race([promise1, promise2]).then((value) => {
 // expected output: "two"
 ```
 
-### `Promise.any()`
+### Promise.any()
 
 Takes an iterable of `Promise` objects and, as soon as one of the promises in the iterable fulfills, returns a single promise that resolves with the value from that promise. If no promises in the iterable fulfill (if all of the given promises are rejected), then the returned promise is rejected with an `AggregateError`, a new subclass of `Error` that groups together individual errors. Essentially, this method is the opposite of `Promise.all()`.
 
@@ -2775,7 +2540,7 @@ Promise.any(promises).then((value) => console.log(value));
 // expected output: "quick"
 ```
 
-### `Promise.allSettled()`
+### Promise.allSettled()
 
 Returns a promise that resolves after all of the given promises have either fulfilled or rejected, with an array of objects that each describes the outcome of each promise.
 It is typically used when you have multiple asynchronous tasks that are not dependent on one another to complete successfully, or you'd always like to know the result of each promise.
@@ -2860,7 +2625,7 @@ function f(x, ...y) {
 f(3, "hello", true) == 6
 ```
 
-## `Set`
+## Set
 
 Stores unique values of any type, whether primitive values or `object` references. Set objects are collections of values. You can iterate through the elements of a set in insertion order. A value in the Set may only occur once - it is unique in the Set's collection.
 
@@ -3038,7 +2803,7 @@ function factorial(n, acc = 1) {
 factorial(100000)
 ```
 
-## `WeakMap`
+## WeakMap
 
 The `WeakMap` object is a collection of **key/value pairs** in which the keys are weakly referenced.
 
@@ -3077,7 +2842,7 @@ wm1.delete(o1);
 wm1.has(o1); // false
 ```
 
-## `WeakSet`
+## WeakSet
 
 Stores weakly held objects in a collection.
 
@@ -3180,7 +2945,7 @@ renderDomNode();
 
 # Terms
 
-## `n+1` problem
+## n+1 problem
 
 We have 2 tables: `Author` and `Book`. They are in **one** `Author` to **many** `Books` relationship. If you use `MySql` and some `ORM` like `sequalize` in `NodeJS` your pseudo code will looks like:
 
@@ -4789,7 +4554,7 @@ Use in:
 - Triggering imperative animations.
 - Integrating with third-party DOM libraries.
 
-## `SyntheticEvent`
+## SyntheticEvent
 
 Cross-browser wrapper class around browser's native event. Normalizes events so that they have consistent properties across different browsers.
 
@@ -4814,30 +4579,4 @@ Cross-browser wrapper class around browser's native event. Normalizes events so 
 #### `redux-observable`
 
 #### `redux-saga`
-
-git rebase 
-git cherry pick
-git merge strategies
-
-Repeat if Needed
-
-Nulish operator
-Op chaining
-
-		bx model
-
-rem em	
-reedux
-react
-big int
-
-koolejka itp
-
-cqrs
-
-react angular
-
-di
-
-shallow equal vs depth
 
