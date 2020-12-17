@@ -4799,3 +4799,340 @@ Cross-browser wrapper class around browser's native event. Normalizes events so 
 
 #### `redux-saga`
 
+```ts
+
+// // WSKAZANIE GDZIE
+
+// // BIERZE DANE GENERYCZNE W OPARCIU O KONFIGURACJE
+
+// // POKAZUJE NA INTEFEJSIe
+
+const data = [
+  { first: 15, second: 20 },
+  { first: 50, second: 20 },
+  { first: 90, second: 20 },
+  { first: 50, second: 20 },
+  { first: 50, second: 20 },
+  { first: 50, second: 20 }
+];
+
+const getData = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+        resolve(data)
+    }, 1000);
+  })
+}
+
+interface ChartConfig {
+  data: {
+    first: number;
+    second: number;
+  }[];
+  target: string;
+  title: string;
+}
+
+class Renderer {
+   prevBtnId: string;
+   nextBtnId: string;
+  
+  constructor(public selector: string, public title: string) {
+      this._createNavigationIds();
+      this._init();
+  }
+  
+   private _init = () => {
+    this._renderWrapper();
+    this._renderHeader();
+    this._renderContent();
+  }
+  
+   private _createNavigationIds = () => {
+    const { selector } = this;
+    
+    this.prevBtnId = `chart-btn-prev-${selector.slice(1, selector.length)}`;
+    this.nextBtnId = `chart-btn-next-${selector.slice(1, selector.length)}`;
+  }
+  
+  private _toHTML = (str: string) => {
+    return document.createRange().createContextualFragment(str);
+  }
+  
+  private _renderBar = (target, item): void => {
+      const bar = this._toHTML(
+        `
+          <div class='chart-content-bar' style="height: ${item.first}%">
+            <div class='chart-content-bar-value' style="height: ${item.second}%"></div>
+          </div>
+        `
+      );
+    
+      target.appendChild(bar);
+  }
+
+  private _renderHeader = (): void => {
+    const chart = document.querySelector('.chart');
+    
+    const header = this._toHTML(`
+         <header class="chart-header">
+      <button id="${this.prevBtnId}">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+      </button>
+      <span>${this.title}</span>
+      <button id="${this.nextBtnId}">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+      </button>
+    </header>
+    `);
+    
+    chart.appendChild(header);
+  }
+  
+  private _renderContent = (): void => {
+    const chart = document.querySelector('.chart');
+    
+    const content = this._toHTML(`
+      <div class='chart-content'>
+         <div class='chart-content-markers'>
+            <div class="chart-content-marker"></div>
+            <div class="chart-content-marker"></div>
+            <div class="chart-content-marker"></div>
+            <div class="chart-content-marker"></div>
+            <div class="chart-content-marker"></div>
+          </div>
+          
+          <div class='chart-content-bars'>
+          </div>
+      </div>
+    `);
+    
+    chart.appendChild(content);
+  }
+  
+  private _renderWrapper = () => {
+    const target = document.querySelector(this.selector);
+    
+    const chart = this._toHTML(`<div class="chart"></div>`);
+    
+    target.appendChild(chart);
+  }
+  
+  renderBars = (data): void => {
+      const bars = document.querySelector('.chart-content-bars');
+    
+      data.forEach(item => {
+        this._renderBar(bars, item);
+      });
+  }
+  
+  toggleLoader = (show: boolean) => {
+    if (show) {
+      const loader = this._toHTML(`<div class='chart-loader'></div>`);
+      document.querySelector('.chart').appendChild(loader);
+    } else {
+      document.querySelector('.chart-loader').remove();
+    }
+  }
+  
+  onNext = (cb) => {
+    const nextBtn = document.getElementById(this.nextBtnId);
+
+    if (!nextBtn) {
+      throw new Error('Invalid id - cannot find buttons');
+    }
+
+    nextBtn.addEventListener('click', cb);
+  }
+}
+
+class Chart {
+  renderer: Renderer;
+  
+  constructor(private _config: ChartConfig) {
+    this.renderer = new Renderer(
+      this._config.selector,
+      this._config.title
+    );
+    
+    this.toggleLoader = this.renderer.toggleLoader;
+    this.onNext = this.renderer.onNext;
+  }
+  
+  display = data => {
+    this.renderer.renderBars(data);
+  }
+}
+
+const chart = new Chart({
+  selector: '.chart-container',
+  title: "By technologies",
+});
+
+const handleGetData = (initData = []) => {
+  chart.toggleLoader(true);
+  
+  getData().then(data => {
+  chart.display([...initData, ...data]);   
+  chart.toggleLoader(false);
+}).catch(err => {
+  chart.toggleLoader(false);
+});
+}
+
+chart.onNext(() => {
+  handleGetData(data);
+});
+
+handleGetData();
+
+```
+
+```html
+<div class="chart-container">
+
+</div>
+```
+
+```css
+::-webkit-scrollbar {
+    width: 12px;
+}
+ 
+::-webkit-scrollbar-track {
+    background: #0F183E;
+}
+ 
+::-webkit-scrollbar-thumb {
+   background: #3381E1;
+   opacity: 0.90;
+}
+
+body {
+  font-family: 'Montserrat';
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.chart-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chart {
+  background: #0F183E;
+  width: 500px;
+  border-radius: 8px;
+}
+
+.chart-header {
+  padding: 20px 20px 24px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chart-header span {
+  color: #fff;
+  font-size: 14px;
+}
+
+.chart-header button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50px;
+  background: #003577;
+  width: 32px;
+  height: 32px;
+  border: none;
+  box-shadow: 0 3px 6px rgba(0,0,0,.14);
+  outline: none;
+  cursor: pointer;
+  transition: 0.3s opacity;
+}
+
+.chart-header button:hover {
+  opacity: 0.80;
+}
+
+.chart-header button:first-of-type svg {
+  transform: rotate(180deg);
+}
+
+.chart-header button path {
+  fill: #fff;
+}
+
+.chart-content {
+  position: relative;
+  height: 210px;
+  margin-bottom: 40px;
+}
+
+.chart-content-markers {
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.chart-content-marker {
+  width: 100%;
+  height: 1px;
+  background: #3381E1;
+  opacity: 0.43;
+}
+
+.chart-content-bars {
+  padding: 0 42px 10px 42px;
+  display: flex;
+  align-items: flex-end;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  overflow-x: auto;
+  height: 100%;
+}
+
+.chart-content-bar {
+  display: flex;
+  flex-flow: column;
+  flex-shrink: 0;
+  background: #0F183E;
+  border: 1px solid #3381E1;
+  width: 10px;
+  margin-right: 42px;
+  border-top-left-radius: 40px;
+  border-top-right-radius: 40px;
+}
+
+.chart-content-bar-value {
+  border-top-left-radius: 40px;
+  border-top-right-radius: 40px;
+  background: #3381E1;
+  opacity: 0.43;
+  margin-top: auto;
+  border-top: 1px solid #3381E1;
+}
+
+.chart-loader {
+  position: absolute;
+  z-index: 10;
+  background: #fff;
+  opacity: 0.43;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+```
+
